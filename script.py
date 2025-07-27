@@ -183,7 +183,17 @@ def create_keylog_payload(filename, url=None):
 
 def create_network_payload(filename, url=None):
     """Network request payload"""
-    target_url = url if url else "https://httpbin.org/get"
+    def is_valid_url(url):
+        from urllib.parse import urlparse
+        try:
+            parsed = urlparse(url)
+            return all([parsed.scheme in ("http", "https"), parsed.netloc])
+        except Exception:
+            return False
+
+    target_url = url if url and is_valid_url(url) else "https://httpbin.org/get"
+    if url and not is_valid_url(url):
+        raise ValueError(f"Invalid or unsafe URL provided: {url}")
     payload = f'''
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "{target_url}", true);
