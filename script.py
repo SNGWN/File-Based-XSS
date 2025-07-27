@@ -126,9 +126,8 @@ def create_obfuscated_payload(filename):
     """Obfuscated payload"""
     # Base64 encoded: app.alert("Obfuscated XSS payload executed")
     payload = '''
-    var obf = "YXBwLmFsZXJ0KCJPYmZ1c2NhdGVkIFhTUyBwYXlsb2FkIGV4ZWN1dGVkIik=";
     try {
-        eval(atob(obf));
+        app.alert("Obfuscated XSS payload executed");
     } catch(e) {
         app.alert("Obfuscated payload execution attempted");
     }
