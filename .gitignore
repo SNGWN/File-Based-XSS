@@ -2,6 +2,9 @@
 *.pdf
 *.html
 
+# Generated PDF files directory (created automatically)
+Files/
+
 # Python cache
 __pycache__/
 *.py[cod]

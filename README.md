@@ -174,12 +174,14 @@ python3 script.py -t network -u https://webhook.site/unique-id
 ## 📁 Output Files
 
 ### PDF Files
-Generated PDF files follow the naming convention: `xss_<type>_<timestamp>.pdf`
+**All generated PDF files are automatically stored in a `Files/` directory.**
+
+The tool creates the `Files` directory automatically if it doesn't exist. Generated PDF files follow the naming convention: `xss_<type>_<timestamp>.pdf`
 
 Examples:
-- `xss_alert_20240115_143022.pdf`
-- `xss_cookie_20240115_143025.pdf`
-- `xss_custom_20240115_143030.pdf`
+- `Files/xss_alert_20240115_143022.pdf`
+- `Files/xss_cookie_20240115_143025.pdf`
+- `Files/xss_custom_20240115_143030.pdf`
 
 ### HTML Files
 Generated HTML files follow the naming convention: `xss_test_<timestamp>.html`
