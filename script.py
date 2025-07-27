@@ -817,6 +817,10 @@ def create_sophisticated_pdf(filename, payload_data, pdf_version=None):
     # Enhanced PDF structure based on version and capabilities
     if pdf_version in ['1.0', '1.1']:
         # Very basic PDF structure - no JavaScript or forms
+        # Include payload text for reference
+        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
+        payload_text_length = len(escaped_payload) + 200  # Estimate content length
+        
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
@@ -839,44 +843,62 @@ endobj
 /Parent 2 0 R
 /MediaBox [0 0 612 792]
 /Contents 4 0 R
+/Resources <</Font <</F1 5 0 R>>>>
 >>
 endobj
 
 4 0 obj
 <<
-/Length 100
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-50 700 Td
+50 750 Td
 (PDF-{pdf_version} Basic Structure) Tj
 0 -20 Td
 (No JavaScript Support) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -20 Td
+({escaped_payload[:100]}...) Tj
 ET
 endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
 endobj'''
 
         # Append xref table separately to avoid Python number parsing issues
         pdf_content += '''
 xref
-0 5
+0 6
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
 0000000115 00000 n 
-0000000201 00000 n 
+0000000231 00000 n 
+0000000000 00000 n 
 trailer
 <<
-/Size 5
+/Size 6
 /Root 1 0 R
 >>
 startxref
-352
+400
 %%EOF'''
     
     elif pdf_version == '1.2':
         # Basic forms and annotations support - limited security
+        # Include payload text for reference
+        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
+        payload_text_length = len(escaped_payload) + 250
+        
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
@@ -908,6 +930,7 @@ endobj
 /MediaBox [0 0 612 792]
 /Contents 7 0 R
 /Annots [5 0 R]
+/Resources <</Font <</F1 9 0 R>>>>
 >>
 endobj
 
@@ -928,15 +951,19 @@ endobj
 
 7 0 obj
 <<
-/Length 120
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-50 700 Td
+50 750 Td
 (PDF-{pdf_version} Forms Support) Tj
 0 -20 Td
 (Basic Annotation Exploit Potential) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -20 Td
+({escaped_payload[:80]}...) Tj
 ET
 endstream
 endobj
@@ -980,6 +1007,18 @@ startxref
     
     elif pdf_version == '1.3':
         # First JavaScript support - basic sandbox, high exploit potential
+        # Include payload text for reference
+        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
+        payload_lines = []
+        for i in range(0, len(escaped_payload), 60):
+            payload_lines.append(escaped_payload[i:i+60])
+        
+        payload_display = ''
+        for line in payload_lines[:5]:  # Show first 5 lines
+            payload_display += f'({line}) Tj\\n0 -15 Td\\n'
+        
+        payload_text_length = len(payload_display) + 300
+        
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
@@ -1020,6 +1059,7 @@ endobj
 /MediaBox [0 0 612 792]
 /Contents 8 0 R
 /Annots [6 0 R]
+/Resources <</Font <</F1 11 0 R>>>>
 >>
 endobj
 
@@ -1041,15 +1081,19 @@ endobj
 
 8 0 obj
 <<
-/Length 140
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-50 700 Td
+50 750 Td
 (PDF-{pdf_version} JavaScript Exploit) Tj
 0 -20 Td
 (Basic Sandbox - High Exploit Potential) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display}
 ET
 endstream
 endobj
@@ -1103,6 +1147,18 @@ startxref
     
     elif pdf_version in ['1.4', '1.5']:
         # Enhanced JavaScript and multimedia support with moderate security
+        # Include payload text for reference
+        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
+        payload_lines = []
+        for i in range(0, len(escaped_payload), 50):
+            payload_lines.append(escaped_payload[i:i+50])
+        
+        payload_display = ''
+        for line in payload_lines[:6]:  # Show first 6 lines
+            payload_display += f'({line}) Tj\\n0 -15 Td\\n'
+        
+        payload_text_length = len(payload_display) + 400
+        
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
 <<
@@ -1151,6 +1207,7 @@ endobj
 /Contents 10 0 R
 /Annots [8 0 R]
 /AA 11 0 R
+/Resources <</Font <</F1 16 0 R>>>>
 >>
 endobj
 
@@ -1178,17 +1235,21 @@ endobj
 
 10 0 obj
 <<
-/Length 160
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-50 700 Td
+50 750 Td
 (PDF-{pdf_version} Enhanced JavaScript) Tj
 0 -20 Td
 (Multimedia Support - Moderate Security) Tj
 0 -20 Td
 (High Exploit Potential) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display}
 ET
 endstream
 endobj
@@ -1283,6 +1344,18 @@ startxref
             js_optimization = "// PDFium sandbox escape\\n"
         
         enhanced_payload = js_optimization + payload
+        
+        # Include payload text for reference with proper escaping
+        escaped_payload = enhanced_payload.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
+        payload_lines = []
+        for i in range(0, len(escaped_payload), 45):
+            payload_lines.append(escaped_payload[i:i+45])
+        
+        payload_display = ''
+        for line in payload_lines[:8]:  # Show first 8 lines
+            payload_display += f'({line}) Tj\\n0 -12 Td\\n'
+        
+        payload_text_length = len(payload_display) + 500
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1396,12 +1469,12 @@ endobj
 
 15 0 obj
 <<
-/Length 180
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-50 700 Td
+50 750 Td
 (PDF-{pdf_version} Advanced Security) Tj
 0 -20 Td
 (Browser: {browser.title()}) Tj
@@ -1409,6 +1482,10 @@ BT
 (Enhanced Sandbox Escape Techniques) Tj
 0 -20 Td
 (Multiple Execution Vectors) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display}
 ET
 endstream
 endobj
@@ -1493,6 +1570,10 @@ startxref
     
     else:
         # Fallback to PDF-1.7 if version not recognized
+        # Include payload text for reference
+        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
+        payload_text_length = len(escaped_payload) + 200
+        
         pdf_content = f'''%PDF-1.7
 1 0 obj
 <<
@@ -1524,39 +1605,53 @@ endobj
 /Parent 2 0 R
 /MediaBox [0 0 612 792]
 /Contents 5 0 R
+/Resources <</Font <</F1 6 0 R>>>>
 >>
 endobj
 
 5 0 obj
 <<
-/Length 80
+/Length {payload_text_length}
 >>
 stream
 BT
 /F1 12 Tf
-100 700 Td
+100 750 Td
 (PDF Fallback Structure) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -20 Td
+({escaped_payload[:60]}...) Tj
 ET
 endstream
+endobj
+
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
 endobj'''
 
         # Append xref table separately to avoid Python number parsing issues
         pdf_content += '''
 xref
-0 6
+0 7
 0000000000 65535 f 
 0000000009 00000 n 
 0000000069 00000 n 
 0000000126 00000 n 
 0000000183 00000 n 
-0000000269 00000 n 
+0000000299 00000 n 
+0000000000 00000 n 
 trailer
 <<
-/Size 6
+/Size 7
 /Root 1 0 R
 >>
 startxref
-398
+450
 %%EOF'''
 
     with open(filename, 'w') as f:
