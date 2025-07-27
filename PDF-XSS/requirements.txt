@@ -1,0 +1,20 @@
+# PDF-XSS Tool Dependencies
+# =========================
+# 
+# The PDF-XSS tool uses only Python standard library modules.
+# No additional dependencies are required for basic PDF generation functionality.
+#
+# Standard library modules used:
+# - argparse (command line parsing)
+# - os (file system operations)
+# - sys (system operations)
+# - json (JSON handling)
+# - datetime (timestamp generation)
+# - platform (system information)
+# - base64 (encoding)
+# - urllib.parse (URL handling)
+# - hashlib (hashing)
+#
+# Installation:
+# No additional packages need to be installed.
+# Simply run: python3 script.py
