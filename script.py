@@ -774,7 +774,7 @@ def list_pdf_versions():
     
     for version in versions:
         caps = get_pdf_version_capabilities(version)
-        print(f"\\n🔹 PDF-{version}")
+        print(f"\n🔹 PDF-{version}")
         print(f"   Security Level: {caps['security_level']}")
         print(f"   Exploit Potential: {caps['exploit_potential']}")
         print(f"   JavaScript: {'✅' if caps['javascript'] else '❌'}")
@@ -783,7 +783,7 @@ def list_pdf_versions():
         print(f"   Encryption: {'✅' if caps['encryption'] else '❌'}")
         print(f"   Description: {caps['description']}")
     
-    print(f"\\n💡 SECURITY RESEARCH INSIGHT:")
+    print(f"\n💡 SECURITY RESEARCH INSIGHT:")
     print("Older PDF versions (1.0-1.3) have minimal security measures and weaker sandboxing.")
     print("Versions 1.3+ introduce JavaScript but with varying sandbox restrictions.")
     print("Modern versions (1.6+) have strong security but may still be vulnerable to sophisticated exploits.")
@@ -811,7 +811,7 @@ def create_sophisticated_pdf(filename, payload_data, pdf_version=None):
     # Adapt payload based on PDF version capabilities
     if not capabilities['javascript']:
         # For PDF versions without JavaScript, use structure-based exploits
-        payload = f"// PDF-{pdf_version} - No JavaScript support, using structure-based exploit\\n{payload}"
+        payload = f"// PDF-{pdf_version} - No JavaScript support, using structure-based exploit\n{payload}"
     
     # Enhanced PDF structure based on version and capabilities
     # Enhanced PDF structure based on version and capabilities
@@ -1332,16 +1332,16 @@ startxref
         # Browser-specific optimizations for modern versions
         if browser == 'firefox':
             # PDF.js optimized for CSP bypass
-            js_optimization = "// PDF.js CSP bypass attempt\\n"
+            js_optimization = "// PDF.js CSP bypass attempt\n"
         elif browser == 'safari':
             # PDFKit specific optimizations
-            js_optimization = "// PDFKit macOS integration\\n"
+            js_optimization = "// PDFKit macOS integration\n"
         elif browser == 'adobe':
             # Adobe Reader full API exploitation
-            js_optimization = "// Adobe Reader full API\\n"
+            js_optimization = "// Adobe Reader full API\n"
         else:
             # Chrome/Edge PDFium optimizations
-            js_optimization = "// PDFium sandbox escape\\n"
+            js_optimization = "// PDFium sandbox escape\n"
         
         enhanced_payload = js_optimization + payload
         
@@ -1744,10 +1744,10 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         }
         
         for browser, cves in research_data.items():
-            print(f"\\n{browser}:")
+            print(f"\n{browser}:")
             print(f"  CVEs: {', '.join(cves)}")
             
-        print(f"\\nTotal Research Base: {sum(len(cves) for cves in research_data.values())} CVEs")
+        print(f"\nTotal Research Base: {sum(len(cves) for cves in research_data.values())} CVEs")
         print("Additional Sources: Academic papers, bug bounty reports, security conferences")
         return
     
@@ -1811,7 +1811,7 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         os.makedirs(files_dir)
         print(f"📁 Created directory: {files_dir}")
     
-    print(f"\\n📁 Creating {len(all_payloads)} sophisticated PDF files in {files_dir}/ directory...")
+    print(f"\n📁 Creating {len(all_payloads)} sophisticated PDF files in {files_dir}/ directory...")
     
     # Progress tracking
     progress_interval = max(1, len(all_payloads) // 20)  # 20 progress updates max
@@ -1842,7 +1842,7 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
             print(f"❌ Error creating {filename}: {e}")
     
     # Output comprehensive summary
-    print(f"\\n🎯 GENERATION COMPLETE")
+    print(f"\n🎯 GENERATION COMPLETE")
     print("=" * 30)
     print(f"✅ Successfully generated {len(generated_files)} sophisticated PDF files")
     print(f"📊 Total payload variations: {len(all_payloads)}")
@@ -1857,7 +1857,7 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         browsers[payload['browser']] = browsers.get(payload['browser'], 0) + 1
         risk_levels[payload['risk_level']] = risk_levels.get(payload['risk_level'], 0) + 1
     
-    print(f"\\n📈 PAYLOAD BREAKDOWN:")
+    print(f"\n📈 PAYLOAD BREAKDOWN:")
     print(f"Categories: {dict(sorted(categories.items()))}")
     print(f"Browsers: {dict(sorted(browsers.items()))}")
     print(f"Risk Levels: {dict(sorted(risk_levels.items()))}")
@@ -1877,17 +1877,17 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
                     },
                     'payloads': all_payloads
                 }, f, indent=2)
-            print(f"\\n💾 Payload database exported to {json_filename}")
+            print(f"\n💾 Payload database exported to {json_filename}")
         except Exception as e:
             print(f"❌ Error exporting JSON: {e}")
     
     # Security warning
-    print(f"\\n⚠️  SECURITY NOTICE:")
+    print(f"\n⚠️  SECURITY NOTICE:")
     print("These sophisticated PDF files contain advanced sandbox escape techniques.")
     print("Use only for authorized security testing with proper permissions.")
     print("Generated files may trigger security software - use in isolated environments.")
     
-    print(f"\\n🎯 Advanced PDF sandbox escape payloads ready for security testing!")
+    print(f"\n🎯 Advanced PDF sandbox escape payloads ready for security testing!")
 
 if __name__ == "__main__":
     main()
