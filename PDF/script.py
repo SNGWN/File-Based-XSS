@@ -889,10 +889,36 @@ def format_complete_payload_for_pdf(payload, filename, max_line_length=80):
     # Escape the payload for PDF display
     escaped_payload = payload.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
     
-    # Split payload into lines that fit in PDF
+    # Split payload into lines that fit in PDF with word boundary awareness
     payload_lines = []
-    for i in range(0, len(escaped_payload), max_line_length):
-        payload_lines.append(escaped_payload[i:i+max_line_length])
+    words = escaped_payload.split(' ')
+    current_line = ''
+    
+    for word in words:
+        # Check if adding this word would exceed the line length
+        test_line = current_line + (' ' if current_line else '') + word
+        if len(test_line) <= max_line_length:
+            current_line = test_line
+        else:
+            # If current line has content, save it and start new line
+            if current_line:
+                payload_lines.append(current_line)
+                current_line = word
+            else:
+                # Single word is longer than max_line_length, split it
+                payload_lines.append(word[:max_line_length])
+                remaining = word[max_line_length:]
+                while remaining:
+                    if len(remaining) <= max_line_length:
+                        current_line = remaining
+                        break
+                    else:
+                        payload_lines.append(remaining[:max_line_length])
+                        remaining = remaining[max_line_length:]
+    
+    # Add any remaining content in current_line
+    if current_line:
+        payload_lines.append(current_line)
     
     # Create display text with filename heading and complete payload
     display_lines = [
@@ -919,7 +945,32 @@ def format_complete_payload_for_pdf(payload, filename, max_line_length=80):
     
     return payload_display, len(payload_display)
 
-def create_sophisticated_pdf(filename, payload_data, pdf_version=None):
+def create_multi_payload_pdf(filename, payloads_list, pdf_version=None):
+    """Create sophisticated PDF with multiple payloads for a browser"""
+    if not payloads_list:
+        return
+    
+    browser = payloads_list[0]['browser']
+    
+    # Format all payloads for display
+    all_payload_displays = []
+    for i, payload_data in enumerate(payloads_list):
+        payload_display, _ = format_complete_payload_for_pdf(
+            payload_data['payload'], 
+            f"Payload {i+1}/{len(payloads_list)}: {payload_data['technique']}"
+        )
+        all_payload_displays.append(payload_display)
+    
+    # Join all payloads with separators
+    combined_payload_display = '\n0 -20 Td\n'.join(all_payload_displays)
+    
+    # Use the first payload for the main PDF structure
+    payload_data = payloads_list[0]
+    
+    # Create the PDF using existing logic but with combined display
+    create_sophisticated_pdf(filename, payload_data, pdf_version, combined_payload_display)
+
+def create_sophisticated_pdf(filename, payload_data, pdf_version=None, custom_payload_display=None):
     """Create sophisticated PDF with browser-specific optimizations and PDF version targeting"""
     payload = payload_data['payload']
     browser = payload_data['browser']
@@ -1138,8 +1189,12 @@ startxref
     elif pdf_version == '1.3':
         # First JavaScript support - basic sandbox, high exploit potential
         # Include complete payload text for reference with filename heading
-        payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
-        payload_text_length += 300  # Add buffer for other content
+        if custom_payload_display:
+            payload_display = custom_payload_display
+            payload_text_length = len(payload_display) + 300
+        else:
+            payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
+            payload_text_length += 300  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1268,8 +1323,12 @@ startxref
     elif pdf_version in ['1.4', '1.5']:
         # Enhanced JavaScript and multimedia support with moderate security
         # Include complete payload text for reference with filename heading
-        payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
-        payload_text_length += 400  # Add buffer for other content
+        if custom_payload_display:
+            payload_display = custom_payload_display
+            payload_text_length = len(payload_display) + 400
+        else:
+            payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
+            payload_text_length += 400  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1456,8 +1515,12 @@ startxref
         enhanced_payload = js_optimization + payload
         
         # Include complete payload text for reference with filename heading
-        payload_display, payload_text_length = format_complete_payload_for_pdf(enhanced_payload, filename)
-        payload_text_length += 500  # Add buffer for other content
+        if custom_payload_display:
+            payload_display = custom_payload_display
+            payload_text_length = len(payload_display) + 500
+        else:
+            payload_display, payload_text_length = format_complete_payload_for_pdf(enhanced_payload, filename)
+            payload_text_length += 500  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1893,7 +1956,34 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         all_payloads = [p for p in all_payloads if p['category'] == args.category]
         print(f"Filtered to {len(all_payloads)} {args.category} payloads")
     
-    if args.count:
+    # Apply count limit after grouping by browser for better distribution
+    if args.count is not None and args.count <= 0:
+        print("❌ Count must be a positive number")
+        return
+    
+    if args.count and args.browser == 'all':
+        # For 'all' browsers, distribute count across browsers for better representation
+        payloads_by_browser_temp = {}
+        for payload in all_payloads:
+            browser = payload['browser']
+            if browser not in payloads_by_browser_temp:
+                payloads_by_browser_temp[browser] = []
+            payloads_by_browser_temp[browser].append(payload)
+        
+        # Calculate how many payloads per browser
+        num_browsers = len(payloads_by_browser_temp)
+        per_browser = max(1, args.count // num_browsers)  # At least 1 per browser
+        remainder = args.count % num_browsers
+        
+        limited_payloads = []
+        for i, (browser, browser_payloads) in enumerate(payloads_by_browser_temp.items()):
+            # Some browsers get one extra payload to account for remainder
+            count_for_this_browser = per_browser + (1 if i < remainder else 0)
+            limited_payloads.extend(browser_payloads[:count_for_this_browser])
+        
+        all_payloads = limited_payloads
+        print(f"Limited to {len(all_payloads)} payloads distributed across {num_browsers} browsers (~{per_browser} per browser)")
+    elif args.count:
         all_payloads = all_payloads[:args.count]
         print(f"Limited to {len(all_payloads)} payloads")
     
@@ -1911,32 +2001,37 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         os.makedirs(files_dir)
         print(f"📁 Created directory: {files_dir}")
     
-    print(f"\n📁 Creating {len(all_payloads)} sophisticated PDF files in {files_dir}/ directory...")
+    # Group payloads by browser
+    payloads_by_browser = {}
+    for payload in all_payloads:
+        browser = payload['browser']
+        if browser not in payloads_by_browser:
+            payloads_by_browser[browser] = []
+        payloads_by_browser[browser].append(payload)
     
-    # Progress tracking
-    progress_interval = max(1, len(all_payloads) // 20)  # 20 progress updates max
+    print(f"\n📁 Creating {len(payloads_by_browser)} PDF files (one per browser) in {files_dir}/ directory...")
     
-    for i, payload_data in enumerate(all_payloads):
-        # Enhanced filename with more details
-        pdf_version_str = f"_pdf{args.pdf_version}" if args.pdf_version else ""
-        base_filename = f"xss_{payload_data['browser']}_{payload_data['category']}_{payload_data['technique']}{pdf_version_str}_{timestamp}_{i+1:04d}.pdf"
+    for browser, browser_payloads in payloads_by_browser.items():
+        # Shorter, more descriptive filename per browser
+        pdf_version_str = f"_v{args.pdf_version}" if args.pdf_version else ""
+        base_filename = f"{browser}_xss_payloads{pdf_version_str}.pdf"
         filename = os.path.join(files_dir, base_filename)
         
         try:
-            create_sophisticated_pdf(filename, payload_data, args.pdf_version)
+            create_multi_payload_pdf(filename, browser_payloads, args.pdf_version)
             generated_files.append(filename)
             
             if args.verbose:
                 print(f"✅ {filename}")
-                print(f"   Category: {payload_data['category']}")
-                print(f"   Technique: {payload_data['technique']}")
-                print(f"   Risk Level: {payload_data['risk_level']}")
-                print(f"   CVE Reference: {payload_data.get('cve_reference', 'N/A')}")
-                print(f"   Description: {payload_data['description']}")
+                print(f"   Browser: {browser}")
+                print(f"   Payloads: {len(browser_payloads)}")
+                for payload in browser_payloads[:3]:  # Show first 3 payloads
+                    print(f"     - {payload['technique']}: {payload['description'][:50]}...")
+                if len(browser_payloads) > 3:
+                    print(f"     ... and {len(browser_payloads) - 3} more payloads")
                 print()
-            elif i % progress_interval == 0:
-                progress = (i + 1) / len(all_payloads) * 100
-                print(f"Progress: {progress:.1f}% ({i+1}/{len(all_payloads)} files)")
+            else:
+                print(f"✅ {browser}: {len(browser_payloads)} payloads → {base_filename}")
                 
         except Exception as e:
             print(f"❌ Error creating {filename}: {e}")
@@ -1944,8 +2039,8 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
     # Output comprehensive summary
     print(f"\n🎯 GENERATION COMPLETE")
     print("=" * 30)
-    print(f"✅ Successfully generated {len(generated_files)} sophisticated PDF files")
-    print(f"📊 Total payload variations: {len(all_payloads)}")
+    print(f"✅ Successfully generated {len(generated_files)} PDF files (one per browser)")
+    print(f"📊 Total payload variations: {len(all_payloads)} across {len(payloads_by_browser)} browsers")
     
     # Detailed breakdown
     categories = {}

