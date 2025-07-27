@@ -1710,7 +1710,13 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     generated_files = []
     
-    print(f"\\n📁 Creating {len(all_payloads)} sophisticated PDF files...")
+    # Create Files directory if it doesn't exist
+    files_dir = "Files"
+    if not os.path.exists(files_dir):
+        os.makedirs(files_dir)
+        print(f"📁 Created directory: {files_dir}")
+    
+    print(f"\\n📁 Creating {len(all_payloads)} sophisticated PDF files in {files_dir}/ directory...")
     
     # Progress tracking
     progress_interval = max(1, len(all_payloads) // 20)  # 20 progress updates max
@@ -1718,7 +1724,8 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
     for i, payload_data in enumerate(all_payloads):
         # Enhanced filename with more details
         pdf_version_str = f"_pdf{args.pdf_version}" if args.pdf_version else ""
-        filename = f"xss_{payload_data['browser']}_{payload_data['category']}_{payload_data['technique']}{pdf_version_str}_{timestamp}_{i+1:04d}.pdf"
+        base_filename = f"xss_{payload_data['browser']}_{payload_data['category']}_{payload_data['technique']}{pdf_version_str}_{timestamp}_{i+1:04d}.pdf"
+        filename = os.path.join(files_dir, base_filename)
         
         try:
             create_sophisticated_pdf(filename, payload_data, args.pdf_version)

