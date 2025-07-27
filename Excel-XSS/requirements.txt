@@ -1,0 +1,20 @@
+# Excel-XSS Tool Dependencies
+# ============================
+# 
+# Core dependencies for Excel browser payload export functionality
+# Install with: pip install -r requirements.txt
+
+# Excel export functionality
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Standard library modules also used:
+# - os (file system operations)
+# - sys (system operations)
+# - json (JSON handling)
+# - datetime (timestamp generation)
+# - glob (file pattern matching)
+#
+# Installation:
+# pip install -r requirements.txt
+# python3 export_to_excel.py
