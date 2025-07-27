@@ -1956,7 +1956,34 @@ LEGAL NOTICE: For authorized security testing only. Users responsible for compli
         all_payloads = [p for p in all_payloads if p['category'] == args.category]
         print(f"Filtered to {len(all_payloads)} {args.category} payloads")
     
-    if args.count:
+    # Apply count limit after grouping by browser for better distribution
+    if args.count is not None and args.count <= 0:
+        print("❌ Count must be a positive number")
+        return
+    
+    if args.count and args.browser == 'all':
+        # For 'all' browsers, distribute count across browsers for better representation
+        payloads_by_browser_temp = {}
+        for payload in all_payloads:
+            browser = payload['browser']
+            if browser not in payloads_by_browser_temp:
+                payloads_by_browser_temp[browser] = []
+            payloads_by_browser_temp[browser].append(payload)
+        
+        # Calculate how many payloads per browser
+        num_browsers = len(payloads_by_browser_temp)
+        per_browser = max(1, args.count // num_browsers)  # At least 1 per browser
+        remainder = args.count % num_browsers
+        
+        limited_payloads = []
+        for i, (browser, browser_payloads) in enumerate(payloads_by_browser_temp.items()):
+            # Some browsers get one extra payload to account for remainder
+            count_for_this_browser = per_browser + (1 if i < remainder else 0)
+            limited_payloads.extend(browser_payloads[:count_for_this_browser])
+        
+        all_payloads = limited_payloads
+        print(f"Limited to {len(all_payloads)} payloads distributed across {num_browsers} browsers (~{per_browser} per browser)")
+    elif args.count:
         all_payloads = all_payloads[:args.count]
         print(f"Limited to {len(all_payloads)} payloads")
     

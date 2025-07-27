@@ -29,13 +29,23 @@ def merge_payload_files():
     # Find all JSON files in the repository
     json_files = []
     
-    # Check root directory
-    root_files = glob.glob('/home/runner/work/XSS-PDF/XSS-PDF/*.json')
-    json_files.extend(root_files)
+    # Get the current working directory and search from there
+    current_dir = os.getcwd()
     
-    # Check PDF directory
-    pdf_files = glob.glob('/home/runner/work/XSS-PDF/XSS-PDF/PDF/*.json')
-    json_files.extend(pdf_files)
+    # Search patterns for JSON files with payload data
+    search_patterns = [
+        os.path.join(current_dir, '*.json'),
+        os.path.join(current_dir, 'PDF', '*.json'),
+        os.path.join(current_dir, '**/sophisticated_payload_database_*.json'),
+        os.path.join(current_dir, '**/merged_payload_database_*.json')
+    ]
+    
+    for pattern in search_patterns:
+        found_files = glob.glob(pattern, recursive=True)
+        json_files.extend(found_files)
+    
+    # Remove duplicates while preserving order
+    json_files = list(dict.fromkeys(json_files))
     
     print(f"📁 Found {len(json_files)} JSON files:")
     for f in json_files:
@@ -125,7 +135,7 @@ def merge_payload_files():
     }
     
     # Save merged file
-    output_file = f'/home/runner/work/XSS-PDF/XSS-PDF/merged_payload_database_{timestamp}.json'
+    output_file = os.path.join(current_dir, f'merged_payload_database_{timestamp}.json')
     
     try:
         with open(output_file, 'w') as f:
