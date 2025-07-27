@@ -5,6 +5,11 @@
 # Generated PDF files directory (created automatically)
 Files/
 
+# Generated Excel and JSON database files (exclude timestamped versions)
+xss_pdf_payload_database_*.xlsx
+sophisticated_payload_database_*.json
+merged_payload_database_*.json
+
 # Python cache
 __pycache__/
 *.py[cod]

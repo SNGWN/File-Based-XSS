@@ -1,0 +1,12 @@
+# XSS-PDF Generator Dependencies
+# ===============================
+# 
+# Core dependencies for XSS-PDF payload generation and Excel export functionality
+# Install with: pip install -r requirements.txt
+
+# Excel export functionality
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Note: The main PDF generation scripts (script.py, Another-Script.py) use only
+# Python standard library and require no additional dependencies

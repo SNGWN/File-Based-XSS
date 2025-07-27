@@ -11,9 +11,14 @@ XSS-PDF/
 ├── PDF/                          # Main PDF generation tools
 │   ├── script.py                 # Advanced XSS-PDF Generator v2.0 (1000+ payloads)
 │   ├── Another-Script.py         # Browser-specific PDF generator
-│   └── Files/                    # Generated PDF files output directory
+│   ├── Files/                    # Generated PDF files output directory
+│   └── IMPROVEMENTS.md           # Feature improvements documentation
+├── export_to_excel.py            # NEW: Excel export functionality
+├── merge_json_payloads.py        # JSON payload database merger
+├── payload_database.json         # Comprehensive payload database (45 payloads)
+├── requirements.txt              # Python dependencies for Excel export
 ├── README.md                     # This file
-└── other files...
+└── Script-1-Readme.md           # Additional documentation
 ```
 
 ## ⚠️ Legal Disclaimer
@@ -75,6 +80,33 @@ This tool is designed for legitimate security testing, educational purposes, and
 - **JSON Database Export**: Export payload database with metadata and CVE references
 - **Verbose Logging**: Detailed payload information and technique descriptions
 - **CVE Reference Integration**: Each payload linked to relevant security vulnerabilities
+
+## 📊 Excel Export Functionality (NEW)
+
+### Overview
+The new Excel export feature provides the same comprehensive security research data in a professional Excel format, maintaining the same objectives and research level as the original PDF tools.
+
+### Features
+- **Complete Payload Database**: All payloads with metadata, CVE references, and research data
+- **Multiple Analysis Sheets**: Browser-specific, category analysis, CVE references, research summary
+- **Professional Formatting**: Tables, conditional formatting, and organized layouts
+- **Same Research Level**: 50+ CVE references, academic papers, bug bounty reports
+- **Security Focus**: Authorized penetration testing and security research
+
+### Usage
+```bash
+# Export payload database to Excel format
+python3 export_to_excel.py
+
+# Generated file: xss_pdf_payload_database_YYYYMMDD_HHMMSS.xlsx
+```
+
+### Excel Sheet Contents
+- **All Payloads**: Complete database with all payload information
+- **Browser Sheets**: Chrome, Firefox, Safari, Adobe, Edge specific payloads
+- **Category Analysis**: Breakdown by attack category (DOM access, file system, etc.)
+- **CVE References**: Security vulnerability references and affected components
+- **Research Summary**: Methodology, sources, and legal framework
 
 ## 📋 Usage Examples
 
@@ -141,12 +173,18 @@ python3 Another-Script.py -b chrome -u http://test.com
 
 ### Requirements
 - Python 3.x
-- No external dependencies required (uses only standard library)
+- For Excel export: pandas, openpyxl (install via requirements.txt)
 
 ### Installation
 ```bash
 git clone https://github.com/SNGWN/XSS-PDF.git
-cd XSS-PDF/PDF  # Note: Scripts are now in the PDF folder
+cd XSS-PDF
+
+# Install dependencies for Excel export functionality (optional)
+pip install -r requirements.txt
+
+# Navigate to PDF folder for main scripts
+cd PDF
 ```
 
 ## 📖 Usage
