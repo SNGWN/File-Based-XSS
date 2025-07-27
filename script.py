@@ -1015,7 +1015,7 @@ startxref
         
         payload_display = ''
         for line in payload_lines[:5]:  # Show first 5 lines
-            payload_display += f'({line}) Tj\\n0 -15 Td\\n'
+            payload_display += f'({line}) Tj\n0 -15 Td\n'
         
         payload_text_length = len(payload_display) + 300
         
@@ -1155,7 +1155,7 @@ startxref
         
         payload_display = ''
         for line in payload_lines[:6]:  # Show first 6 lines
-            payload_display += f'({line}) Tj\\n0 -15 Td\\n'
+            payload_display += f'({line}) Tj\n0 -15 Td\n'
         
         payload_text_length = len(payload_display) + 400
         
@@ -1353,7 +1353,7 @@ startxref
         
         payload_display = ''
         for line in payload_lines[:8]:  # Show first 8 lines
-            payload_display += f'({line}) Tj\\n0 -12 Td\\n'
+            payload_display += f'({line}) Tj\n0 -12 Td\n'
         
         payload_text_length = len(payload_display) + 500
         
