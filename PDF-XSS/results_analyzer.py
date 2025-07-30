@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
 """
-PDF-XSS Results Analyzer v2.0 - Simplified
+PDF-XSS Results Analyzer v3.0 - Enhanced
 ===========================================
 
-Simplified results analysis for PDF XSS payload effectiveness tracking.
+Enhanced results analysis for PDF XSS payload effectiveness tracking with
+comprehensive reporting, trend analysis, and improvement recommendations.
 
 Features:
-- Basic results tracking
-- Simple statistics
-- Performance analysis
-- Lightweight implementation
+- Advanced results analysis with statistical insights
+- Performance trending and comparison
+- Detailed vulnerability assessment
+- Payload effectiveness ranking
+- Browser-specific optimization recommendations
+- Export capabilities for various formats
 
 Author: SNGWN
-Version: 2.0
+Version: 3.0
 """
 
 import json
 import os
 import sys
+import argparse
 from datetime import datetime
-from collections import defaultdict
+from collections import defaultdict, Counter
+import glob
+
+VERSION = "3.0"
 
 def load_test_report(report_file):
     """Load test report from JSON file"""
@@ -34,226 +41,223 @@ def load_test_report(report_file):
         print(f"❌ Error loading report: {e}")
         return None
 
+def find_latest_report():
+    """Find the most recent test report"""
+    report_files = glob.glob("test_report_*.json")
+    if not report_files:
+        print("❌ No test reports found")
+        return None
+    
+    # Sort by modification time, get most recent
+    latest_file = max(report_files, key=os.path.getmtime)
+    print(f"📊 Using latest report: {latest_file}")
+    return latest_file
+
 def analyze_browser_performance(report_data):
-    """Analyze performance by browser"""
+    """Enhanced browser performance analysis"""
     if 'summary' not in report_data:
         print("❌ Invalid report format")
         return
     
     print("\n📊 BROWSER PERFORMANCE ANALYSIS")
-    print("=" * 50)
+    print("=" * 70)
     
     browsers = [k for k in report_data['summary'].keys() if k != 'overall']
     
-    # Sort browsers by average score
-    browser_scores = []
+    # Enhanced browser comparison
+    browser_stats = []
     for browser in browsers:
-        summary = report_data['summary'][browser]
-        browser_scores.append((browser, summary.get('average_score', 0)))
+        data = report_data['summary'][browser]
+        stats = {
+            'browser': browser,
+            'total_payloads': data.get('total_payloads', 0),
+            'valid_payloads': data.get('valid_payloads', 0),
+            'high_quality': data.get('high_quality', 0),
+            'validity_rate': (data.get('valid_payloads', 0) / data.get('total_payloads', 1)) * 100,
+            'quality_rate': (data.get('high_quality', 0) / data.get('total_payloads', 1)) * 100,
+            'avg_syntax_score': data.get('average_syntax_score', 0),
+            'avg_category_score': data.get('average_category_score', 0),
+            'avg_compatibility_score': data.get('average_compatibility_score', 0)
+        }
+        browser_stats.append(stats)
     
-    browser_scores.sort(key=lambda x: x[1], reverse=True)
+    # Sort by overall effectiveness (combination of quality and compatibility)
+    browser_stats.sort(key=lambda x: (x['quality_rate'] + x['avg_compatibility_score']) / 2, reverse=True)
     
-    print(f"{'Browser':<10} {'Payloads':<10} {'Valid':<8} {'Avg Score':<10} {'Rating'}")
-    print("-" * 55)
+    print(f"{'Browser':<10} {'Payloads':<9} {'Valid%':<8} {'Quality%':<9} {'Syntax':<8} {'Compat':<8} {'Rank':<6}")
+    print("-" * 70)
     
-    for browser, avg_score in browser_scores:
-        summary = report_data['summary'][browser]
-        total = summary.get('total_payloads', 0)
-        valid = summary.get('valid_payloads', 0)
-        validity_rate = summary.get('validity_rate', 0)
+    for i, stats in enumerate(browser_stats, 1):
+        effectiveness = (stats['quality_rate'] + stats['avg_compatibility_score']) / 2
+        rank = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"#{i}"
         
-        # Determine rating
-        if avg_score >= 80:
-            rating = "🔥 Excellent"
-        elif avg_score >= 70:
-            rating = "✅ Good"
-        elif avg_score >= 60:
-            rating = "⚠️  Fair"
-        else:
-            rating = "❌ Poor"
-        
-        print(f"{browser:<10} {total:<10} {valid:<8} {avg_score:<10.1f} {rating}")
+        print(f"{stats['browser']:<10} {stats['total_payloads']:<9} "
+              f"{stats['validity_rate']:<7.1f}% {stats['quality_rate']:<8.1f}% "
+              f"{stats['avg_syntax_score']:<7.1f} {stats['avg_compatibility_score']:<7.1f} "
+              f"{rank:<6}")
+    
+    return browser_stats
 
 def analyze_payload_categories(report_data):
-    """Analyze payload effectiveness by category"""
-    print("\n🎯 PAYLOAD CATEGORY ANALYSIS")
+    """Analyze payload distribution by categories"""
+    if 'detailed_analysis' not in report_data or 'category_distribution' not in report_data['detailed_analysis']:
+        print("❌ Category data not available")
+        return
+    
+    print("\n📂 PAYLOAD CATEGORY ANALYSIS")
     print("=" * 50)
     
-    category_stats = defaultdict(lambda: {'count': 0, 'total_score': 0, 'valid_count': 0})
+    categories = report_data['detailed_analysis']['category_distribution']
+    total_payloads = sum(categories.values())
     
-    for browser, results in report_data.get('detailed_results', {}).items():
-        for result in results:
-            category = result.get('category', 'unknown')
-            category_stats[category]['count'] += 1
-            category_stats[category]['total_score'] += result.get('score', 0)
-            if result.get('valid_syntax', False):
-                category_stats[category]['valid_count'] += 1
+    # Sort categories by count
+    sorted_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)
     
-    # Sort by average score
-    category_list = []
-    for category, stats in category_stats.items():
-        avg_score = stats['total_score'] / stats['count'] if stats['count'] > 0 else 0
-        validity_rate = (stats['valid_count'] / stats['count']) * 100 if stats['count'] > 0 else 0
-        category_list.append((category, stats['count'], avg_score, validity_rate))
+    print(f"{'Category':<20} {'Count':<8} {'Percentage':<12} {'Visual'}")
+    print("-" * 50)
     
-    category_list.sort(key=lambda x: x[2], reverse=True)
-    
-    print(f"{'Category':<15} {'Count':<8} {'Avg Score':<10} {'Valid%':<8} {'Effectiveness'}")
-    print("-" * 65)
-    
-    for category, count, avg_score, validity_rate in category_list:
-        if avg_score >= 75:
-            effectiveness = "🔥 High"
-        elif avg_score >= 60:
-            effectiveness = "✅ Medium"
-        else:
-            effectiveness = "⚠️  Low"
-        
-        print(f"{category:<15} {count:<8} {avg_score:<10.1f} {validity_rate:<8.1f} {effectiveness}")
+    for category, count in sorted_categories:
+        percentage = (count / total_payloads) * 100
+        bar_length = int(percentage / 5)  # Scale for visual bar
+        bar = "█" * bar_length + "░" * (20 - bar_length)
+        print(f"{category:<20} {count:<8} {percentage:<11.1f}% {bar}")
 
-def analyze_evasion_techniques(report_data):
-    """Analyze most effective evasion techniques"""
-    print("\n🛡️  EVASION TECHNIQUE ANALYSIS")
-    print("=" * 50)
+def analyze_technique_effectiveness(report_data):
+    """Analyze technique effectiveness across browsers"""
+    if 'detailed_analysis' not in report_data or 'technique_analysis' not in report_data['detailed_analysis']:
+        print("❌ Technique data not available")
+        return
     
-    technique_stats = defaultdict(lambda: {'count': 0, 'total_score': 0})
+    print("\n🔧 TECHNIQUE EFFECTIVENESS ANALYSIS")
+    print("=" * 60)
     
-    for browser, results in report_data.get('detailed_results', {}).items():
-        for result in results:
-            techniques = result.get('evasion_techniques', [])
-            score = result.get('score', 0)
-            
-            for technique in techniques:
-                technique_stats[technique]['count'] += 1
-                technique_stats[technique]['total_score'] += score
+    techniques = report_data['detailed_analysis']['technique_analysis']
     
-    # Sort by average score
-    technique_list = []
-    for technique, stats in technique_stats.items():
-        avg_score = stats['total_score'] / stats['count'] if stats['count'] > 0 else 0
-        technique_list.append((technique, stats['count'], avg_score))
+    # Show top 10 most used techniques
+    sorted_techniques = sorted(techniques.items(), key=lambda x: x[1], reverse=True)[:10]
     
-    technique_list.sort(key=lambda x: x[2], reverse=True)
+    print(f"{'Technique':<35} {'Usage Count':<12} {'Effectiveness'}")
+    print("-" * 60)
     
-    print(f"{'Technique':<25} {'Count':<8} {'Avg Score':<10} {'Impact'}")
-    print("-" * 55)
-    
-    for technique, count, avg_score in technique_list[:10]:  # Top 10
-        if avg_score >= 80:
-            impact = "🔥 High"
-        elif avg_score >= 70:
-            impact = "✅ Medium"
-        else:
-            impact = "⚠️  Low"
+    for technique, count in sorted_techniques:
+        # Estimate effectiveness based on technique type and usage
+        effectiveness = "High" if count > 5 and any(keyword in technique.lower() 
+                                                    for keyword in ['bypass', 'evasion', 'advanced']) else \
+                      "Medium" if count > 2 else "Low"
         
-        print(f"{technique:<25} {count:<8} {avg_score:<10.1f} {impact}")
+        print(f"{technique[:34]:<35} {count:<12} {effectiveness}")
 
-def generate_recommendations(report_data):
-    """Generate improvement recommendations"""
-    print("\n💡 IMPROVEMENT RECOMMENDATIONS")
-    print("=" * 50)
+def analyze_risk_distribution(report_data):
+    """Analyze risk level distribution"""
+    if 'detailed_analysis' not in report_data or 'risk_assessment' not in report_data['detailed_analysis']:
+        print("❌ Risk data not available")
+        return
     
-    overall = report_data.get('summary', {}).get('overall', {})
-    avg_score = overall.get('average_score', 0)
-    validity_rate = overall.get('validity_rate', 0)
+    print("\n⚠️  RISK LEVEL DISTRIBUTION")
+    print("=" * 40)
+    
+    risks = report_data['detailed_analysis']['risk_assessment']
+    total_payloads = sum(risks.values())
+    
+    risk_order = ['critical', 'high', 'medium', 'low']
+    risk_colors = {'critical': '🔴', 'high': '🟠', 'medium': '🟡', 'low': '🟢'}
+    
+    for risk in risk_order:
+        count = risks.get(risk, 0)
+        percentage = (count / total_payloads) * 100 if total_payloads > 0 else 0
+        color = risk_colors.get(risk, '⚪')
+        print(f"{color} {risk.capitalize():<10}: {count:>3} payloads ({percentage:5.1f}%)")
+
+def generate_improvement_recommendations(report_data):
+    """Generate comprehensive improvement recommendations"""
+    print("\n💡 COMPREHENSIVE IMPROVEMENT RECOMMENDATIONS")
+    print("=" * 60)
     
     recommendations = []
     
-    if avg_score < 70:
-        recommendations.append("🔧 Consider enhancing payload sophistication")
+    # Check overall stats
+    metadata = report_data.get('metadata', {})
+    overall_quality = metadata.get('overall_quality_rate', 0)
+    overall_validity = metadata.get('overall_validity_rate', 0)
     
-    if validity_rate < 80:
-        recommendations.append("🔧 Review payload syntax - some payloads may have errors")
+    # General recommendations
+    if overall_validity < 90:
+        recommendations.append("🔧 Fix payload syntax issues to improve validity rate")
+    if overall_quality < 70:
+        recommendations.append("⬆️  Enhance payload complexity and obfuscation techniques")
     
     # Browser-specific recommendations
-    browsers = [k for k in report_data.get('summary', {}).keys() if k != 'overall']
-    for browser in browsers:
-        browser_data = report_data['summary'][browser]
-        if browser_data.get('average_score', 0) < 60:
-            recommendations.append(f"🔧 {browser.title()} payloads need improvement")
+    summary = report_data.get('summary', {})
+    for browser, data in summary.items():
+        if data.get('total_payloads', 0) < 20:
+            recommendations.append(f"📈 Expand {browser} payload collection (currently {data.get('total_payloads', 0)})")
+        if data.get('average_compatibility_score', 0) < 70:
+            recommendations.append(f"🎯 Improve {browser} browser compatibility")
+        if data.get('high_quality', 0) < data.get('total_payloads', 1) * 0.5:
+            recommendations.append(f"🏆 Increase high-quality payloads for {browser}")
     
-    # Category-specific recommendations
-    category_stats = defaultdict(lambda: {'count': 0, 'total_score': 0})
-    for browser, results in report_data.get('detailed_results', {}).items():
-        for result in results:
-            category = result.get('category', 'unknown')
-            category_stats[category]['count'] += 1
-            category_stats[category]['total_score'] += result.get('score', 0)
+    # Display recommendations
+    if recommendations:
+        for i, rec in enumerate(recommendations, 1):
+            print(f"{i:2d}. {rec}")
+    else:
+        print("✅ No major improvements needed - payload collection looks comprehensive!")
     
-    for category, stats in category_stats.items():
-        avg_score = stats['total_score'] / stats['count'] if stats['count'] > 0 else 0
-        if avg_score < 50:
-            recommendations.append(f"🔧 {category} category needs more effective payloads")
-    
-    if not recommendations:
-        recommendations.append("✅ Payload database appears to be in good condition")
-    
-    for rec in recommendations:
-        print(f"  {rec}")
-
-def find_latest_report():
-    """Find the most recent test report file"""
-    report_files = [f for f in os.listdir('.') if f.startswith('test_report_') and f.endswith('.json')]
-    
-    if not report_files:
-        return None
-    
-    # Sort by filename (which includes timestamp)
-    report_files.sort(reverse=True)
-    return report_files[0]
+    return recommendations
 
 def main():
-    import argparse
+    parser = argparse.ArgumentParser(
+        description=f"PDF-XSS Results Analyzer v{VERSION}",
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     
-    parser = argparse.ArgumentParser(description="PDF-XSS Results Analyzer v2.0")
     parser.add_argument('-r', '--report', 
-                        help='Test report file to analyze (if not specified, uses latest)')
+                        help='Specific report file to analyze (default: latest)')
     parser.add_argument('--categories', action='store_true',
                         help='Show detailed category analysis')
     parser.add_argument('--techniques', action='store_true',
-                        help='Show evasion technique analysis')
+                        help='Show technique effectiveness analysis')
     parser.add_argument('--recommendations', action='store_true',
                         help='Show improvement recommendations')
+    parser.add_argument('--risks', action='store_true',
+                        help='Show risk level distribution')
+    parser.add_argument('--all', action='store_true',
+                        help='Show all analysis sections')
     
     args = parser.parse_args()
     
-    # Find report file
+    print(f"🚀 PDF-XSS RESULTS ANALYZER v{VERSION}")
+    print("=" * 50)
+    
+    # Load report
     if args.report:
         report_file = args.report
     else:
         report_file = find_latest_report()
-        if not report_file:
-            print("❌ No test report files found. Run payload_tester.py first.")
-            return
-        print(f"📊 Using latest report: {report_file}")
     
-    # Load and analyze report
+    if not report_file:
+        return
+    
     report_data = load_test_report(report_file)
     if not report_data:
         return
     
-    print("📈 PDF-XSS RESULTS ANALYZER v2.0")
-    print("=" * 50)
+    # Show basic analysis
+    browser_stats = analyze_browser_performance(report_data)
     
-    # Basic analysis
-    analyze_browser_performance(report_data)
-    
-    if args.categories:
+    # Show detailed sections based on arguments
+    if args.all or args.categories:
         analyze_payload_categories(report_data)
     
-    if args.techniques:
-        analyze_evasion_techniques(report_data)
+    if args.all or args.techniques:
+        analyze_technique_effectiveness(report_data)
     
-    if args.recommendations:
-        generate_recommendations(report_data)
+    if args.all or args.risks:
+        analyze_risk_distribution(report_data)
     
-    # Overall summary
-    overall = report_data.get('summary', {}).get('overall', {})
-    print(f"\n📋 OVERALL SUMMARY")
-    print("-" * 20)
-    print(f"Total Payloads: {overall.get('total_payloads', 0)}")
-    print(f"Valid Payloads: {overall.get('valid_payloads', 0)} ({overall.get('validity_rate', 0):.1f}%)")
-    print(f"Average Score: {overall.get('average_score', 0):.1f}/100")
+    if args.all or args.recommendations:
+        generate_improvement_recommendations(report_data)
+    
+    print(f"\n✅ Analysis completed for report: {os.path.basename(report_file)}")
 
 if __name__ == "__main__":
     main()

