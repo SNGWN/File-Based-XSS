@@ -1,0 +1,2141 @@
+{
+  "metadata": {
+    "generated_at": "20250730_144455",
+    "test_framework_version": "1.0",
+    "database_version": "3.0",
+    "total_payloads_tested": 110,
+    "platform": "Linux",
+    "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]"
+  },
+  "validation_summary": {
+    "valid_payloads": 65,
+    "invalid_payloads": 45,
+    "average_complexity": 7.943090909090909,
+    "average_quality_score": 45.5
+  },
+  "browser_breakdown": {
+    "chrome": {
+      "total": 38,
+      "valid": 27,
+      "average_complexity": 9.155263157894737,
+      "average_quality": 58.421052631578945
+    },
+    "firefox": {
+      "total": 23,
+      "valid": 18,
+      "average_complexity": 10.019565217391303,
+      "average_quality": 62.82608695652174
+    },
+    "safari": {
+      "total": 16,
+      "valid": 9,
+      "average_complexity": 9.468125,
+      "average_quality": 43.125
+    },
+    "adobe": {
+      "total": 17,
+      "valid": 6,
+      "average_complexity": 2.358235294117647,
+      "average_quality": 15.0
+    },
+    "edge": {
+      "total": 16,
+      "valid": 5,
+      "average_complexity": 6.488124999999999,
+      "average_quality": 24.6875
+    }
+  },
+  "technique_analysis": {},
+  "detailed_results": [
+    {
+      "id": "advanced_xss_002",
+      "browser": "firefox",
+      "category": "dom_manipulation",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 4,
+        "data_exfiltration": 2,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 20.22,
+      "quality_score": 95
+    },
+    {
+      "id": "advanced_xss_014",
+      "browser": "firefox",
+      "category": "webassembly_exploitation",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 1,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 20.0,
+      "quality_score": 95
+    },
+    {
+      "id": "advanced_xss_021",
+      "browser": "firefox",
+      "category": "webgl_exploitation",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 20.64,
+      "quality_score": 95
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 11.48,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0004",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 12.120000000000001,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 11.22,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 13.6,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0004",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 14.16,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 13.41,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0004",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 13.969999999999999,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 3,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 13.18,
+      "quality_score": 90
+    },
+    {
+      "id": "advanced_xss_006",
+      "browser": "chrome",
+      "category": "persistence",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 1,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 2,
+        "error_handling": 2
+      },
+      "complexity": 19.6,
+      "quality_score": 90
+    },
+    {
+      "id": "advanced_xss_010",
+      "browser": "firefox",
+      "category": "event_driven",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 3,
+        "data_exfiltration": 2,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 23.83,
+      "quality_score": 90
+    },
+    {
+      "id": "advanced_xss_017",
+      "browser": "firefox",
+      "category": "broadcast_channel",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 2,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 1,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 27.88,
+      "quality_score": 90
+    },
+    {
+      "id": "advanced_xss_025",
+      "browser": "firefox",
+      "category": "web_locks_api",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 2,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 25.85,
+      "quality_score": 90
+    },
+    {
+      "id": "xss_pdf_0007",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 3,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 11.55,
+      "quality_score": 80
+    },
+    {
+      "id": "xss_pdf_0010",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 11.57,
+      "quality_score": 80
+    },
+    {
+      "id": "xss_pdf_0002",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.39,
+      "quality_score": 80
+    },
+    {
+      "id": "advanced_xss_003",
+      "browser": "safari",
+      "category": "file_system",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 21.7,
+      "quality_score": 80
+    },
+    {
+      "id": "advanced_xss_013",
+      "browser": "chrome",
+      "category": "cross_frame_communication",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 3,
+        "data_exfiltration": 2,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 42.21,
+      "quality_score": 80
+    },
+    {
+      "id": "advanced_xss_015",
+      "browser": "safari",
+      "category": "service_worker_abuse",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 2,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 31.380000000000003,
+      "quality_score": 80
+    },
+    {
+      "id": "advanced_xss_018",
+      "browser": "edge",
+      "category": "intersection_observer",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 3,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 30.119999999999997,
+      "quality_score": 80
+    },
+    {
+      "id": "advanced_xss_007",
+      "browser": "firefox",
+      "category": "steganography",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 1,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 15,
+      "quality_score": 75
+    },
+    {
+      "id": "advanced_xss_012",
+      "browser": "edge",
+      "category": "machine_learning_evasion",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 1,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 17.33,
+      "quality_score": 75
+    },
+    {
+      "id": "chrome_003",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 7.48,
+      "quality_score": 70
+    },
+    {
+      "id": "firefox_011",
+      "browser": "firefox",
+      "category": "file_system",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 6.2,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_005",
+      "browser": "edge",
+      "category": "network_exfiltration",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 3,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 1,
+        "error_handling": 2
+      },
+      "complexity": 22.31,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_008",
+      "browser": "safari",
+      "category": "timing_attack",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 19.18,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_009",
+      "browser": "chrome",
+      "category": "polyglot",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 6.8,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_016",
+      "browser": "chrome",
+      "category": "shared_array_buffer",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 3,
+        "evasion": 0,
+        "encoding": 1,
+        "pdf_specific": 1,
+        "modern_apis": 1,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 31.560000000000002,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_019",
+      "browser": "safari",
+      "category": "mutation_observer",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 2,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 25.15,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_023",
+      "browser": "chrome",
+      "category": "credential_management",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 24.619999999999997,
+      "quality_score": 70
+    },
+    {
+      "id": "advanced_xss_024",
+      "browser": "safari",
+      "category": "performance_timeline",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 2,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 19.2,
+      "quality_score": 70
+    },
+    {
+      "id": "xss_pdf_0001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.34,
+      "quality_score": 65
+    },
+    {
+      "id": "xss_pdf_0004",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.7,
+      "quality_score": 65
+    },
+    {
+      "id": "xss_pdf_0007",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.38,
+      "quality_score": 65
+    },
+    {
+      "id": "xss_pdf_0010",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.14,
+      "quality_score": 65
+    },
+    {
+      "id": "xss_pdf_0016",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.42,
+      "quality_score": 65
+    },
+    {
+      "id": "xss_pdf_0019",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.3,
+      "quality_score": 65
+    },
+    {
+      "id": "firefox_003",
+      "browser": "firefox",
+      "category": "csp_bypass",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.09,
+      "quality_score": 65
+    },
+    {
+      "id": "advanced_xss_001",
+      "browser": "chrome",
+      "category": "sandbox_escape",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 4,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 15.33,
+      "quality_score": 65
+    },
+    {
+      "id": "advanced_xss_004",
+      "browser": "adobe",
+      "category": "command_execution",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 3,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 14.16,
+      "quality_score": 65
+    },
+    {
+      "id": "advanced_xss_011",
+      "browser": "adobe",
+      "category": "anti_forensics",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 1,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 13.52,
+      "quality_score": 65
+    },
+    {
+      "id": "firefox_005",
+      "browser": "firefox",
+      "category": "network_exfiltration",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.76,
+      "quality_score": 60
+    },
+    {
+      "id": "firefox_015",
+      "browser": "firefox",
+      "category": "network_exfiltration",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 6.03,
+      "quality_score": 60
+    },
+    {
+      "id": "advanced_xss_020",
+      "browser": "chrome",
+      "category": "indexeddb_exploitation",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 2,
+        "error_handling": 3
+      },
+      "complexity": 29,
+      "quality_score": 60
+    },
+    {
+      "id": "advanced_xss_022",
+      "browser": "edge",
+      "category": "payment_request_api",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 3
+      },
+      "complexity": 25,
+      "quality_score": 60
+    },
+    {
+      "id": "xss_pdf_0013",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 2,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.98,
+      "quality_score": 55
+    },
+    {
+      "id": "chrome_015",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 7.02,
+      "quality_score": 55
+    },
+    {
+      "id": "safari_004",
+      "browser": "safari",
+      "category": "webkit_specific",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 6.07,
+      "quality_score": 55
+    },
+    {
+      "id": "chrome_001",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.4,
+      "quality_score": 50
+    },
+    {
+      "id": "chrome_002",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.64,
+      "quality_score": 50
+    },
+    {
+      "id": "firefox_004",
+      "browser": "firefox",
+      "category": "csp_bypass",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.98,
+      "quality_score": 50
+    },
+    {
+      "id": "firefox_013",
+      "browser": "firefox",
+      "category": "csp_bypass",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.85,
+      "quality_score": 50
+    },
+    {
+      "id": "safari_010",
+      "browser": "safari",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 2,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 3.15,
+      "quality_score": 50
+    },
+    {
+      "id": "firefox_006",
+      "browser": "firefox",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 3.0300000000000002,
+      "quality_score": 45
+    },
+    {
+      "id": "firefox_008",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 3.42,
+      "quality_score": 45
+    },
+    {
+      "id": "firefox_009",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 1,
+        "error_handling": 0
+      },
+      "complexity": 6.34,
+      "quality_score": 45
+    },
+    {
+      "id": "firefox_010",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 1,
+        "error_handling": 0
+      },
+      "complexity": 3.19,
+      "quality_score": 45
+    },
+    {
+      "id": "safari_003",
+      "browser": "safari",
+      "category": "webkit_specific",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 5.73,
+      "quality_score": 45
+    },
+    {
+      "id": "chrome_012",
+      "browser": "chrome",
+      "category": "file_system",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 2,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 3.5300000000000002,
+      "quality_score": 40
+    },
+    {
+      "id": "firefox_012",
+      "browser": "firefox",
+      "category": "file_system",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.3100000000000005,
+      "quality_score": 40
+    },
+    {
+      "id": "firefox_014",
+      "browser": "firefox",
+      "category": "csp_bypass",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.03,
+      "quality_score": 40
+    },
+    {
+      "id": "safari_011",
+      "browser": "safari",
+      "category": "webkit_specific",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 1
+      },
+      "complexity": 8.0,
+      "quality_score": 40
+    },
+    {
+      "id": "chrome_008",
+      "browser": "chrome",
+      "category": "sandbox_escape",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.0,
+      "quality_score": 35
+    },
+    {
+      "id": "chrome_010",
+      "browser": "chrome",
+      "category": "sandbox_escape",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 6.4399999999999995,
+      "quality_score": 35
+    },
+    {
+      "id": "chrome_011",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.33,
+      "quality_score": 35
+    },
+    {
+      "id": "chrome_013",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 4.28,
+      "quality_score": 35
+    },
+    {
+      "id": "chrome_014",
+      "browser": "chrome",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.81,
+      "quality_score": 30
+    },
+    {
+      "id": "safari_002",
+      "browser": "safari",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.88,
+      "quality_score": 30
+    },
+    {
+      "id": "safari_009",
+      "browser": "safari",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 1,
+        "error_handling": 0
+      },
+      "complexity": 2.95,
+      "quality_score": 30
+    },
+    {
+      "id": "safari_012",
+      "browser": "safari",
+      "category": "webkit_specific",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.94,
+      "quality_score": 30
+    },
+    {
+      "id": "chrome_009",
+      "browser": "chrome",
+      "category": "sandbox_escape",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 2
+      },
+      "complexity": 3.95,
+      "quality_score": 25
+    },
+    {
+      "id": "adobe_014",
+      "browser": "adobe",
+      "category": "privilege_escalation",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 1,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.66,
+      "quality_score": 25
+    },
+    {
+      "id": "firefox_007",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.01,
+      "quality_score": 25
+    },
+    {
+      "id": "adobe_003",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 1.08,
+      "quality_score": 20
+    },
+    {
+      "id": "adobe_015",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.5,
+      "quality_score": 20
+    },
+    {
+      "id": "edge_001",
+      "browser": "edge",
+      "category": "webview_exploit",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 1,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.43,
+      "quality_score": 20
+    },
+    {
+      "id": "adobe_002",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.52,
+      "quality_score": 10
+    },
+    {
+      "id": "adobe_006",
+      "browser": "adobe",
+      "category": "file_system",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.56,
+      "quality_score": 10
+    },
+    {
+      "id": "adobe_007",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.76,
+      "quality_score": 10
+    },
+    {
+      "id": "adobe_008",
+      "browser": "adobe",
+      "category": "network_exfiltration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.74,
+      "quality_score": 10
+    },
+    {
+      "id": "adobe_009",
+      "browser": "adobe",
+      "category": "network_exfiltration",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 1,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 2.89,
+      "quality_score": 10
+    },
+    {
+      "id": "adobe_010",
+      "browser": "adobe",
+      "category": "network_exfiltration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.9,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_003",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.6,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_004",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.58,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_005",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.56,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_006",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.5,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_007",
+      "browser": "edge",
+      "category": "registry_manipulation",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.85,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_008",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.65,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_010",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.75,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_011",
+      "browser": "edge",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.7,
+      "quality_score": 10
+    },
+    {
+      "id": "edge_012",
+      "browser": "edge",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.71,
+      "quality_score": 10
+    },
+    {
+      "id": "safari_005",
+      "browser": "safari",
+      "category": "macos_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.98,
+      "quality_score": 10
+    },
+    {
+      "id": "safari_006",
+      "browser": "safari",
+      "category": "macos_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.89,
+      "quality_score": 10
+    },
+    {
+      "id": "safari_007",
+      "browser": "safari",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.59,
+      "quality_score": 10
+    },
+    {
+      "id": "safari_008",
+      "browser": "safari",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.7,
+      "quality_score": 10
+    },
+    {
+      "id": "chrome_004",
+      "browser": "chrome",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.42,
+      "quality_score": 5
+    },
+    {
+      "id": "chrome_005",
+      "browser": "chrome",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.37,
+      "quality_score": 5
+    },
+    {
+      "id": "chrome_006",
+      "browser": "chrome",
+      "category": "command_execution",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.4,
+      "quality_score": 5
+    },
+    {
+      "id": "chrome_007",
+      "browser": "chrome",
+      "category": "command_execution",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.37,
+      "quality_score": 5
+    },
+    {
+      "id": "firefox_001",
+      "browser": "firefox",
+      "category": "dom_access",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.22,
+      "quality_score": 5
+    },
+    {
+      "id": "adobe_001",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.29,
+      "quality_score": 0
+    },
+    {
+      "id": "adobe_004",
+      "browser": "adobe",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.36,
+      "quality_score": 0
+    },
+    {
+      "id": "adobe_005",
+      "browser": "adobe",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.3,
+      "quality_score": 0
+    },
+    {
+      "id": "adobe_011",
+      "browser": "adobe",
+      "category": "file_system",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.33,
+      "quality_score": 0
+    },
+    {
+      "id": "adobe_012",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.21,
+      "quality_score": 0
+    },
+    {
+      "id": "adobe_013",
+      "browser": "adobe",
+      "category": "api_abuse",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.31,
+      "quality_score": 0
+    },
+    {
+      "id": "edge_002",
+      "browser": "edge",
+      "category": "webview_exploit",
+      "is_valid": true,
+      "error": null,
+      "techniques": {
+        "dom_manipulation": 1,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.32,
+      "quality_score": 0
+    },
+    {
+      "id": "edge_009",
+      "browser": "edge",
+      "category": "windows_integration",
+      "is_valid": false,
+      "error": "No JavaScript keywords detected",
+      "techniques": {
+        "dom_manipulation": 0,
+        "data_exfiltration": 0,
+        "evasion": 0,
+        "encoding": 0,
+        "pdf_specific": 0,
+        "modern_apis": 0,
+        "persistence": 0,
+        "error_handling": 0
+      },
+      "complexity": 0.4,
+      "quality_score": 0
+    }
+  ]
+}

