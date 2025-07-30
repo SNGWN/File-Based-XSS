@@ -1,0 +1,183 @@
+{
+  "pdf_xss_config": {
+    "version": "3.0",
+    "description": "PDF-XSS Generator Configuration",
+    "author": "SNGWN",
+    "
+": {
+      "default_url": "http://evil.com/collect",
+      "default_output_dir": "Files",
+      "default_pdf_version": "1.7",
+      "max_payloads_per_run": 100,
+      "enable_os_detection": true,
+      "enable_payload_validation": true,
+      "enable_quality_scoring": true
+    },
+    "browsers": {
+      "chrome": {
+        "name": "Chrome/PDFium",
+        "json_file": "chrome.json",
+        "description": "Chrome browser with PDFium PDF engine",
+        "supported_categories": ["dom_access", "file_system", "command_execution", "sandbox_escape"],
+        "risk_categories": ["high", "critical"],
+        "optimization_flags": ["v8_engine", "sandbox_escape", "ipc_abuse"]
+      },
+      "firefox": {
+        "name": "Firefox/PDF.js", 
+        "json_file": "firefox.json",
+        "description": "Firefox browser with PDF.js renderer",
+        "supported_categories": ["dom_access", "csp_bypass", "network_exfiltration"],
+        "risk_categories": ["high", "medium"],
+        "optimization_flags": ["spidermonkey_engine", "csp_bypass", "content_security"]
+      },
+      "safari": {
+        "name": "Safari/PDFKit",
+        "json_file": "safari.json", 
+        "description": "Safari browser with PDFKit renderer",
+        "supported_categories": ["dom_access", "file_system", "webkit_specific"],
+        "risk_categories": ["high", "medium"],
+        "optimization_flags": ["webkit_engine", "macos_integration", "file_access"]
+      },
+      "adobe": {
+        "name": "Adobe Reader/Acrobat",
+        "json_file": "adobe.json",
+        "description": "Adobe Reader and Acrobat applications",
+        "supported_categories": ["command_execution", "file_system", "pdf_specific"],
+        "risk_categories": ["critical", "high"],
+        "optimization_flags": ["acrobat_api", "plugin_execution", "system_access"]
+      },
+      "edge": {
+        "name": "Microsoft Edge",
+        "json_file": "edge.json",
+        "description": "Microsoft Edge browser with PDF renderer",
+        "supported_categories": ["dom_access", "network_exfiltration", "modern_apis"],
+        "risk_categories": ["high", "medium"],
+        "optimization_flags": ["chromium_engine", "edge_specific", "modern_features"]
+      }
+    },
+    "payload_categories": {
+      "dom_access": {
+        "description": "Direct DOM manipulation and parent window access",
+        "risk_level": "high",
+        "techniques": ["parent.window", "top.document", "frame manipulation"]
+      },
+      "file_system": {
+        "description": "Local file system access and manipulation",
+        "risk_level": "critical", 
+        "techniques": ["file:// URLs", "local file reading", "directory traversal"]
+      },
+      "command_execution": {
+        "description": "Operating system command execution",
+        "risk_level": "critical",
+        "techniques": ["app.execMenuItem", "system calls", "shell command injection"]
+      },
+      "sandbox_escape": {
+        "description": "PDF sandbox escape techniques",
+        "risk_level": "critical",
+        "techniques": ["process isolation bypass", "memory corruption", "privilege escalation"]
+      },
+      "network_exfiltration": {
+        "description": "Data exfiltration via network requests",
+        "risk_level": "high",
+        "techniques": ["XMLHttpRequest", "fetch API", "postMessage", "sendBeacon"]
+      },
+      "csp_bypass": {
+        "description": "Content Security Policy bypass techniques",
+        "risk_level": "high",
+        "techniques": ["CSP nonce abuse", "unsafe-inline bypass", "script injection"]
+      },
+      "persistence": {
+        "description": "Persistent payload execution and storage",
+        "risk_level": "medium",
+        "techniques": ["localStorage", "sessionStorage", "indexedDB", "service workers"]
+      },
+      "anti_forensics": {
+        "description": "Anti-forensics and evasion techniques",
+        "risk_level": "medium",
+        "techniques": ["obfuscation", "steganography", "trace removal"]
+      }
+    },
+    "evasion_techniques": {
+      "encoding": {
+        "base64": {
+          "enabled": true,
+          "description": "Base64 encoding for payload obfuscation",
+          "functions": ["atob", "btoa"]
+        },
+        "unicode": {
+          "enabled": true,
+          "description": "Unicode escape sequences",
+          "pattern": "\\u"
+        },
+        "hex": {
+          "enabled": true,
+          "description": "Hexadecimal encoding",
+          "functions": ["String.fromCharCode"]
+        }
+      },
+      "timing": {
+        "setTimeout": {
+          "enabled": true,
+          "description": "Delayed execution to bypass detection",
+          "min_delay": 100,
+          "max_delay": 5000
+        },
+        "setInterval": {
+          "enabled": true,
+          "description": "Periodic execution attempts"
+        }
+      },
+      "polymorphism": {
+        "function_names": {
+          "enabled": true,
+          "description": "Randomize function and variable names"
+        },
+        "code_structure": {
+          "enabled": true,
+          "description": "Randomize code structure and flow"
+        }
+      }
+    },
+    "output_options": {
+      "pdf_versions": ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "2.0"],
+      "naming_conventions": {
+        "individual_files": "{browser}_{technique}_{timestamp}.pdf",
+        "comprehensive_files": "{browser}_comprehensive_xss_{timestamp}.pdf",
+        "custom_prefix": "{prefix}_{browser}_{category}_{timestamp}.pdf"
+      },
+      "metadata_options": {
+        "include_payload_description": true,
+        "include_cve_references": true,
+        "include_risk_level": true,
+        "include_technique_analysis": true,
+        "include_quality_score": true
+      }
+    },
+    "security_features": {
+      "payload_validation": {
+        "syntax_check": true,
+        "security_analysis": true,
+        "quality_scoring": true,
+        "technique_detection": true
+      },
+      "safe_mode": {
+        "enabled": false,
+        "description": "Restrict to low-risk payloads only",
+        "max_risk_level": "medium"
+      },
+      "logging": {
+        "enabled": true,
+        "log_file": "pdf_xss_generation.log",
+        "log_level": "INFO",
+        "include_payload_hashes": true
+      }
+    },
+    "testing_framework": {
+      "enabled": true,
+      "auto_validation": true,
+      "performance_benchmarking": true,
+      "result_analysis": true,
+      "report_generation": true
+    }
+  }
+}

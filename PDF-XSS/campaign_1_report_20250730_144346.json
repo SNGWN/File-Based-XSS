@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "generated_at": "2025-07-30T14:43:46.435074",
+    "report_version": "1.0",
+    "analyzer_version": "1.0"
+  },
+  "campaign": {
+    "id": 1,
+    "name": "Demo Security Assessment",
+    "description": "Demonstration of PDF XSS testing capabilities",
+    "target_url": "https://test-target.example.com",
+    "created_at": "2025-07-30 14:43:45"
+  },
+  "summary": {
+    "total_executions": 5,
+    "successful_executions": 2,
+    "success_rate": 40.0,
+    "avg_quality_score": 83
+  },
+  "detailed_analysis": {
+    "browser_breakdown": {
+      "firefox": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "safari": {
+        "total": 1,
+        "successful": 1,
+        "success_rate": 100.0
+      },
+      "adobe": {
+        "total": 1,
+        "successful": 1,
+        "success_rate": 100.0
+      },
+      "edge": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "chrome": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      }
+    },
+    "category_breakdown": {
+      "csp_bypass": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "file_system": {
+        "total": 1,
+        "successful": 1,
+        "success_rate": 100.0
+      },
+      "command_execution": {
+        "total": 1,
+        "successful": 1,
+        "success_rate": 100.0
+      },
+      "network_exfiltration": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "dom_access": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      }
+    },
+    "risk_level_breakdown": {
+      "medium": {
+        "total": 1,
+        "successful": 0,
+        "success_rate": 0.0
+      },
+      "critical": {
+        "total": 2,
+        "successful": 2,
+        "success_rate": 100.0
+      },
+      "high": {
+        "total": 2,
+        "successful": 0,
+        "success_rate": 0.0
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "type": "browser_optimization",
+      "priority": "high",
+      "message": "Focus on safari payloads (success rate: 100.0%) vs firefox (0.0%)"
+    },
+    {
+      "type": "category_focus",
+      "priority": "medium",
+      "message": "'file_system' category shows high success rate (100.0%) - consider expanding this category"
+    }
+  ]
+}
