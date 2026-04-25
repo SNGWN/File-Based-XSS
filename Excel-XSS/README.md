@@ -1,181 +1,326 @@
-# Excel-XSS Tool v3.0 - Advanced Excel Browser Exploitation
+# Excel-XSS Exporter v2.0
 
-## 🚀 Excel Browser Rendering XSS Framework
+Professional Excel browser rendering payload database exporter for authorized security testing.
 
-A research-grade tool for generating Excel files with sophisticated payloads designed to exploit Excel files when rendered in web browsers. Features 60+ distinct payloads targeting Chrome Excel rendering, Firefox Excel handling, Safari Excel integration, Edge Excel processing, Office 365 Web Excel, and Google Sheets Excel import functionality.
+## Overview
 
-## 📁 Project Structure
+Excel-XSS Exporter is a research tool that exports a comprehensive database of Excel browser rendering exploitation payloads to professional Excel format (.xlsx). This tool is designed for security researchers, penetration testers, and red team operations to analyze and test Excel-based attack vectors in web browser environments.
+
+**Legal Notice**: This tool is for authorized security testing and educational purposes only. Ensure you have explicit permission before testing any systems.
+
+## Features
+
+- ✅ **60+ Payloads**: Research-backed Excel browser rendering exploits
+- ✅ **Multi-Format Support**: .xls, .xlsx, .xlsm, .xlsb format exploitation
+- ✅ **Browser Compatibility**: Chrome, Firefox, Safari, Edge, Office 365 Web, Google Sheets
+- ✅ **Professional Excel Output**: Multi-sheet workbooks with comprehensive documentation
+- ✅ **Advanced Payloads**: Formula injection, macro execution, XXE exploitation, CSV injection
+- ✅ **Production Logging**: Structured logging with configurable levels
+- ✅ **Research-Based**: Built on 100+ CVE references and security conference research
+- ✅ **No Complex Dependencies**: Uses pandas and openpyxl only
+
+## Quick Start
+
+### Prerequisites
+- Python 3.7+
+- Required packages: pandas, openpyxl
+
+### Installation
+
+```bash
+cd Excel-XSS
+pip install -r requirements.txt
+```
+
+### Basic Usage
+
+```bash
+# Export payloads to Excel with default settings
+python3 export_to_excel.py
+
+# Export with debug logging
+python3 export_to_excel.py --log-level DEBUG
+
+# Export to custom output directory
+python3 export_to_excel.py --output-dir /path/to/output
+
+# Save logs to file
+python3 export_to_excel.py --log-file export.log
+```
+
+## Command Line Reference
+
+### Arguments
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--log-level` | Logging level (DEBUG, INFO, WARNING, ERROR) | INFO |
+| `--log-file` | Path to log file (optional) | Console only |
+| `-o, --output-dir` | Output directory for Excel file | `output` |
+| `--help` | Show help message | - |
+
+### Log Levels
+
+- **DEBUG**: Detailed payload information and processing steps
+- **INFO**: Status updates and summary information (default)
+- **WARNING**: Important notices and security warnings
+- **ERROR**: Failures and error conditions
+
+## Payload Categories
+
+### Formula Injection
+Malicious Excel formulas executed in browser context:
+- `=cmd|'/c calc'!A1`
+- `=cmd|'/c powershell.exe'!A1`
+- `@SUM(1+9)*cmd|'/c whoami'!A1`
+
+### Macro Execution
+VBA macro payloads for browser-rendered Excel files:
+- AutoOpen trigger macros
+- Document_Open event handlers
+- DLL injection techniques
+
+### External Data Connections
+HTTP/UNC path abuse for data exfiltration:
+- External data connections to attacker servers
+- UNC path traversal
+- HTTP request interception
+
+### XML External Entity (XXE)
+Excel XML format exploitation:
+- External entity definitions in XLSX structure
+- DTD injection in Excel XML
+- Entity expansion attacks
+
+### CSV Injection
+CSV-based formula injection in browser Excel viewers:
+- Formula injection via CSV import
+- Cross-sheet formula references
+- Hidden formula execution
+
+### Browser DOM Access
+Excel-to-browser DOM manipulation techniques:
+- XSS via Excel to browser bridge
+- DOM injection payloads
+- Cross-window communication
+
+## Generated Output
+
+The tool exports payloads to a professional Excel workbook with the following sheets:
+
+1. **All Payloads**: Complete payload list with details
+2. **By Browser**: Payloads organized by target browser
+3. **By Category**: Payloads grouped by attack technique
+4. **By Risk Level**: Payloads sorted by severity
+5. **Statistics**: Summary analysis and metrics
+6. **Documentation**: Research references and CVE citations
+
+### Output Naming
+
+```
+excel_payloads_YYYYMMDD_HHMMSS.xlsx
+```
+
+Example: `excel_payloads_20260426_143022.xlsx`
+
+## Security Testing Methodology
+
+### 1. Preparation
+- Identify target Excel application (Office 365, Google Sheets, etc.)
+- Set up monitoring for payload execution
+- Prepare test environment in isolated network
+
+### 2. Payload Selection
+- Export payloads from Excel-XSS Exporter
+- Select payloads by browser/category from exported Excel
+- Customize payloads for target environment
+
+### 3. Delivery & Testing
+- Upload/import Excel file to target application
+- Monitor for formula execution or macro triggers
+- Test across different Excel versions
+- Document successful techniques
+
+### 4. Analysis
+- Review generated workbook for detailed payload info
+- Cross-reference payloads with CVE database
+- Document browser-specific vulnerabilities
+- Report findings responsibly
+
+## Logging Output
+
+The tool provides structured logging with timestamps:
+
+```
+2026-04-26 02:15:33,192 - INFO - Excel Browser Rendering Payload Exporter v2.0
+2026-04-26 02:15:33,192 - INFO - Output directory: output
+2026-04-26 02:15:33,193 - INFO - Searching for Excel browser payload database
+2026-04-26 02:15:33,193 - INFO - Found excel_payloads.json
+2026-04-26 02:15:33,194 - INFO - Loaded 60 Excel browser payloads
+2026-04-26 02:15:33,195 - INFO - Creating Excel workbook with payload data...
+2026-04-26 02:15:33,245 - INFO - Excel export complete - output/excel_payloads_20260426_021533.xlsx
+2026-04-26 02:15:33,245 - WARNING - These payloads are for authorized security testing only
+```
+
+## Payload Database Structure
+
+The `excel_payloads.json` file contains payload data with this structure:
+
+```json
+{
+  "browser": "chrome",
+  "payloads": [
+    {
+      "id": "excel_formula_001",
+      "category": "formula_injection",
+      "technique": "cmd_execution_2024",
+      "payload": "=cmd|'/c calc'!A1",
+      "description": "Execute calculator via formula injection",
+      "risk_level": "high",
+      "cve_reference": "CVE-2024-XXXXX",
+      "target_formats": [".xls", ".xlsx", ".xlsm"]
+    },
+    ...
+  ],
+  "metadata": {
+    "focus": "Excel browser rendering",
+    "target_formats": [".xls", ".xlsx", ".xlsm", ".xlsb"],
+    "browser_targets": ["Chrome", "Firefox", "Safari", "Edge", "Office 365", "Google Sheets"]
+  }
+}
+```
+
+## Best Practices
+
+### For Security Researchers
+1. ✅ Use debug logging (`--log-level DEBUG`) for detailed analysis
+2. ✅ Test payloads in isolated environments only
+3. ✅ Document which payloads work on each platform/version
+4. ✅ Share findings through responsible disclosure
+5. ✅ Keep logs for security audit trails
+
+### For Red Team Operations
+1. ✅ Export payloads to custom directory with meaningful naming
+2. ✅ Organize by browser/category for targeted campaigns
+3. ✅ Use logging for operational security (OSInt mitigation)
+4. ✅ Archive generated workbooks for post-assessment reporting
+5. ✅ Customize payloads for specific target environments
+
+### For Blue Team Defense
+1. ✅ Understand Excel formula injection vectors
+2. ✅ Implement strict Excel upload validation
+3. ✅ Disable external data connections
+4. ✅ Monitor for suspicious formula patterns
+5. ✅ Restrict Excel file extensions
+
+## Defensive Measures
+
+### Excel File Security
+- **Disable Formulas**: Configure Excel to disable formula execution
+- **Upload Validation**: Scan for suspicious formulas before processing
+- **External Connections**: Block HTTP/UNC paths in Excel files
+- **Macro Security**: Implement strict macro execution policies
+- **Format Restrictions**: Allow only safe Excel formats
+
+### Application Controls
+- **File Upload Restrictions**: Whitelist safe file types
+- **Content Validation**: Analyze file content, not just extension
+- **User Education**: Train users on Excel security risks
+- **Version Control**: Keep Excel and Office applications updated
+- **Sandboxing**: Open Excel files in isolated environments
+
+## Troubleshooting
+
+### "No Excel browser payload database found"
+**Solution**: Ensure `excel_payloads.json` exists in the same directory
+```bash
+ls -la excel_payloads.json  # Verify file exists
+```
+
+### Import errors (pandas, openpyxl)
+**Solution**: Install required dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Permission denied on output directory
+**Solution**: Create output directory with write permissions
+```bash
+mkdir -p output
+chmod 755 output
+```
+
+### Logging not showing expected level
+**Solution**: Verify --log-level argument
+```bash
+python3 export_to_excel.py --log-level DEBUG  # Enable debug logging
+```
+
+## File Structure
 
 ```
 Excel-XSS/
-├── export_to_excel.py           # Main Excel browser payload exporter
-├── excel_payloads.json         # Consolidated Excel payload database
-├── merge_json_payloads.py      # JSON payload database merger utility
-├── requirements.txt            # Python dependencies
-└── README.md                   # This file
+├── export_to_excel.py      (single executable, v2.0)
+├── excel_payloads.json     (60+ payload database)
+├── requirements.txt        (dependencies: pandas, openpyxl)
+├── README.md               (this file)
+└── output/                 (generated Excel files directory)
 ```
 
-## ⚠️ Legal Disclaimer
+## Requirements
 
-This tool is designed for legitimate security testing, educational purposes, and authorized penetration testing only. Users are responsible for ensuring they have proper authorization before testing any systems. Unauthorized use is prohibited and may be illegal.
-
-## 🎯 Excel Browser Rendering Research Database
-
-### Browser-Specific Excel Targeting
-- **Chrome Excel Rendering**: Google Drive integration, Chromium-based Excel viewer exploitation
-- **Firefox Excel Handling**: Plugin-based Excel rendering, Gecko engine integration abuse
-- **Safari Excel Integration**: macOS Excel rendering, WebKit engine exploitation
-- **Edge Excel Processing**: Windows Excel integration, WebView2 and ActiveX legacy exploitation
-- **Office 365 Web Excel**: Browser-based Excel application, SharePoint integration abuse
-- **Google Sheets Excel Import**: Excel file processing and conversion vulnerabilities
-
-### Comprehensive Research Foundation
-- **100+ CVE References** for Excel browser rendering vulnerabilities
-- **Security Conference Research** (BlackHat, DEF CON, BSides presentations)
-- **GitHub Security Research** repositories and POC exploits
-- **Bug Bounty Platform Reports** (HackerOne, Bugcrowd disclosures)
-- **Academic Security Papers** on Excel browser security vulnerabilities
-
-## 🔒 Excel Browser Exploitation Features
-
-### Advanced Excel File Formats
-- **Legacy .xls Format**: Reduced security restrictions, ActiveX control support
-- **Modern .xlsx Format**: XML-based structure with XXE exploitation vectors
-- **Macro-enabled .xlsm**: VBA macro execution in browser context
-- **Binary .xlsb Format**: Performance optimized with detection evasion capabilities
-
-### Excel Browser Payload Categories
-- **Formula Injection**: Malicious Excel formulas executed in browser context (DDE, RTD functions)
-- **Macro Execution**: VBA macro payloads for browser-rendered Excel files
-- **External Data Connections**: HTTP/UNC path abuse for data exfiltration and credential harvesting
-- **XML External Entity (XXE)**: Excel XML format exploitation for file disclosure
-- **CSV Injection**: CSV-based formula injection in browser Excel viewers
-- **Browser DOM Access**: Excel-to-browser DOM manipulation and cross-frame access
-
-## 🛠️ Installation & Requirements
-
-### Requirements
-- Python 3.x
-- pandas
-- openpyxl
-
-### Installation
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Export Excel browser payload database to Excel format
-python3 export_to_excel.py
+```
+pandas>=1.0.0
+openpyxl>=3.0.0
 ```
 
-## 📊 Excel Browser Payload Export
+## Research Foundation
 
-### Overview
-The Excel browser payload export provides comprehensive security research data focused on Excel files rendered in web browsers, targeting legacy Excel formats with reduced security restrictions.
+This tool is built on extensive security research:
 
-### Features
-- **Excel Browser Focus**: Payloads targeting Excel files opened in web browsers
-- **Legacy Format Targeting**: Emphasis on older Excel standards (.xls) with lower security restrictions
-- **Comprehensive Research**: GitHub, CVE database, security conferences analysis
-- **Multiple Analysis Sheets**: Browser-specific, Excel format analysis, CVE references, research summary
-- **Professional Formatting**: Tables, conditional formatting, and organized layouts for security research
+### Excel Security Research
+- **100+ CVE References**: Excel formula injection, macro execution, XXE vulnerabilities
+- **Security Conferences**: BlackHat, DEF CON, BSides presentations
+- **Bug Bounty Programs**: HackerOne, Bugcrowd, Synack disclosures
+- **Academic Papers**: Excel security analysis and exploitation techniques
 
-### Usage
-```bash
-# Export Excel browser payload database to Excel format
-python3 export_to_excel.py
+### Key References
+- OWASP Testing Guide - File Upload Testing
+- Microsoft Excel Security Documentation
+- Excel Formula Injection Research Papers
+- CSV Injection Attack Documentation
 
-# Generated file: excel_browser_payload_database_YYYYMMDD_HHMMSS.xlsx
-```
+## Version History
 
-### Excel Sheet Contents
-- **All Excel Browser Payloads**: Complete database with Excel browser exploitation payloads
-- **Browser Sheets**: Chrome, Firefox, Safari, Edge, Office 365 Web, Google Sheets specific payloads
-- **Excel Category Analysis**: Breakdown by Excel attack category (formula injection, macro execution, etc.)
-- **Excel CVE References**: Excel browser security vulnerability references and affected components
-- **Excel Research Summary**: Methodology, sources, and comprehensive research foundation
+- **v2.0** (Current): Consolidated architecture, production logging, enhanced error handling
+- **v1.0**: Initial release, basic Excel export functionality
 
-## 📋 Usage Examples
+## Contributing
 
-### Excel Browser Payload Generation
-```bash
-# Export comprehensive Excel browser payload database
-python3 export_to_excel.py
+For improvements or additional payloads:
 
-# View available payloads in JSON format
-cat excel_payloads.json | jq '.metadata'
+1. Ensure payloads are thoroughly tested
+2. Include CVE references and research citations
+3. Follow existing JSON structure
+4. Test across multiple Excel versions
+5. Document any new attack techniques
 
-# Extract payloads by browser
-cat excel_payloads.json | jq '.payloads[] | select(.browser=="chrome")'
+## Security Notice
 
-# Count payloads by category
-cat excel_payloads.json | jq '.payloads | group_by(.category) | map({category: .[0].category, count: length})'
-```
+⚠️ **WARNING**: These payloads are designed to exploit Excel browser rendering vulnerabilities. Use only for:
+- Authorized security testing
+- Authorized penetration testing
+- Approved red team operations
+- Educational purposes in controlled environments
 
-## 🎯 Excel File Format Targets
+Unauthorized access to computer systems is **illegal** and may violate applicable laws.
 
-| Format | Description | Payload Count | Focus Areas |
-|--------|-------------|---------------|-------------|
-| .xls | Legacy Excel 97-2003 | 15+ | Reduced security restrictions, ActiveX support |
-| .xlsx | Modern Excel XML | 20+ | XXE exploitation, XML structure abuse |
-| .xlsm | Macro-enabled Excel | 15+ | VBA macro execution in browser context |
-| .xlsb | Binary Excel | 10+ | Performance optimized, detection evasion |
+## License
 
-## 📊 Browser Compatibility
+Educational and Authorized Security Testing Only
 
-| Browser | Excel Viewer | Payload Count | Key Techniques |
-|---------|-------------|---------------|----------------|
-| Chrome | Google Drive, Chromium | 12+ | DOM manipulation, drive integration |
-| Firefox | Plugin-based rendering | 10+ | Gecko engine exploitation |
-| Safari | macOS Excel integration | 8+ | WebKit engine abuse |
-| Edge | Windows Excel integration | 10+ | ActiveX legacy, WebView2 |
-| Office 365 Web | Browser Excel app | 15+ | SharePoint integration abuse |
-| Google Sheets | Excel import processing | 5+ | File conversion vulnerabilities |
+---
 
-## 🔍 Excel Security Testing Methodology
+**Ready to Export**: Use `python3 export_to_excel.py` to begin analyzing Excel browser rendering vulnerabilities.
 
-1. **Generate Excel Test Files**: Use the tool to create Excel files with various browser exploitation payloads
-2. **Upload/Share Testing**: Test file upload functionality and sharing mechanisms
-3. **Browser Excel Viewer Analysis**: Test different browser Excel viewers and online services
-4. **Formula Injection Testing**: Test malicious formula execution in browser context
-5. **Data Exfiltration Testing**: Test external data connection abuse
-6. **Cross-Browser Testing**: Verify payload effectiveness across different browsers
-
-## 🛡️ Excel-Specific Defensive Measures
-
-To protect against Excel browser exploitation attacks:
-
-- **Disable External Data Connections**: Block HTTP/UNC path connections from Excel files
-- **Formula Execution Restrictions**: Disable or restrict formula execution in browser Excel viewers
-- **Macro Security**: Implement strict macro execution policies for browser-rendered Excel files
-- **File Upload Validation**: Scan uploaded Excel files for suspicious formulas and external connections
-- **Content Security Policy**: Implement CSP headers that restrict Excel-initiated requests
-- **User Education**: Train users on Excel security risks when opening files in browsers
-
-## 📈 Changelog
-
-### Version 3.0 (Current) - Excel Browser Rendering Focus
-- **60+ Excel browser exploitation payloads**
-- **Legacy format emphasis**: Targeting .xls files with reduced security restrictions
-- **Cross-browser compatibility**: Chrome, Firefox, Safari, Edge, Office 365, Google Sheets
-- **Advanced research base**: 100+ CVE references, security conferences, GitHub research
-- **Professional Excel export**: Multi-sheet analysis with comprehensive research documentation
-- **CVE reference integration**: Each payload linked to relevant Excel security vulnerabilities
-
-## 🚨 Security Considerations
-
-- Always obtain proper authorization before testing
-- Use in controlled environments only
-- Be aware of legal implications
-- Respect responsible disclosure practices
-- Monitor and log all testing activities
-
-## 🔗 Resources
-
-- [OWASP Testing Guide - File Upload Testing](https://owasp.org/www-project-web-security-testing-guide/)
-- [Microsoft Excel Security](https://docs.microsoft.com/en-us/deployoffice/security/)
-- [Excel Formula Injection](https://owasp.org/www-community/attacks/CSV_Injection)
-
-## 📄 License
-
-This project is for educational and authorized security testing purposes only. Please use responsibly and in accordance with applicable laws and regulations.
+*Last Updated: 2026-04-26*

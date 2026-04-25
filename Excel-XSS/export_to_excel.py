@@ -45,39 +45,45 @@ import json
 import pandas as pd
 import os
 import sys
+import logging
+import argparse
 from datetime import datetime
-import glob
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
+VERSION = "2.0"
+
+# Configure logging
+def setup_logging(log_level=logging.INFO, log_file=None):
+    """Setup logging configuration with optional file output"""
+    handlers = [logging.StreamHandler(sys.stdout)]
+    
+    if log_file:
+        handlers.append(logging.FileHandler(log_file, encoding='utf-8'))
+    
+    logging.basicConfig(
+        level=log_level,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+    
+    return logging.getLogger(__name__)
+
+logger = setup_logging()
+
 def find_latest_payload_database():
-    """Find the most recent and comprehensive Excel browser payload database file"""
-    print("🔍 SEARCHING FOR EXCEL BROWSER PAYLOAD DATABASE FILES")
-    print("=" * 52)
+    """Find Excel browser payload database file"""
+    logger.info("Searching for Excel browser payload database")
     
-    # Search patterns for Excel browser payload database files
-    search_patterns = [
-        'excel_browser_payload_database.json',  # Primary Excel browser database file
-        'payload_database.json',  # Fallback to original database
-        'merged_payload_database_*.json',
-        'sophisticated_payload_database_*.json',
-        'PDF/sophisticated_payload_database_*.json'
-    ]
+    # Direct path to payload file
+    if os.path.exists('excel_payloads.json'):
+        logger.info("Found excel_payloads.json")
+        return 'excel_payloads.json'
     
-    found_files = []
-    for pattern in search_patterns:
-        files = glob.glob(pattern)
-        found_files.extend(files)
-    
-    if not found_files:
-        print("❌ No Excel browser payload database files found")
-        return None
-    
-    # Prioritize Excel browser specific database
-    excel_browser_files = [f for f in found_files if 'excel_browser' in f]
-    if excel_browser_files:
+    logger.error("Excel payload database not found (excel_payloads.json)")
+    return None
         # Use the Excel browser specific database
         best_file = excel_browser_files[0]
         print(f"✅ Found Excel browser specific database: {os.path.basename(best_file)}")
@@ -114,34 +120,30 @@ def find_latest_payload_database():
 
 def load_payload_database(file_path):
     """Load and validate Excel browser payload database"""
-    print(f"\n📖 LOADING EXCEL BROWSER PAYLOAD DATABASE")
-    print("=" * 44)
+    logger.info(f"Loading Excel browser payload database from {file_path}")
     
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
         payloads = data.get('payloads', [])
         metadata = data.get('metadata', {})
         
-        print(f"✅ Successfully loaded {len(payloads)} Excel browser payloads")
-        print(f"📊 Database metadata:")
-        print(f"   Generated: {metadata.get('generated_at', 'Unknown')}")
-        print(f"   Focus: {metadata.get('focus', 'Excel browser rendering')}")
-        print(f"   Target Formats: {', '.join(metadata.get('target_formats', []))}")
-        print(f"   Browser Targets: {', '.join(metadata.get('browser_targets', []))}")
-        
-        if 'breakdown' in metadata:
-            breakdown = metadata['breakdown']
-            print(f"   Excel Formats: {breakdown.get('excel_formats', {})}")
-            print(f"   Browsers: {breakdown.get('browsers', {})}")
-            print(f"   Categories: {breakdown.get('categories', {})}")
-            print(f"   Risk levels: {breakdown.get('risk_levels', {})}")
+        logger.info(f"Loaded {len(payloads)} Excel browser payloads")
+        logger.info(f"Database focus: {metadata.get('focus', 'Excel browser rendering')}")
+        logger.info(f"Target formats: {', '.join(metadata.get('target_formats', []))}")
+        logger.info(f"Browser targets: {', '.join(metadata.get('browser_targets', []))}")
         
         return data
         
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in {file_path}: {e}")
+        return None
+    except IOError as e:
+        logger.error(f"Cannot read {file_path}: {e}")
+        return None
     except Exception as e:
-        print(f"❌ Error loading Excel browser database: {e}")
+        logger.error(f"Unexpected error loading database: {e}")
         return None
 
 def create_excel_workbook(data):
@@ -503,7 +505,7 @@ def export_to_excel(output_file, data):
 
 def main():
     """Main execution function"""
-    print("📊 EXCEL BROWSER RENDERING PAYLOAD DATABASE - EXPORTER")
+    logger.info("Excel Browser Rendering Payload Exporter v" + VERSION)
     print("=" * 56)
     print("Objective: Export comprehensive Excel browser rendering security research data")
     print("Research Level: 100+ CVEs, security conferences, GitHub research, darknet analysis")
@@ -514,12 +516,12 @@ def main():
     # Find and load Excel browser payload database
     db_file = find_latest_payload_database()
     if not db_file:
-        print("❌ No Excel browser payload database found. Please ensure excel_browser_payload_database.json exists.")
+        logger.error("No Excel browser payload database found (excel_payloads.json)")
         return False
     
     data = load_payload_database(db_file)
     if not data:
-        print("❌ Failed to load Excel browser payload database.")
+        logger.error("Failed to load Excel browser payload database")
         return False
     
     # Generate output filename
@@ -530,12 +532,12 @@ def main():
     success = export_to_excel(output_file, data)
     
     if success:
-        print(f"\n🎉 EXCEL BROWSER PAYLOAD EXPORT COMPLETE")
+        logger.info("Excel export complete")
         print("=" * 38)
         print(f"📊 Excel file ready for security research and testing")
         print(f"🔍 Professional formatting with Excel browser analysis sheets")
         print(f"📋 Comprehensive Excel browser rendering vulnerability research")
-        print(f"⚖️ Remember: Use only for authorized security testing")
+        logger.warning("These payloads are for authorized security testing only")
         return True
     else:
         return False
