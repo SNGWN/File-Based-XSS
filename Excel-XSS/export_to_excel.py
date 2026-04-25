@@ -6,37 +6,6 @@ Excel Browser Rendering Payload Database Exporter
 This script exports Excel browser rendering payload database to Excel format,
 focusing on Excel files opened and rendered in web browsers.
 
-EXCEL BROWSER RENDERING FOCUS:
-- Excel files (.xls, .xlsx, .xlsm, .xlsb) opened in web browsers
-- Browser-based Excel viewers (Office 365 Web, Google Sheets, etc.)
-- Legacy Excel formats with reduced security restrictions
-- Cross-browser Excel rendering engine vulnerabilities
-
-TARGETED BROWSERS & PLATFORMS:
-- Chrome: Excel files in Google Drive, Chromium-based rendering
-- Firefox: Excel file handling and plugin-based rendering  
-- Safari: macOS Excel integration and WebKit rendering
-- Edge: Windows Excel integration and WebView2 rendering
-- Office 365 Web: Browser-based Excel application
-- Google Sheets: Excel import and rendering functionality
-
-RESEARCH FOUNDATION:
-- 100+ CVE references for Excel browser rendering vulnerabilities
-- Legacy Excel format (.xls) security bypass techniques
-- Modern Excel (.xlsx, .xlsm) browser exploitation methods
-- Cross-platform Excel rendering engine analysis
-- Security conference research (BlackHat, DEF CON, BSides)
-- GitHub security research and POC exploits
-- Bug bounty platform vulnerability disclosures
-
-PAYLOAD CATEGORIES:
-- Formula Injection: Malicious Excel formulas executed in browser context
-- Macro Execution: VBA macro payloads for browser-rendered Excel files
-- External Data Connections: HTTP/UNC path abuse for data exfiltration
-- XML External Entity (XXE): Excel XML format exploitation
-- CSV Injection: CSV-based formula injection in browser Excel viewers
-- Browser DOM Access: Excel-to-browser DOM manipulation techniques
-
 Author: SNGWN
 Legal Notice: For authorized security testing only.
 """
@@ -77,45 +46,11 @@ def find_latest_payload_database():
     """Find Excel browser payload database file"""
     logger.info("Searching for Excel browser payload database")
     
-    # Direct path to payload file
     if os.path.exists('excel_payloads.json'):
         logger.info("Found excel_payloads.json")
         return 'excel_payloads.json'
     
     logger.error("Excel payload database not found (excel_payloads.json)")
-    return None
-        # Use the Excel browser specific database
-        best_file = excel_browser_files[0]
-        print(f"✅ Found Excel browser specific database: {os.path.basename(best_file)}")
-        return best_file
-    
-    # Analyze files to find the most comprehensive one
-    best_file = None
-    max_payloads = 0
-    
-    print(f"📁 Found {len(found_files)} database files:")
-    
-    for file_path in found_files:
-        try:
-            with open(file_path, 'r') as f:
-                data = json.load(f)
-                payload_count = len(data.get('payloads', []))
-                file_size = os.path.getsize(file_path)
-                
-                print(f"   📄 {os.path.basename(file_path)}")
-                print(f"      Payloads: {payload_count}, Size: {file_size:,} bytes")
-                
-                if payload_count > max_payloads:
-                    max_payloads = payload_count
-                    best_file = file_path
-                    
-        except Exception as e:
-            print(f"   ❌ Error reading {file_path}: {e}")
-    
-    if best_file:
-        print(f"\n✅ Selected: {os.path.basename(best_file)} ({max_payloads} payloads)")
-        return best_file
-    
     return None
 
 def load_payload_database(file_path):
@@ -140,407 +75,146 @@ def load_payload_database(file_path):
         logger.error(f"Invalid JSON in {file_path}: {e}")
         return None
     except IOError as e:
-        logger.error(f"Cannot read {file_path}: {e}")
+        logger.error(f"Cannot read file {file_path}: {e}")
         return None
     except Exception as e:
-        logger.error(f"Unexpected error loading database: {e}")
+        logger.error(f"Unexpected error loading {file_path}: {e}")
         return None
 
 def create_excel_workbook(data):
     """Create comprehensive Excel workbook with multiple sheets"""
-    print(f"\n📊 CREATING EXCEL WORKBOOK")
-    print("=" * 29)
+    logger.info("Creating Excel workbook")
     
     payloads = data.get('payloads', [])
     metadata = data.get('metadata', {})
     
     # Create main DataFrame from payloads
     df = pd.DataFrame(payloads)
-    
-    print(f"✅ Processing {len(df)} payloads for Excel export")
+    logger.info(f"Processing {len(df)} payloads for Excel export")
     
     # Create workbook with multiple sheets
     wb = Workbook()
-    wb.remove(wb.active)  # Remove default sheet
+    wb.remove(wb.active)
     
-    # 1. Main payload data sheet
-    create_main_sheet(wb, df, metadata)
+    # 1. Main payloads sheet
+    ws_payloads = wb.create_sheet("Payloads", 0)
+    for r_idx, row in enumerate(dataframe_to_rows(df, index=False, header=True), 1):
+        for c_idx, value in enumerate(row, 1):
+            cell = ws_payloads.cell(row=r_idx, column=c_idx)
+            cell.value = value
+            if r_idx == 1:
+                cell.font = Font(bold=True)
+                cell.fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+                cell.font = Font(bold=True, color="FFFFFF")
     
-    # 2. Browser-specific sheets
-    create_browser_sheets(wb, df)
+    # 2. Metadata sheet
+    ws_metadata = wb.create_sheet("Metadata", 1)
+    ws_metadata['A1'] = "Key"
+    ws_metadata['B1'] = "Value"
+    ws_metadata['A1'].font = Font(bold=True)
+    ws_metadata['B1'].font = Font(bold=True)
     
-    # 3. Category analysis sheet
-    create_category_sheet(wb, df)
+    row_idx = 2
+    for key, value in metadata.items():
+        ws_metadata[f'A{row_idx}'] = key
+        ws_metadata[f'B{row_idx}'] = str(value)
+        row_idx += 1
     
-    # 4. CVE reference sheet
-    create_cve_sheet(wb, df)
+    # 3. Statistics sheet
+    ws_stats = wb.create_sheet("Statistics", 2)
+    ws_stats['A1'] = "Category"
+    ws_stats['B1'] = "Count"
     
-    # 5. Research summary sheet
-    create_research_summary_sheet(wb, data)
+    categories = {}
+    for payload in payloads:
+        category = payload.get('category', 'Unknown')
+        categories[category] = categories.get(category, 0) + 1
     
+    row_idx = 2
+    for category, count in sorted(categories.items()):
+        ws_stats[f'A{row_idx}'] = category
+        ws_stats[f'B{row_idx}'] = count
+        row_idx += 1
+    
+    logger.info(f"Created workbook with {len(wb.sheetnames)} sheets")
     return wb
 
-def create_main_sheet(wb, df, metadata):
-    """Create main comprehensive Excel browser payload sheet"""
-    print("📋 Creating main Excel browser payload sheet...")
+def save_workbook(wb, output_dir=None):
+    """Save workbook to file"""
+    if output_dir is None:
+        output_dir = 'output'
     
-    ws = wb.create_sheet("All Excel Browser Payloads", 0)
+    os.makedirs(output_dir, exist_ok=True)
     
-    # Add header information
-    ws['A1'] = "Excel Browser Rendering Payload Database - Security Research"
-    ws['A1'].font = Font(size=16, bold=True)
-    ws['A2'] = f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}"
-    ws['A3'] = f"Focus: Excel files rendered in web browsers"
-    ws['A4'] = f"Total Payloads: {len(df)}"
-    ws['A5'] = f"Target Formats: {', '.join(metadata.get('target_formats', []))}"
-    ws['A6'] = "LEGAL NOTICE: For authorized security testing only"
-    ws['A6'].font = Font(color="FF0000", bold=True)
-    
-    # Add payload data starting from row 8
-    start_row = 8
-    
-    for r in dataframe_to_rows(df, index=False, header=True):
-        ws.append(r)
-    
-    # Apply formatting
-    header_row = start_row
-    for col in range(1, len(df.columns) + 1):
-        cell = ws.cell(row=header_row, column=col)
-        cell.font = Font(bold=True)
-        cell.fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        cell.font = Font(color="FFFFFF", bold=True)
-    
-    # Auto-adjust column widths
-    for column in ws.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
-            try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = min(max_length + 2, 50)  # Cap at 50 characters
-        ws.column_dimensions[column_letter].width = adjusted_width
-
-def create_browser_sheets(wb, df):
-    """Create browser-specific Excel rendering analysis sheets"""
-    print("🌐 Creating browser-specific Excel rendering sheets...")
-    
-    browsers = df['browser'].unique()
-    
-    for browser in browsers:
-        browser_data = df[df['browser'] == browser]
-        ws = wb.create_sheet(f"{browser.title()} Excel Payloads")
-        
-        # Add header
-        ws['A1'] = f"{browser.upper()} - Excel Browser Rendering Payloads"
-        ws['A1'].font = Font(size=14, bold=True)
-        ws['A2'] = f"Total {browser} Excel payloads: {len(browser_data)}"
-        
-        # Add browser-specific Excel rendering info
-        browser_info = {
-            'chrome': 'Chrome Excel rendering - Google Drive integration, Chromium-based Excel viewer, V8 engine exploitation',
-            'firefox': 'Firefox Excel handling - Plugin-based rendering, Gecko engine exploitation, XPCOM interface abuse',
-            'safari': 'Safari Excel integration - macOS Excel rendering, WebKit engine, NSAppleScript execution',
-            'edge': 'Edge Excel integration - Windows integration, WebView2 rendering, ActiveX legacy support',
-            'office365_web': 'Office 365 Web Excel - Browser-based Excel application, SharePoint integration, Office.js APIs',
-            'google_sheets': 'Google Sheets Excel import - Excel file processing, Google Apps Script integration, function abuse'
-        }
-        
-        ws['A3'] = f"Focus: {browser_info.get(browser, 'Browser-specific Excel rendering exploitation')}"
-        
-        # Add data starting from row 5
-        start_row = 5
-        for r in dataframe_to_rows(browser_data, index=False, header=True):
-            ws.append(r)
-        
-        # Format header
-        for col in range(1, len(browser_data.columns) + 1):
-            cell = ws.cell(row=start_row, column=col)
-            cell.font = Font(bold=True)
-            cell.fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
-            cell.font = Font(color="FFFFFF", bold=True)
-
-def create_category_sheet(wb, df):
-    """Create Excel payload category analysis sheet"""
-    print("📂 Creating Excel payload category analysis sheet...")
-    
-    ws = wb.create_sheet("Excel Category Analysis")
-    
-    # Header
-    ws['A1'] = "Excel Browser Payload Category Breakdown"
-    ws['A1'].font = Font(size=14, bold=True)
-    
-    # Category statistics
-    category_counts = df['category'].value_counts()
-    
-    row = 3
-    ws['A3'] = "Category"
-    ws['B3'] = "Count"
-    ws['C3'] = "Description"
-    
-    # Format header
-    for col in ['A', 'B', 'C']:
-        ws[f'{col}3'].font = Font(bold=True)
-        ws[f'{col}3'].fill = PatternFill(start_color="70AD47", end_color="70AD47", fill_type="solid")
-        ws[f'{col}3'].font = Font(color="FFFFFF", bold=True)
-    
-    category_descriptions = {
-        'formula_injection': 'Malicious Excel formulas executed in browser context (DDE, RTD, etc.)',
-        'macro_execution': 'VBA macro payloads for browser-rendered Excel files',
-        'external_data_connections': 'HTTP/UNC path abuse for data exfiltration and credential harvesting',
-        'xml_external_entity': 'Excel XML format XXE exploitation for file disclosure',
-        'csv_injection': 'CSV-based formula injection in browser Excel viewers',
-        'browser_dom_access': 'Excel-to-browser DOM manipulation and cross-frame access'
-    }
-    
-    row = 4
-    for category, count in category_counts.items():
-        ws[f'A{row}'] = category
-        ws[f'B{row}'] = count
-        ws[f'C{row}'] = category_descriptions.get(category, 'Excel browser security testing payload')
-        row += 1
-    
-    # Auto-adjust columns
-    ws.column_dimensions['A'].width = 25
-    ws.column_dimensions['B'].width = 10
-    ws.column_dimensions['C'].width = 70
-
-def create_cve_sheet(wb, df):
-    """Create Excel browser CVE reference analysis sheet"""
-    print("🔒 Creating Excel browser CVE reference sheet...")
-    
-    ws = wb.create_sheet("Excel CVE References")
-    
-    # Header
-    ws['A1'] = "Excel Browser Rendering CVE References - Research Foundation"
-    ws['A1'].font = Font(size=14, bold=True)
-    ws['A2'] = "100+ CVE references for Excel browser rendering vulnerabilities"
-    
-    # Extract all CVE references from payloads
-    all_cves = set()
-    for _, payload in df.iterrows():
-        cve_ref = payload.get('cve_reference', '')
-        if cve_ref:
-            cves = [cve.strip() for cve in cve_ref.split(',')]
-            all_cves.update(cves)
-    
-    # Sort CVEs
-    sorted_cves = sorted(list(all_cves))
-    
-    row = 4
-    ws['A4'] = "CVE ID"
-    ws['B4'] = "Affected Component"
-    ws['C4'] = "Associated Payloads"
-    
-    # Format header
-    for col in ['A', 'B', 'C']:
-        ws[f'{col}4'].font = Font(bold=True)
-        ws[f'{col}4'].fill = PatternFill(start_color="C5504B", end_color="C5504B", fill_type="solid")
-        ws[f'{col}4'].font = Font(color="FFFFFF", bold=True)
-    
-    row = 5
-    for cve in sorted_cves:
-        if cve.startswith('CVE-'):
-            ws[f'A{row}'] = cve
-            
-            # Determine component based on CVE (Excel browser specific)
-            if any(x in cve for x in ['2017-8759', '2018-0802', '2017-8570']):
-                component = "Excel DDE/RTD Functions"
-            elif any(x in cve for x in ['2021-40444', '2021-42292']):
-                component = "Excel Macro Execution"
-            elif any(x in cve for x in ['2018-8574', '2019-1446']):
-                component = "Excel External Data Connections"
-            elif any(x in cve for x in ['2018-8636', '2019-0540']):
-                component = "Excel XML Processing (XXE)"
-            elif any(x in cve for x in ['2019-5786', '2020-6418']):
-                component = "Chrome Excel Rendering"
-            elif any(x in cve for x in ['2018-4878', '2019-17026']):
-                component = "Firefox Excel Handling"
-            elif any(x in cve for x in ['2019-8761', '2020-9715']):
-                component = "Safari Excel Integration"
-            elif any(x in cve for x in ['2020-1464', '2021-31955']):
-                component = "Edge Excel Processing"
-            elif any(x in cve for x in ['2021-31199', '2021-42321']):
-                component = "Office 365 Web Excel"
-            elif any(x in cve for x in ['2020-6519', '2021-30506']):
-                component = "Google Sheets Excel Import"
-            else:
-                component = "Multi-platform Excel"
-            
-            ws[f'B{row}'] = component
-            
-            # Count associated payloads
-            payload_count = sum(1 for _, payload in df.iterrows() if cve in payload.get('cve_reference', ''))
-            ws[f'C{row}'] = payload_count
-            row += 1
-    
-    # Auto-adjust columns
-    ws.column_dimensions['A'].width = 18
-    ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 20
-
-def create_research_summary_sheet(wb, data):
-    """Create Excel browser research methodology and sources summary"""
-    print("📚 Creating Excel browser research summary sheet...")
-    
-    ws = wb.create_sheet("Excel Research Summary")
-    
-    # Header
-    ws['A1'] = "Excel Browser Rendering Research Methodology & Sources"
-    ws['A1'].font = Font(size=16, bold=True)
-    
-    research_content = [
-        "",
-        "EXCEL BROWSER RENDERING RESEARCH FOUNDATION:",
-        "=" * 45,
-        "",
-        "📄 ACADEMIC & CONFERENCE SOURCES:",
-        "• BlackHat/DEF CON presentations on Excel security vulnerabilities",
-        "• BSides conferences Excel exploitation research",
-        "• OWASP testing methodologies for Office document security",
-        "• Academic papers on Excel browser rendering security",
-        "• Security conference whitepapers and technical presentations",
-        "",
-        "🔒 SECURITY REFERENCES & CVE DATABASE:",
-        "• 100+ CVE references for Excel browser rendering vulnerabilities",
-        "• Microsoft Security Bulletins for Excel security updates",
-        "• Bug bounty reports from HackerOne and Bugcrowd platforms",
-        "• Security advisory disclosures for Excel browser integration",
-        "• MITRE ATT&CK framework Excel-related techniques",
-        "",
-        "🌐 BROWSER-SPECIFIC EXCEL ANALYSIS:",
-        "• Chrome: Google Drive Excel rendering, Chromium-based processing",
-        "• Firefox: Plugin-based Excel handling, Gecko engine integration",
-        "• Safari: macOS Excel integration, WebKit rendering engine",
-        "• Edge: Windows Excel integration, WebView2 and ActiveX legacy",
-        "• Office 365 Web: Browser-based Excel application security",
-        "• Google Sheets: Excel import/conversion vulnerability analysis",
-        "",
-        "🎯 EXCEL FORMAT TARGETING:",
-        "• Legacy .xls format: Reduced security restrictions, ActiveX support",
-        "• Modern .xlsx format: XML-based structure, XXE vulnerabilities",
-        "• Macro-enabled .xlsm: VBA macro execution in browser context",
-        "• Binary .xlsb format: Performance optimized, detection evasion",
-        "• CSV format: Formula injection through browser Excel viewers",
-        "",
-        "📊 PAYLOAD CATEGORIES:",
-        "• Formula Injection: DDE, RTD, and malicious Excel formulas",
-        "• Macro Execution: VBA macros in browser-rendered Excel files",
-        "• External Data Connections: HTTP/UNC abuse for exfiltration",
-        "• XML External Entity (XXE): Excel XML format exploitation",
-        "• CSV Injection: Formula injection in browser CSV processors",
-        "• Browser DOM Access: Excel-to-browser DOM manipulation",
-        "",
-        "🔬 RESEARCH METHODOLOGY:",
-        "• GitHub security research repositories and POC exploits",
-        "• Vulnerability disclosure platforms (CVE, NVD, security blogs)",
-        "• Darknet forum discussions on Excel exploitation techniques",
-        "• Security researcher Twitter feeds and technical blogs",
-        "• Reverse engineering of Excel browser rendering engines",
-        "",
-        "📊 STATISTICAL BREAKDOWN:",
-        f"• Total Unique Excel Payloads: {len(data.get('payloads', []))}",
-        f"• CVE References: 100+ Excel browser vulnerabilities",
-        f"• Browser Targets: 6 major Excel rendering platforms",
-        f"• Excel Formats: 5 distinct file format targets",
-        f"• Attack Categories: 6 specialized payload types",
-        "",
-        "⚖️ LEGAL & ETHICAL FRAMEWORK:",
-        "• Designed for authorized security testing only",
-        "• Educational and security research purposes",
-        "• Responsible disclosure practices for vulnerabilities",
-        "• Compliance with applicable laws and regulations",
-        "",
-        "🛡️ DEFENSIVE APPLICATIONS:",
-        "• Excel browser security assessment and hardening",
-        "• Security awareness training for Excel file handling",
-        "• Penetration testing and red team exercises",
-        "• Security control validation for Excel processing",
-        "",
-        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}",
-        "Tool: Excel Browser Rendering Payload Exporter v2.0",
-        "Author: SNGWN"
-    ]
-    
-    for i, line in enumerate(research_content, 1):
-        cell = ws[f'A{i}']
-        cell.value = line
-        if line.startswith(('📄', '🔒', '🌐', '🎯', '📊', '🔬', '⚖️', '🛡️')):
-            cell.font = Font(bold=True, color="2F5597")
-        elif line and line[0] in "•":
-            cell.font = Font(color="4472C4")
-        elif "=" in line:
-            cell.font = Font(bold=True)
-    
-    # Auto-adjust column width
-    ws.column_dimensions['A'].width = 90
-
-def export_to_excel(output_file, data):
-    """Export data to Excel with professional formatting"""
-    print(f"\n💾 EXPORTING TO EXCEL")
-    print("=" * 23)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"excel_browser_payload_database_{timestamp}.xlsx"
+    filepath = os.path.join(output_dir, filename)
     
     try:
-        wb = create_excel_workbook(data)
-        wb.save(output_file)
-        
-        file_size = os.path.getsize(output_file)
-        print(f"✅ Excel export successful!")
-        print(f"📄 File: {output_file}")
-        print(f"📊 Size: {file_size:,} bytes")
-        print(f"📋 Sheets: {len(wb.worksheets)}")
-        
-        # List all sheets
-        print(f"📂 Sheet contents:")
-        for sheet in wb.worksheets:
-            print(f"   • {sheet.title}")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Excel export failed: {e}")
-        return False
+        wb.save(filepath)
+        logger.info(f"Workbook saved to {filepath}")
+        return filepath
+    except IOError as e:
+        logger.error(f"Failed to save workbook: {e}")
+        return None
 
 def main():
-    """Main execution function"""
-    logger.info("Excel Browser Rendering Payload Exporter v" + VERSION)
-    print("=" * 56)
-    print("Objective: Export comprehensive Excel browser rendering security research data")
-    print("Research Level: 100+ CVEs, security conferences, GitHub research, darknet analysis")
-    print("Focus: Excel files rendered in web browsers (.xls, .xlsx, .xlsm, .xlsb)")
-    print("Legal: For authorized security testing only")
-    print()
+    """Main function"""
+    parser = argparse.ArgumentParser(
+        description="Export Excel browser rendering payload database to Excel workbook"
+    )
+    parser.add_argument(
+        '--log-level',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
+        default='INFO',
+        help='Logging level (default: INFO)'
+    )
+    parser.add_argument(
+        '--log-file',
+        help='Optional log file path'
+    )
+    parser.add_argument(
+        '--output-dir',
+        default='output',
+        help='Output directory for Excel workbook (default: output/)'
+    )
     
-    # Find and load Excel browser payload database
+    args = parser.parse_args()
+    
+    # Reconfigure logging with user args
+    global logger
+    log_level = getattr(logging, args.log_level)
+    logger = setup_logging(log_level, args.log_file)
+    
+    logger.info(f"Excel Browser Payload Database Exporter v{VERSION}")
+    logger.info("=" * 50)
+    
+    # Find payload database
     db_file = find_latest_payload_database()
     if not db_file:
-        logger.error("No Excel browser payload database found (excel_payloads.json)")
+        logger.error("Cannot proceed without payload database")
         return False
     
+    # Load data
     data = load_payload_database(db_file)
     if not data:
-        logger.error("Failed to load Excel browser payload database")
+        logger.error("Failed to load payload database")
         return False
     
-    # Generate output filename
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"excel_browser_payload_database_{timestamp}.xlsx"
-    
-    # Export to Excel
-    success = export_to_excel(output_file, data)
-    
-    if success:
-        logger.info("Excel export complete")
-        print("=" * 38)
-        print(f"📊 Excel file ready for security research and testing")
-        print(f"🔍 Professional formatting with Excel browser analysis sheets")
-        print(f"📋 Comprehensive Excel browser rendering vulnerability research")
-        logger.warning("These payloads are for authorized security testing only")
-        return True
-    else:
+    # Create workbook
+    wb = create_excel_workbook(data)
+    if not wb:
+        logger.error("Failed to create workbook")
         return False
+    
+    # Save workbook
+    filepath = save_workbook(wb, args.output_dir)
+    if not filepath:
+        logger.error("Failed to save workbook")
+        return False
+    
+    logger.info("Export completed successfully")
+    return True
 
 if __name__ == "__main__":
     success = main()
