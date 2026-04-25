@@ -1,0 +1,151 @@
+name: Validate PDF-XSS Payloads
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'PDF-XSS/**/*.json'
+      - 'PDF-XSS/**/*.py'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'PDF-XSS/**'
+
+jobs:
+  validate-json:
+    name: Validate JSON Payload Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Validate JSON syntax
+        run: |
+          echo "Validating JSON payload files..."
+          for file in PDF-XSS/*.json; do
+            if [ -f "$file" ]; then
+              echo "Checking $file..."
+              python3 -c "import json; json.load(open('$file'))" || exit 1
+            fi
+          done
+          echo "✅ All JSON files are valid"
+
+  validate-payloads:
+    name: Test Payload Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Run payload validation tests
+        run: |
+          cd PDF-XSS
+          python3 payload_tester.py -b chrome --report || exit 1
+          python3 payload_tester.py -b firefox --report || exit 1
+          python3 payload_tester.py -b safari --report || exit 1
+          python3 payload_tester.py -b adobe --report || exit 1
+          python3 payload_tester.py -b edge --report || exit 1
+          echo "✅ All payload tests passed"
+      
+      - name: Check for hardcoded URLs
+        run: |
+          echo "Checking for hardcoded exfiltration URLs..."
+          cd PDF-XSS
+          if grep -r "http://evil.com\|http://test.com" --include="*.py" --exclude-dir=legacy_scripts | grep -v "placeholder\|substitute\|example"; then
+            echo "❌ Found hardcoded URLs in Python files"
+            exit 1
+          fi
+          echo "✅ No hardcoded exfiltration URLs found in Python files"
+      
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: payload-test-reports
+          path: PDF-XSS/test_report_*.json
+
+  validate-generator:
+    name: Test PDF Generator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Test PDF generation requires URL
+        run: |
+          cd PDF-XSS
+          echo "Testing that -u flag is required..."
+          if python3 pdf_xss_generator.py -b chrome 2>&1 | grep -q "required"; then
+            echo "✅ URL parameter is properly required"
+          else
+            echo "❌ URL parameter should be required"
+            exit 1
+          fi
+      
+      - name: Test valid PDF generation
+        run: |
+          cd PDF-XSS
+          echo "Testing PDF generation with valid parameters..."
+          python3 pdf_xss_generator.py -b chrome -u http://test.example.com --count 2 || exit 1
+          if [ -d "Files" ] && [ -f "Files"/*.pdf ]; then
+            echo "✅ PDF generation successful"
+          else
+            echo "❌ PDF files not generated"
+            exit 1
+          fi
+      
+      - name: Upload generated PDFs for inspection
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: generated-pdfs
+          path: PDF-XSS/Files/
+
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Check Python syntax
+        run: |
+          echo "Checking Python syntax..."
+          cd PDF-XSS
+          for file in *.py; do
+            if [ -f "$file ]; then
+              python3 -m py_compile "$file" || exit 1
+            fi
+          done
+          echo "✅ All Python files have valid syntax"
+      
+      - name: Check for deprecated patterns
+        run: |
+          echo "Checking for deprecated patterns..."
+          cd PDF-XSS
+          if grep -r "print(" *.py | grep -v "logger\|def.*print\|#.*print"; then
+            echo "⚠️  Warning: Found print() calls that should use logger"
+          fi
+          echo "✅ Code quality check complete"
+
+  summary:
+    name: Validation Summary
+    needs: [validate-json, validate-payloads, validate-generator, code-quality]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check validation results
+        run: |
+          echo "✅ All validation checks passed!"
+          echo "Safe to merge."

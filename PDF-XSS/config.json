@@ -3,9 +3,7 @@
     "version": "3.0",
     "description": "PDF-XSS Generator Configuration",
     "author": "SNGWN",
-    "
-": {
-      "default_url": "http://evil.com/collect",
+    "generation": {
       "default_output_dir": "Files",
       "default_pdf_version": "1.7",
       "max_payloads_per_run": 100,
